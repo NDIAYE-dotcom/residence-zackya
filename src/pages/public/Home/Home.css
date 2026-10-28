@@ -1,9 +1,11 @@
 .home { min-height: 100vh; display: flex; flex-direction: column; background: var(--blanc); }
 
-.home__nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 6vw; border-bottom: 1px solid var(--bordure); }
+.home__nav { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 14px 6vw; border-bottom: 1px solid var(--bordure); }
 .home__nav img { height: 56px; }
 .home__nav nav { display: flex; gap: 24px; }
 .home__nav a { text-decoration: none; font-weight: 600; font-size: .92rem; }
+.home__burger { display: none; background: none; border: none; color: var(--bleu); font-size: 1.7rem; line-height: 1; padding: 6px 10px; border-radius: var(--radius-sm); }
+.home__burger:hover { background: var(--fond); }
 
 .home__hero {
   background: linear-gradient(150deg, var(--bleu), var(--bleu-fonce));
@@ -26,7 +28,7 @@
 .home__resultats h2 { color: var(--bleu); margin-top: 0; }
 .home__cartes { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; }
 .home__carte { border-radius: var(--radius); overflow: hidden; box-shadow: var(--ombre); border: 1px solid var(--bordure); }
-.home__photo { height: 170px; background: var(--bleu-clair) center / cover; }
+.home__photo { height: 200px; }
 .home__carte-corps { padding: 16px; }
 .home__carte h3 { margin: 0 0 6px; }
 .home__carte p { margin: 0 0 14px; color: var(--texte-doux); font-size: .88rem; }
@@ -38,5 +40,17 @@
 
 @media (max-width: 860px) {
   .home__recherche { grid-template-columns: 1fr; }
+  .home__nav img { height: 46px; }
+  .home__burger { display: block; }
+  /* Menu mobile : caché, puis déroulé sous l'entête au clic sur ☰ */
   .home__nav nav { display: none; }
+  .home__nav nav.home__menu--ouvert {
+    display: flex; flex-direction: column; gap: 0;
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+    background: var(--blanc); border-bottom: 3px solid var(--rouge); box-shadow: var(--ombre);
+    animation: home-menu .2s ease-out;
+  }
+  .home__menu--ouvert a { padding: 16px 6vw; font-size: 1rem; border-top: 1px solid var(--bordure); }
 }
+
+@keyframes home-menu { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }

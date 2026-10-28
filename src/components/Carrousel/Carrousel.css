@@ -1,0 +1,50 @@
+.carrousel { position: relative; height: 100%; overflow: hidden; background: var(--bleu-clair); }
+.carrousel--vide { display: flex; align-items: center; justify-content: center; color: var(--bleu); font-size: .85rem; font-weight: 600; }
+.carrousel--vide span { opacity: .6; }
+
+/* La piste défile horizontalement, chaque photo « s'aimante » au bord */
+.carrousel__piste {
+  display: flex; height: 100%;
+  overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.carrousel__piste::-webkit-scrollbar { display: none; }
+.carrousel__diapo {
+  flex: 0 0 100%; height: 100%; scroll-snap-align: start;
+  padding: 0; border: none; background: none; cursor: zoom-in;
+}
+.carrousel__diapo img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
+
+.carrousel__fleche {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 34px; height: 34px; border-radius: 50%; border: none;
+  background: var(--blanc); color: var(--bleu); box-shadow: var(--ombre);
+  font-size: 1.5rem; line-height: 1; padding-bottom: 3px;
+  opacity: .85; transition: opacity .2s;
+}
+.carrousel__fleche:hover { opacity: 1; }
+.carrousel__fleche--gauche { left: 10px; }
+.carrousel__fleche--droite { right: 10px; }
+
+.carrousel__compteur {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--voile); color: var(--blanc);
+  font-size: .72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+}
+
+.carrousel__points {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.carrousel__points button {
+  width: 8px; height: 8px; padding: 0; border: none; border-radius: 999px;
+  background: var(--blanc); opacity: .6; transition: width .2s, opacity .2s;
+}
+.carrousel__points .carrousel__point--actif { width: 20px; opacity: 1; }
+
+/* Sur ordinateur, les flèches apparaissent au survol */
+@media (hover: hover) {
+  .carrousel__fleche { opacity: 0; }
+  .carrousel:hover .carrousel__fleche, .carrousel__fleche:focus-visible { opacity: .85; }
+  .carrousel:hover .carrousel__fleche:hover { opacity: 1; }
+}

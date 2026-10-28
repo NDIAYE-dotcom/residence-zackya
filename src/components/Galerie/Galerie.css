@@ -1,0 +1,49 @@
+.galerie {
+  position: fixed; inset: 0; z-index: 90;
+  display: flex; flex-direction: column;
+  background: var(--fond-galerie); color: var(--blanc);
+  animation: galerie-fondu .2s ease-out;
+}
+
+.galerie__entete { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; font-size: .92rem; }
+.galerie__fermer {
+  background: none; border: none; color: var(--blanc);
+  font-size: 2rem; line-height: 1; padding: 0 8px; opacity: .8;
+}
+.galerie__fermer:hover { opacity: 1; }
+
+.galerie__scene {
+  position: relative; flex: 1; min-height: 0;
+  display: flex; align-items: center; justify-content: center; padding: 0 64px;
+}
+.galerie__scene img {
+  max-width: 100%; max-height: 100%; object-fit: contain;
+  border-radius: var(--radius-sm); animation: galerie-fondu .25s ease-out;
+}
+
+.galerie__fleche {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 46px; height: 46px; border-radius: 50%; border: none;
+  background: var(--blanc); color: var(--bleu);
+  font-size: 1.9rem; line-height: 1; padding-bottom: 4px; opacity: .85;
+}
+.galerie__fleche:hover { opacity: 1; }
+.galerie__fleche--gauche { left: 12px; }
+.galerie__fleche--droite { right: 12px; }
+
+.galerie__miniatures { display: flex; gap: 8px; justify-content: center; padding: 14px; overflow-x: auto; }
+.galerie__miniatures button {
+  flex: 0 0 auto; width: 72px; height: 52px; padding: 0;
+  border: 2px solid transparent; border-radius: 6px; overflow: hidden; background: none; opacity: .55;
+}
+.galerie__miniatures img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.galerie__miniatures .galerie__miniature--active { border-color: var(--rouge); opacity: 1; }
+
+@keyframes galerie-fondu { from { opacity: 0; } to { opacity: 1; } }
+
+/* Mobile : la photo prend toute la largeur, on glisse au doigt */
+@media (max-width: 600px) {
+  .galerie__scene { padding: 0; }
+  .galerie__fleche { width: 38px; height: 38px; font-size: 1.6rem; }
+  .galerie__miniatures { justify-content: flex-start; }
+}

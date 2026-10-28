@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../../lib/supabase.js';
 import { FORMULES, formatFCFA } from '../../../lib/format.js';
+import Carrousel from '../../../components/Carrousel/Carrousel.jsx';
+import Galerie from '../../../components/Galerie/Galerie.jsx';
 import './Home.css';
 
 // Site public : recherche de disponibilité (étape suivante : tunnel /reserver)
@@ -12,6 +14,8 @@ export default function Home() {
   const [resultats, setResultats] = useState(null);
   const [erreur, setErreur] = useState('');
   const [chargement, setChargement] = useState(false);
+  const [galerie, setGalerie] = useState(null); // { photos, index, titre }
+  const [menuOuvert, setMenuOuvert] = useState(false); // menu ☰ sur mobile
 
   const rechercher = async (e) => {
     e.preventDefault();
@@ -35,9 +39,13 @@ export default function Home() {
     <div className="home">
       <header className="home__nav">
         <img src="/logo-zaquia.png" alt="Zaquia Résidence" />
-        <nav>
-          <a href="#studios">Nos studios</a>
-          <Link to="/suivi">Suivre ma réservation</Link>
+        <button type="button" className="home__burger" onClick={() => setMenuOuvert((o) => !o)}
+          aria-expanded={menuOuvert} aria-controls="home-menu" aria-label={menuOuvert ? 'Fermer le menu' : 'Ouvrir le menu'}>
+          {menuOuvert ? '×' : '☰'}
+        </button>
+        <nav id="home-menu" className={menuOuvert ? 'home__menu--ouvert' : ''}>
+          <a href="#studios" onClick={() => setMenuOuvert(false)}>Nos studios</a>
+          <Link to="/suivi" onClick={() => setMenuOuvert(false)}>Suivre ma réservation</Link>
         </nav>
       </header>
 
@@ -74,7 +82,10 @@ export default function Home() {
             <div className="home__cartes">
               {resultats.map((s) => (
                 <article key={s.id} className="home__carte">
-                  <div className="home__photo" style={s.photos?.[0] ? { backgroundImage: `url(${s.photos[0]})` } : undefined} />
+                  <div className="home__photo">
+                    <Carrousel photos={s.photos} alt={s.nom}
+                      onOuvrir={(index) => setGalerie({ photos: s.photos, index, titre: s.nom })} />
+                  </div>
                   <div className="home__carte-corps">
                     <h3>{s.nom}</h3>
                     <p>{s.capacite} pers. · {s.equipements.slice(0, 3).join(' · ')}</p>
@@ -92,6 +103,11 @@ export default function Home() {
           </>
         )}
       </section>
+
+      {galerie && (
+        <Galerie photos={galerie.photos} indexInitial={galerie.index} titre={galerie.titre}
+          onFermer={() => setGalerie(null)} />
+      )}
 
       <footer className="home__pied">
         © {new Date().getFullYear()} Zaquia Résidence · <Link to="/admin">Administration</Link>

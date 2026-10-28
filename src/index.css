@@ -27,6 +27,7 @@
   --ombre: 0 6px 24px rgba(0, 38, 104, 0.08);
   --ombre-forte: 0 20px 60px rgba(0, 20, 50, 0.25);
   --voile: rgba(0, 20, 50, 0.45);
+  --fond-galerie: rgba(4, 10, 24, 0.96);
 }
 
 *, *::before, *::after { box-sizing: border-box; }

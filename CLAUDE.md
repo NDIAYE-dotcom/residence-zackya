@@ -1890,3 +1890,6 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   `format.js` : `DUREES_FORMULE`, `UNITES_FORMULE`. Photos = URLs publiques dans `studios.photos` (1re = couverture, 12 max).
   Suppression d'un studio avec réservations → 23503 → message « dépubliez-le ou Hors service ».
   ⏳ Reste : saisir les vrais studios et prix d'Ousmane (S101 = exemple à modifier/supprimer).
+- **2026-10-28 · Site public (en avance sur l'étape 13)** : à la demande d'Ousmane, toutes les photos sont visibles sur les cartes de l'accueil.
+  Nouveaux composants réutilisables : `components/Carrousel` (scroll-snap, flèches, points, compteur) et `components/Galerie` (plein écran, ← → Échap, glisser, miniatures) → à réutiliser pour `/studios/:id`.
+  Menu ☰ mobile ajouté à l'entête de l'accueil (les liens étaient masqués sous 860 px).
