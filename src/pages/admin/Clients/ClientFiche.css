@@ -1,0 +1,82 @@
+.fiche { display: flex; flex-direction: column; gap: 18px; }
+
+.fiche__etat {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 36px 24px; text-align: center; color: var(--texte-doux);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.fiche__etat p { margin: 0; }
+.fiche__etat--erreur { color: var(--rouge); }
+.fiche__etat .btn { text-decoration: none; }
+
+.fiche__retour { align-self: flex-start; text-decoration: none; font-weight: 600; font-size: .9rem; }
+.fiche__retour:hover { text-decoration: underline; }
+
+.fiche__entete { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.fiche__entete h1 { margin: 0; color: var(--bleu); font-size: 1.7rem; }
+.fiche__entete p { margin: 4px 0 0; color: var(--texte-doux); font-size: .9rem; }
+.fiche__boutons { display: flex; gap: 8px; flex-wrap: wrap; }
+.fiche__boutons .btn { padding: 9px 14px; font-size: .88rem; text-decoration: none; }
+
+/* Bandeau liste noire */
+.fiche__noire {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding: 16px 18px; border-radius: var(--radius); background: var(--texte); color: var(--blanc);
+}
+.fiche__noire strong { font-size: 1rem; }
+.fiche__noire p { margin: 4px 0; opacity: .9; }
+.fiche__noire small { opacity: .7; font-size: .8rem; }
+.fiche__noire .btn { background: var(--blanc); }
+
+/* Statistiques */
+.fiche__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.fiche__stats div {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; border-top: 4px solid var(--bleu);
+}
+.fiche__stats div:nth-child(3) { border-top-color: var(--rouge); }
+.fiche__stats span { font-size: .78rem; font-weight: 600; color: var(--texte-doux); }
+.fiche__stats strong { font-size: 1.3rem; color: var(--bleu); }
+.fiche__stats div:nth-child(3) strong { color: var(--rouge); }
+
+.fiche__grille { display: grid; grid-template-columns: 1fr 1.5fr; gap: 18px; align-items: start; }
+.fiche__carte { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 20px; }
+.fiche__carte h2 { margin: 0 0 10px; font-size: 1rem; color: var(--texte); }
+.fiche__carte h2:not(:first-child) { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--bordure); }
+
+.fiche__infos { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: .9rem; }
+.fiche__infos dt { color: var(--texte-doux); }
+.fiche__infos dd { margin: 0; font-weight: 600; word-break: break-word; }
+.fiche__numero { font-family: monospace; font-size: .95rem; }
+.fiche__manque { margin: 0; color: var(--alerte); font-size: .88rem; font-weight: 500; }
+.fiche__notes { margin: 0; white-space: pre-wrap; font-size: .9rem; line-height: 1.5; color: var(--texte); }
+
+.fiche__lien-noire {
+  margin-top: 22px; background: none; border: none; padding: 0;
+  color: var(--rouge); font-size: .85rem; font-weight: 600;
+}
+.fiche__lien-noire:hover { text-decoration: underline; }
+
+/* Historique */
+.fiche__historique { list-style: none; margin: 0; padding: 0; }
+.fiche__historique li {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--bordure);
+}
+.fiche__historique li:last-child { border-bottom: none; }
+.fiche__historique li > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.fiche__historique span, .fiche__historique small { font-size: .82rem; color: var(--texte-doux); }
+.fiche__historique-droite { align-items: flex-end; text-align: right; flex-shrink: 0; }
+.fiche__historique-droite strong { color: var(--bleu); font-size: .92rem; }
+.fiche__historique-droite small { color: var(--rouge); font-weight: 600; }
+
+@media (max-width: 1000px) {
+  .fiche__grille { grid-template-columns: 1fr; }
+  .fiche__stats { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .fiche__boutons { width: 100%; }
+  .fiche__boutons .btn { flex: 1; }
+  .fiche__historique li { flex-direction: column; }
+  .fiche__historique li > .fiche__historique-droite { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; text-align: left; }
+}

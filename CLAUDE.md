@@ -1850,7 +1850,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 0.8 Git
 - [x] 1 Studios & tarifs
 - [x] 2 Personnel & rôles
-- [ ] 3 Clients
+- [x] 3 Clients
 - [ ] 4 Réservations
 - [ ] 5 Fiche réservation
 - [ ] 6 Planning
@@ -1899,3 +1899,6 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Pour redéployer : Edge Functions > creer-employe > Code > coller `supabase/functions/creer-employe/index.js` > Deploy.
   Comptes créés confirmés d'office (pas d'email envoyé) ; l'admin transmet les accès (Copier / WhatsApp). Utilitaires : `lib/telephone.js`, `lib/motDePasse.js`, `ROLES_STAFF` dans format.js.
   Compte de test « Awa Test » (awa@test.sn) créé pendant les tests → à désactiver ou supprimer (Supabase > Authentication > Users).
+- **2026-10-28 · Étape 3 Clients** : testée et validée. Migration `004_clients.sql` exécutée (`liste_noire_motif`, `liste_noire_le`, vue `v_clients` avec nb_reservations / nb_sejours / dernier_sejour / total_depense).
+  Téléphones clients **normalisés** `+221XXXXXXXXX` (ou international `+33…`) via `normaliserTelephoneClient()` — à utiliser PARTOUT (résa admin, site public avant `creer_reservation_publique`, `suivre_reservation`), sinon doublons.
+  Fiche `/admin/clients/:id` ; historique sans lien pour l'instant → **ajouter le lien vers `/admin/reservations/:id` à l'étape 5**. `lienWhatsApp(tel, message)` dans lib/telephone.js pour l'étape 5.

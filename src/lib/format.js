@@ -82,3 +82,12 @@ export const DESCRIPTIONS_ROLES = {
   menage: 'Ménage, maintenance et planning.',
   comptable: 'Caisse, dépenses, rapports (réservations en lecture).',
 };
+
+// Pièces d'identité acceptées à l'enregistrement
+export const PIECES_IDENTITE = ['CNI', 'Passeport', 'Carte CEDEAO', 'Permis de conduire', 'Carte de séjour', 'Autre'];
+
+// Suggestions de nationalités (saisie libre possible)
+export const NATIONALITES = [
+  'Sénégalaise', 'Gambienne', 'Bissau-guinéenne', 'Guinéenne', 'Malienne', 'Mauritanienne',
+  'Ivoirienne', 'Capverdienne', 'Française', 'Belge', 'Espagnole', 'Italienne', 'Américaine',
+];

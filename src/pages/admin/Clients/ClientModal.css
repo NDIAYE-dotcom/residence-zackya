@@ -1,0 +1,20 @@
+.client-modal { display: flex; flex-direction: column; gap: 16px; }
+.client-modal__ligne { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.client-modal textarea { resize: vertical; }
+
+.client-modal__piece {
+  margin: 0; padding: 14px; border: 1.5px dashed var(--bordure); border-radius: var(--radius-sm);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.client-modal__piece legend { padding: 0 6px; font-size: .85rem; font-weight: 600; color: var(--texte-doux); }
+.client-modal__aide { color: var(--texte-doux); font-size: .78rem; }
+
+.client-modal__actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding-top: 16px; border-top: 1px solid var(--bordure);
+}
+
+@media (max-width: 600px) {
+  .client-modal__ligne { grid-template-columns: 1fr; }
+  .client-modal__actions .btn { flex: 1; }
+}

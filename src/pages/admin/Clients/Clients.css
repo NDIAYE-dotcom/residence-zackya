@@ -1,0 +1,62 @@
+.clients__entete {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.clients__entete h1 { margin: 0; color: var(--bleu); font-size: 1.6rem; }
+.clients__entete p { margin: 4px 0 0; color: var(--texte-doux); font-size: .9rem; }
+
+.clients__filtres { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.clients__filtres input[type='search'] {
+  flex: 1 1 300px; padding: 12px 14px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+  background: var(--blanc); outline: none;
+}
+.clients__filtres input[type='search']:focus { border-color: var(--bleu); }
+.clients__noire { display: flex; align-items: center; gap: 8px; font-size: .9rem; cursor: pointer; }
+.clients__noire input { width: 17px; height: 17px; accent-color: var(--rouge); }
+
+.clients__etat {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 36px 24px; text-align: center; color: var(--texte-doux);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.clients__etat p { margin: 0; max-width: 520px; line-height: 1.5; }
+.clients__etat--erreur { color: var(--rouge); }
+
+/* ---- Tableau (grille CSS) ---- */
+.clients__tableau { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); overflow: hidden; }
+.clients__ligne {
+  display: grid; grid-template-columns: minmax(0, 2fr) 1.3fr .8fr 1fr 1fr; align-items: center; gap: 12px;
+  width: 100%; padding: 13px 18px; border: none; border-bottom: 1px solid var(--bordure);
+  background: var(--blanc); text-align: left; font-size: .9rem; color: var(--texte);
+}
+.clients__ligne:last-child { border-bottom: none; }
+button.clients__ligne:hover { background: var(--fond); }
+button.clients__ligne:focus-visible { outline: 2px solid var(--bleu); outline-offset: -2px; }
+.clients__ligne--titre {
+  background: var(--fond); font-size: .76rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--texte-doux); padding-top: 10px; padding-bottom: 10px;
+}
+
+.clients__nom { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-width: 0; }
+.clients__nom strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.clients__nom small { flex-basis: 100%; color: var(--texte-doux); font-size: .76rem; }
+.clients__badge-noire {
+  padding: 2px 8px; border-radius: 999px; background: var(--texte); color: var(--blanc);
+  font-size: .68rem; font-weight: 700;
+}
+.clients__tel { font-variant-numeric: tabular-nums; }
+.clients__montant { font-weight: 600; color: var(--bleu); }
+
+.clients__plus { display: flex; justify-content: center; margin-top: 16px; }
+
+/* Mobile : chaque client devient une carte */
+@media (max-width: 760px) {
+  .clients__ligne--titre { display: none; }
+  .clients__ligne { grid-template-columns: 1fr 1fr; gap: 6px 12px; padding: 14px 16px; }
+  .clients__nom { grid-column: 1 / -1; }
+  .clients__tel { grid-column: 1 / -1; color: var(--texte-doux); }
+  .clients__ligne [data-libelle]::before {
+    content: attr(data-libelle) ' : '; color: var(--texte-doux); font-size: .78rem; font-weight: 500;
+  }
+  .clients__entete .btn { width: 100%; }
+}
