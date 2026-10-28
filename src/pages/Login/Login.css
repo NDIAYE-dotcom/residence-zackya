@@ -1,0 +1,70 @@
+.login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  animation: login-fondu .5s ease-out;
+}
+
+/* ---- Panneau visuel ---- */
+.login__visuel {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--bleu) 0%, var(--bleu-fonce) 100%);
+  color: var(--blanc);
+  display: flex;
+  align-items: flex-end;
+  padding: 56px;
+}
+.login__visuel-contenu { position: relative; z-index: 1; max-width: 440px; }
+.login__visuel h2 {
+  font-family: var(--police-titre);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.2;
+  margin: 0 0 16px;
+}
+.login__visuel p { margin: 0; opacity: .85; line-height: 1.6; }
+
+/* Bandes verticales rappelant l'immeuble du logo */
+.login__bandes {
+  position: absolute; top: 12%; right: 12%;
+  display: flex; align-items: flex-end; gap: 14px; height: 50%;
+}
+.login__bandes span { width: 22px; border-radius: 4px 4px 0 0; background: rgba(255,255,255,.12); }
+.login__bandes span:nth-child(1) { height: 60%; background: var(--rouge); }
+.login__bandes span:nth-child(2) { height: 85%; }
+.login__bandes span:nth-child(3) { height: 100%; }
+
+/* ---- Panneau formulaire ---- */
+.login__panneau {
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px 24px; background: var(--blanc);
+}
+.login__form { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 18px; }
+.login__logo { width: 150px; align-self: center; margin-bottom: 4px; }
+.login__form h1 { margin: 0; text-align: center; color: var(--bleu); font-size: 1.6rem; }
+.login__sous-titre { margin: -12px 0 6px; text-align: center; color: var(--texte-doux); font-size: .9rem; }
+
+.login__alerte { padding: 12px 14px; border-radius: var(--radius-sm); font-size: .9rem; }
+.login__alerte--erreur { background: var(--rouge-clair); color: var(--rouge); }
+.login__alerte--info   { background: var(--bleu-clair); color: var(--bleu); }
+
+.login__mdp { position: relative; }
+.login__mdp input { width: 100%; padding-right: 86px; }
+.login__oeil {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--bleu); font-size: .8rem; font-weight: 600; padding: 6px;
+}
+
+.login__oublie {
+  align-self: flex-end; margin-top: -8px;
+  background: none; border: none; color: var(--rouge); font-size: .85rem; font-weight: 600; padding: 0;
+}
+.login__submit { width: 100%; padding: 14px; font-size: 1rem; }
+.login__pied { text-align: center; color: var(--texte-doux); font-size: .8rem; margin: 8px 0 0; }
+
+@keyframes login-fondu { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 860px) {
+  .login { grid-template-columns: 1fr; }
+  .login__visuel { display: none; }
+}

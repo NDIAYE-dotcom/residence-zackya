@@ -1,0 +1,93 @@
+.splash {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px;
+  background: var(--blanc);
+  transition: opacity .45s ease, transform .45s ease;
+}
+
+.splash--sortie {
+  opacity: 0;
+  transform: scale(1.03);
+}
+
+.splash__logo {
+  width: min(300px, 70vw);
+  height: auto;
+  animation: splash-apparition .8s ease-out both;
+}
+
+.splash__titre {
+  margin: 8px 0 0;
+  font-family: var(--police);
+  font-weight: 500;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: var(--texte);
+  animation: splash-apparition .8s .15s ease-out both;
+}
+
+/* Barre BLEUE = le fond (le "vide") */
+.splash__barre {
+  width: min(760px, 88vw);
+  height: 40px;
+  border-radius: 999px;
+  background: var(--bleu);
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .25);
+}
+
+/* Barre ROUGE = la progression, qui avance de gauche à droite */
+.splash__remplissage {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--rouge-fonce), var(--rouge));
+  position: relative;
+  overflow: hidden;
+}
+
+/* Reflet lumineux qui glisse sur la barre rouge */
+.splash__remplissage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+  animation: splash-reflet 1.2s linear infinite;
+}
+
+.splash__texte {
+  margin: 0;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--texte);
+}
+
+.splash__points span {
+  animation: splash-point 1.2s infinite;
+  opacity: 0;
+}
+.splash__points span:nth-child(2) { animation-delay: .15s; }
+.splash__points span:nth-child(3) { animation-delay: .3s; }
+.splash__points span:nth-child(4) { animation-delay: .45s; }
+
+@keyframes splash-apparition {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes splash-reflet {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+@keyframes splash-point {
+  0%, 20%  { opacity: 0; }
+  40%, 80% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .splash__barre { height: 26px; }
+}

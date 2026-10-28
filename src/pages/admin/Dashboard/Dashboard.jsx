@@ -1,0 +1,101 @@
+import { useEffect, useState } from 'react';
+import { supabase } from '../../../lib/supabase.js';
+import { formatFCFA, formatDateHeure, FORMULES, STATUTS_RESERVATION, STATUTS_STUDIO } from '../../../lib/format.js';
+import './Dashboard.css';
+
+export default function Dashboard() {
+  const [studios, setStudios] = useState([]);
+  const [arrivees, setArrivees] = useState([]);
+  const [departs, setDeparts] = useState([]);
+  const [enAttente, setEnAttente] = useState(0);
+  const [encaisseJour, setEncaisseJour] = useState(0);
+  const [chargement, setChargement] = useState(true);
+
+  useEffect(() => {
+    const charger = async () => {
+      const debutJour = new Date(); debutJour.setHours(0, 0, 0, 0);
+      const finJour = new Date(); finJour.setHours(23, 59, 59, 999);
+
+      const [s, a, d, att, p] = await Promise.all([
+        supabase.from('studios').select('id, code, nom, statut').order('code'),
+        supabase.from('v_reservations').select('*').in('statut', ['confirmee', 'en_attente'])
+          .gte('date_debut', debutJour.toISOString()).lte('date_debut', finJour.toISOString()).order('date_debut'),
+        supabase.from('v_reservations').select('*').eq('statut', 'en_cours')
+          .lte('date_fin', finJour.toISOString()).order('date_fin'),
+        supabase.from('reservations').select('id', { count: 'exact', head: true }).eq('statut', 'en_attente'),
+        supabase.from('paiements').select('montant, type').gte('created_at', debutJour.toISOString()),
+      ]);
+
+      setStudios(s.data ?? []);
+      setArrivees(a.data ?? []);
+      setDeparts(d.data ?? []);
+      setEnAttente(att.count ?? 0);
+      setEncaisseJour((p.data ?? []).reduce((t, x) => t + (x.type === 'remboursement' ? -x.montant : x.type === 'caution' ? 0 : x.montant), 0));
+      setChargement(false);
+    };
+    charger();
+  }, []);
+
+  const occupes = studios.filter((s) => s.statut === 'occupe').length;
+  const taux = studios.length ? Math.round((occupes / studios.length) * 100) : 0;
+
+  return (
+    <div className="dash">
+      <h1 className="dash__titre">Tableau de bord</h1>
+
+      <section className="dash__kpis">
+        <div className="kpi"><span>Taux d’occupation</span><strong>{taux} %</strong><small>{occupes} / {studios.length} studios</small></div>
+        <div className="kpi kpi--rouge"><span>À confirmer</span><strong>{enAttente}</strong><small>réservations en attente</small></div>
+        <div className="kpi"><span>Arrivées du jour</span><strong>{arrivees.length}</strong><small>check-in prévus</small></div>
+        <div className="kpi"><span>Encaissé aujourd’hui</span><strong>{formatFCFA(encaisseJour)}</strong><small>hors cautions</small></div>
+      </section>
+
+      <section className="dash__grille">
+        <div className="carte">
+          <h2>État des studios</h2>
+          {chargement ? <p className="vide">Chargement…</p> : (
+            <div className="dash__studios">
+              {studios.map((s) => (
+                <div key={s.id} className={`studio-tuile studio-tuile--${s.statut}`}>
+                  <strong>{s.code}</strong>
+                  <span>{STATUTS_STUDIO[s.statut]}</span>
+                </div>
+              ))}
+              {!studios.length && <p className="vide">Aucun studio enregistré.</p>}
+            </div>
+          )}
+        </div>
+
+        <div className="carte">
+          <h2>Arrivées du jour</h2>
+          <ListeResa items={arrivees} champDate="date_debut" vide="Aucune arrivée prévue." />
+        </div>
+
+        <div className="carte">
+          <h2>Départs du jour</h2>
+          <ListeResa items={departs} champDate="date_fin" vide="Aucun départ prévu." />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ListeResa({ items, champDate, vide }) {
+  if (!items.length) return <p className="vide">{vide}</p>;
+  return (
+    <ul className="dash__liste">
+      {items.map((r) => (
+        <li key={r.id}>
+          <div>
+            <strong>{r.client_nom}</strong>
+            <span>{r.studio_code} · {FORMULES[r.formule]} · {formatDateHeure(r[champDate])}</span>
+          </div>
+          <div className="dash__liste-droite">
+            <span className={`badge badge-${r.statut}`}>{STATUTS_RESERVATION[r.statut]}</span>
+            {r.reste_a_payer > 0 && <small>Reste {formatFCFA(r.reste_a_payer)}</small>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}

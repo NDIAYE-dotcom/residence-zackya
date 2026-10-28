@@ -1,0 +1,72 @@
+/* ===== Charte Zaquia Résidence (couleurs extraites du logo) ===== */
+:root {
+  --bleu: #002668;
+  --bleu-fonce: #001a4a;
+  --bleu-clair: #e8edf7;
+  --rouge: #b4001a;
+  --rouge-fonce: #8c0014;
+  --rouge-clair: #fbe9ec;
+
+  --blanc: #ffffff;
+  --fond: #f5f7fb;
+  --texte: #1b1f2a;
+  --texte-doux: #5b6475;
+  --bordure: #dfe4ee;
+
+  --succes: #1e8e4e;
+  --alerte: #d98a00;
+
+  --police-titre: 'Playfair Display', Georgia, serif;
+  --police: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --ombre: 0 6px 24px rgba(0, 38, 104, 0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--police);
+  color: var(--texte);
+  background: var(--fond);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--bleu); }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; font-size: 1rem; }
+
+/* Boutons réutilisables */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border: none; border-radius: var(--radius-sm);
+  font-weight: 600; font-size: 0.95rem; transition: background .2s, transform .1s;
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn-primaire { background: var(--bleu); color: var(--blanc); }
+.btn-primaire:hover:not(:disabled) { background: var(--bleu-fonce); }
+.btn-rouge { background: var(--rouge); color: var(--blanc); }
+.btn-rouge:hover:not(:disabled) { background: var(--rouge-fonce); }
+.btn-contour { background: transparent; color: var(--bleu); border: 1.5px solid var(--bleu); }
+
+/* Champs de formulaire */
+.champ { display: flex; flex-direction: column; gap: 6px; }
+.champ label { font-size: .85rem; font-weight: 600; color: var(--texte-doux); }
+.champ input, .champ select, .champ textarea {
+  padding: 12px 14px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+  background: var(--blanc); outline: none; transition: border-color .2s;
+}
+.champ input:focus, .champ select:focus, .champ textarea:focus { border-color: var(--bleu); }
+
+/* Badges de statut */
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+.badge-en_attente  { background: #fff4dc; color: var(--alerte); }
+.badge-confirmee   { background: var(--bleu-clair); color: var(--bleu); }
+.badge-en_cours    { background: #e3f6ec; color: var(--succes); }
+.badge-terminee    { background: #eceff4; color: var(--texte-doux); }
+.badge-annulee, .badge-no_show { background: var(--rouge-clair); color: var(--rouge); }

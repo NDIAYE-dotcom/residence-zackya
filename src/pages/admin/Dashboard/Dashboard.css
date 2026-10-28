@@ -1,0 +1,37 @@
+.dash__titre { margin: 0 0 22px; color: var(--bleu); font-size: 1.6rem; }
+
+.dash__kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
+.kpi {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; border-top: 4px solid var(--bleu);
+}
+.kpi--rouge { border-top-color: var(--rouge); }
+.kpi span { font-size: .82rem; color: var(--texte-doux); font-weight: 600; }
+.kpi strong { font-size: 1.7rem; color: var(--bleu); }
+.kpi--rouge strong { color: var(--rouge); }
+.kpi small { color: var(--texte-doux); font-size: .78rem; }
+
+.dash__grille { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 16px; }
+.carte { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 20px; }
+.carte h2 { margin: 0 0 14px; font-size: 1.05rem; color: var(--texte); }
+.vide { color: var(--texte-doux); font-size: .9rem; margin: 0; }
+
+.dash__studios { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
+.studio-tuile { border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+.studio-tuile strong { font-size: 1rem; }
+.studio-tuile span { font-size: .72rem; font-weight: 600; }
+.studio-tuile--disponible   { background: #e3f6ec; color: var(--succes); }
+.studio-tuile--occupe       { background: var(--rouge-clair); color: var(--rouge); }
+.studio-tuile--nettoyage    { background: #fff4dc; color: var(--alerte); }
+.studio-tuile--maintenance,
+.studio-tuile--hors_service { background: #eceff4; color: var(--texte-doux); }
+
+.dash__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.dash__liste li { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--bordure); }
+.dash__liste li:last-child { border-bottom: none; }
+.dash__liste li div { display: flex; flex-direction: column; gap: 2px; }
+.dash__liste li span { font-size: .8rem; color: var(--texte-doux); }
+.dash__liste-droite { align-items: flex-end; }
+.dash__liste-droite small { color: var(--rouge); font-size: .75rem; font-weight: 600; }
+
+@media (max-width: 1100px) { .dash__grille { grid-template-columns: 1fr; } }

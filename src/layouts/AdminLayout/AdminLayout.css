@@ -1,0 +1,43 @@
+.admin { display: flex; min-height: 100vh; }
+
+.admin__sidebar {
+  width: 250px; flex-shrink: 0;
+  background: var(--bleu); color: var(--blanc);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.admin__marque { background: var(--blanc); padding: 18px; display: flex; justify-content: center; border-bottom: 4px solid var(--rouge); }
+.admin__marque img { width: 130px; }
+
+.admin__nav { display: flex; flex-direction: column; padding: 16px 12px; gap: 4px; }
+.admin__lien {
+  color: rgba(255,255,255,.8); text-decoration: none;
+  padding: 11px 14px; border-radius: var(--radius-sm); font-size: .92rem; font-weight: 500;
+  border-left: 3px solid transparent; transition: background .2s;
+}
+.admin__lien:hover { background: rgba(255,255,255,.08); color: var(--blanc); }
+.admin__lien--actif { background: rgba(255,255,255,.12); color: var(--blanc); border-left-color: var(--rouge); font-weight: 600; }
+
+.admin__principal { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.admin__entete {
+  height: 68px; background: var(--blanc); border-bottom: 1px solid var(--bordure);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  position: sticky; top: 0; z-index: 5;
+}
+.admin__burger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--bleu); }
+.admin__utilisateur { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.admin__utilisateur div { display: flex; flex-direction: column; text-align: right; }
+.admin__utilisateur span { font-size: .78rem; color: var(--texte-doux); }
+.admin__utilisateur .btn { padding: 8px 14px; }
+
+.admin__contenu { padding: 28px; }
+.admin__voile { display: none; }
+
+@media (max-width: 900px) {
+  .admin__sidebar { position: fixed; left: 0; z-index: 20; transform: translateX(-100%); transition: transform .25s; }
+  .admin__sidebar--ouvert { transform: translateX(0); }
+  .admin__voile { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 15; }
+  .admin__burger { display: block; }
+  .admin__contenu { padding: 18px; }
+  .admin__utilisateur div { display: none; }
+}
