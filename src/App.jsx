@@ -4,6 +4,7 @@ import Login from './pages/Login/Login.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import AdminLayout from './layouts/AdminLayout/AdminLayout.jsx';
 import Dashboard from './pages/admin/Dashboard/Dashboard.jsx';
+import Studios from './pages/admin/Studios/Studios.jsx';
 import Home from './pages/public/Home/Home.jsx';
 import EnConstruction from './components/EnConstruction.jsx';
 
@@ -29,7 +30,7 @@ export default function App() {
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/planning" element={<EnConstruction titre="Planning" />} />
         <Route path="/admin/reservations" element={<EnConstruction titre="Réservations" />} />
-        <Route path="/admin/studios" element={<EnConstruction titre="Studios & tarifs" />} />
+        <Route path="/admin/studios" element={<ProtectedRoute roles={['admin', 'gerant']}><Studios /></ProtectedRoute>} />
         <Route path="/admin/clients" element={<EnConstruction titre="Clients" />} />
         <Route path="/admin/caisse" element={<EnConstruction titre="Caisse & paiements" />} />
         <Route path="/admin/depenses" element={<EnConstruction titre="Dépenses" />} />

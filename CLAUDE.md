@@ -1848,7 +1848,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 0.6 Fichier .env
 - [x] 0.7 Premier test OK
 - [x] 0.8 Git
-- [ ] 1 Studios & tarifs
+- [x] 1 Studios & tarifs
 - [ ] 2 Personnel & rôles
 - [ ] 3 Clients
 - [ ] 4 Réservations
@@ -1884,3 +1884,9 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   (paramètre `adresse`). `schema.sql`/§ 7 laissés tels qu'exécutés (contiennent encore 'Dakar' → la migration 001 corrige). Fuseau `Africa/Dakar` conservé (fuseau de tout le Sénégal).
 - **2026-10-28 · Étape 0.8** : `git init` dans le projet, branche `main`, remote `https://github.com/NDIAYE-dotcom/residence-zackya.git`. **Phase 0 terminée.**
 - **2026-10-28 · Migration 001** exécutée et vérifiée (`adresse` = « Ziguinchor, Sénégal »). Prochaine étape : **1 · Studios & tarifs**.
+- **2026-10-28 · Étape 1 Studios & tarifs** : testée et validée par Ousmane. Migration `002_storage_photos_studios.sql` exécutée (bucket public `studios`, 5 Mo, JPG/PNG/WEBP, écriture admin/gérant).
+  Ajouts réutilisables : `components/Modal` (portal + pile Échap), `components/Confirm` (slot children pour un motif), `components/Toast` (`useToast().succes/erreur`),
+  `lib/erreurs.js` (`messageErreur(err)` : 23P01, 23505, 23503, RLS, Storage…), `lib/images.js` (compression JPEG 1600 px), `services/journal.js` (`journaliser(action, table, id, details)`),
+  `format.js` : `DUREES_FORMULE`, `UNITES_FORMULE`. Photos = URLs publiques dans `studios.photos` (1re = couverture, 12 max).
+  Suppression d'un studio avec réservations → 23503 → message « dépubliez-le ou Hors service ».
+  ⏳ Reste : saisir les vrais studios et prix d'Ousmane (S101 = exemple à modifier/supprimer).

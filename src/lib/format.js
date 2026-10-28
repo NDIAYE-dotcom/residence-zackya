@@ -44,3 +44,23 @@ export const MODES_PAIEMENT = {
   virement: 'Virement',
   paydunya: 'PayDunya (en ligne)',
 };
+
+// Durée d'une unité de chaque formule (colonne tarifs.duree_heures)
+export const DUREES_FORMULE = {
+  heure: 1,
+  demi_journee: 6,
+  journee: 12,
+  nuitee: 18,
+  semaine: 168,
+  mois: 720,
+};
+
+// Unité facturée, pour « 25 000 FCFA / nuit »
+export const UNITES_FORMULE = {
+  heure: 'heure',
+  demi_journee: 'demi-journée',
+  journee: 'journée',
+  nuitee: 'nuit',
+  semaine: 'semaine',
+  mois: 'mois',
+};

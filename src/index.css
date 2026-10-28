@@ -14,7 +14,10 @@
   --bordure: #dfe4ee;
 
   --succes: #1e8e4e;
+  --succes-clair: #e3f6ec;
   --alerte: #d98a00;
+  --alerte-clair: #fff4dc;
+  --neutre-clair: #eceff4;
 
   --police-titre: 'Playfair Display', Georgia, serif;
   --police: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -22,11 +25,14 @@
   --radius: 12px;
   --radius-sm: 8px;
   --ombre: 0 6px 24px rgba(0, 38, 104, 0.08);
+  --ombre-forte: 0 20px 60px rgba(0, 20, 50, 0.25);
+  --voile: rgba(0, 20, 50, 0.45);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, #root { height: 100%; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -70,3 +76,13 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 .badge-en_cours    { background: #e3f6ec; color: var(--succes); }
 .badge-terminee    { background: #eceff4; color: var(--texte-doux); }
 .badge-annulee, .badge-no_show { background: var(--rouge-clair); color: var(--rouge); }
+
+/* Badges de statut des studios */
+.badge-disponible { background: var(--succes-clair); color: var(--succes); }
+.badge-occupe     { background: var(--rouge-clair); color: var(--rouge); }
+.badge-nettoyage  { background: var(--alerte-clair); color: var(--alerte); }
+.badge-maintenance, .badge-hors_service { background: var(--neutre-clair); color: var(--texte-doux); }
+
+/* Erreur de validation sous un champ */
+.champ--erreur input, .champ--erreur select, .champ--erreur textarea { border-color: var(--rouge); }
+.champ__erreur { color: var(--rouge); font-size: .8rem; font-weight: 500; }

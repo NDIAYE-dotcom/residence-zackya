@@ -1,0 +1,47 @@
+.tarifs { display: flex; flex-direction: column; gap: 16px; }
+.tarifs__etat { color: var(--texte-doux); margin: 0; }
+.tarifs__etat--erreur { color: var(--rouge); }
+
+.tarifs__aide { margin: 0; color: var(--texte-doux); font-size: .88rem; line-height: 1.55; }
+.tarifs__copie { max-width: 420px; }
+.tarifs__info {
+  padding: 11px 14px; border-radius: var(--radius-sm);
+  background: var(--bleu-clair); color: var(--bleu); font-size: .88rem; font-weight: 500;
+}
+
+.tarifs__liste { display: flex; flex-direction: column; border: 1px solid var(--bordure); border-radius: var(--radius); }
+.tarifs__ligne {
+  display: grid; grid-template-columns: 1.4fr 1.2fr 1fr auto; align-items: center; gap: 14px;
+  padding: 12px 16px; border-bottom: 1px solid var(--bordure); transition: opacity .2s;
+}
+.tarifs__ligne:last-child { border-bottom: none; }
+.tarifs__ligne--inactive { background: var(--fond); }
+.tarifs__ligne--inactive .tarifs__formule,
+.tarifs__ligne--inactive .tarifs__prix,
+.tarifs__ligne--inactive .tarifs__apercu { opacity: .5; }
+
+.tarifs__formule { display: flex; flex-direction: column; gap: 2px; }
+.tarifs__formule strong { color: var(--texte); font-size: .95rem; }
+.tarifs__formule span { color: var(--texte-doux); font-size: .78rem; }
+
+.tarifs__prix { display: flex; align-items: center; gap: 8px; }
+.tarifs__prix input {
+  width: 100%; min-width: 0; padding: 10px 12px; text-align: right; font-weight: 600;
+  border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); outline: none;
+}
+.tarifs__prix input:focus { border-color: var(--bleu); }
+.tarifs__prix span { font-size: .78rem; font-weight: 600; color: var(--texte-doux); }
+.tarifs__apercu { color: var(--rouge); font-weight: 700; font-size: .9rem; }
+
+.tarifs__actif { display: flex; align-items: center; gap: 6px; font-size: .84rem; cursor: pointer; min-width: 112px; }
+.tarifs__actif input { width: 17px; height: 17px; accent-color: var(--bleu); }
+
+.tarifs__actions { display: flex; justify-content: flex-end; }
+
+@media (max-width: 700px) {
+  .tarifs__ligne { grid-template-columns: 1fr auto; gap: 8px 12px; }
+  .tarifs__prix { grid-column: 1; grid-row: 2; }
+  .tarifs__apercu { display: none; }
+  .tarifs__actif { grid-column: 2; grid-row: 1 / span 2; min-width: 0; }
+  .tarifs__actions .btn { width: 100%; }
+}

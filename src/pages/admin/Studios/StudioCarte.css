@@ -1,0 +1,48 @@
+.studio-carte {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  overflow: hidden; display: flex; flex-direction: column;
+}
+
+.studio-carte__photo {
+  position: relative; height: 170px;
+  background: var(--bleu-clair) center / cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+}
+.studio-carte__sans-photo { color: var(--bleu); font-size: .85rem; font-weight: 600; opacity: .6; }
+.studio-carte__statut { position: absolute; top: 12px; left: 12px; }
+.studio-carte__nb {
+  position: absolute; bottom: 10px; right: 10px;
+  background: var(--voile); color: var(--blanc); font-size: .72rem; font-weight: 600;
+  padding: 3px 8px; border-radius: 999px;
+}
+
+.studio-carte__corps { padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.studio-carte__titre { display: flex; align-items: baseline; gap: 10px; }
+.studio-carte__code {
+  background: var(--bleu); color: var(--blanc); font-size: .75rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 6px; flex-shrink: 0;
+}
+.studio-carte__titre h3 { margin: 0; font-size: 1.05rem; color: var(--texte); }
+.studio-carte__infos { margin: 0; color: var(--texte-doux); font-size: .84rem; }
+.studio-carte__prix { margin: 0; font-size: .86rem; color: var(--texte-doux); }
+.studio-carte__prix strong { color: var(--rouge); }
+.studio-carte__alerte { color: var(--rouge); font-weight: 600; }
+
+.studio-carte__rapide { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.studio-carte__rapide select {
+  padding: 8px 10px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+  background: var(--blanc); font-size: .85rem;
+}
+.studio-carte__publie { display: flex; align-items: center; gap: 6px; font-size: .85rem; cursor: pointer; }
+.studio-carte__publie input { width: 17px; height: 17px; accent-color: var(--bleu); }
+
+.studio-carte__actions {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  padding: 12px 16px; border-top: 1px solid var(--bordure);
+}
+.studio-carte__actions .btn { padding: 8px 12px; font-size: .84rem; }
+.studio-carte__supprimer {
+  margin-left: auto; background: none; border: none; padding: 8px 4px;
+  color: var(--rouge); font-size: .84rem; font-weight: 600;
+}
+.studio-carte__supprimer:hover { text-decoration: underline; }
