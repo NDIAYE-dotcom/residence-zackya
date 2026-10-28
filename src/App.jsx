@@ -5,6 +5,7 @@ import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import AdminLayout from './layouts/AdminLayout/AdminLayout.jsx';
 import Dashboard from './pages/admin/Dashboard/Dashboard.jsx';
 import Studios from './pages/admin/Studios/Studios.jsx';
+import Personnel from './pages/admin/Personnel/Personnel.jsx';
 import Home from './pages/public/Home/Home.jsx';
 import EnConstruction from './components/EnConstruction.jsx';
 
@@ -37,7 +38,7 @@ export default function App() {
         <Route path="/admin/menage" element={<EnConstruction titre="Ménage" />} />
         <Route path="/admin/maintenance" element={<EnConstruction titre="Maintenance" />} />
         <Route path="/admin/rapports" element={<EnConstruction titre="Rapports" />} />
-        <Route path="/admin/personnel" element={<EnConstruction titre="Personnel" />} />
+        <Route path="/admin/personnel" element={<ProtectedRoute roles={['admin']}><Personnel /></ProtectedRoute>} />
         <Route path="/admin/parametres" element={<EnConstruction titre="Paramètres" />} />
       </Route>
 

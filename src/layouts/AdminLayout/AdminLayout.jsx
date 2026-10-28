@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { ROLES_STAFF } from '../../lib/format.js';
 import './AdminLayout.css';
 
 // Menu : "roles" = qui voit l'entrée (absent = tout le personnel)
@@ -18,11 +19,6 @@ const MENU = [
   { to: '/admin/personnel',    label: 'Personnel',    roles: ['admin'] },
   { to: '/admin/parametres',   label: 'Paramètres',   roles: ['admin'] },
 ];
-
-const ROLES = {
-  admin: 'Administrateur', gerant: 'Gérant', receptionniste: 'Réception',
-  menage: 'Ménage', comptable: 'Comptable',
-};
 
 export default function AdminLayout() {
   const { profile, signOut } = useAuth();
@@ -60,7 +56,7 @@ export default function AdminLayout() {
           <div className="admin__utilisateur">
             <div>
               <strong>{profile?.full_name || 'Utilisateur'}</strong>
-              <span>{ROLES[profile?.role] ?? ''}</span>
+              <span>{ROLES_STAFF[profile?.role] ?? ''}</span>
             </div>
             <button className="btn btn-contour" onClick={deconnexion}>Déconnexion</button>
           </div>

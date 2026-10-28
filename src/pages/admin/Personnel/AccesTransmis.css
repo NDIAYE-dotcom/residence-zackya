@@ -1,0 +1,26 @@
+.acces { display: flex; flex-direction: column; gap: 16px; }
+.acces__intro { margin: 0; line-height: 1.55; }
+
+.acces__liste {
+  margin: 0; padding: 14px 16px; border-radius: var(--radius-sm);
+  background: var(--fond); border: 1px solid var(--bordure);
+  display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; align-items: baseline;
+}
+.acces__liste dt { font-size: .8rem; font-weight: 600; color: var(--texte-doux); }
+.acces__liste dd { margin: 0; font-weight: 600; word-break: break-all; }
+.acces__mdp { font-family: monospace; font-size: 1.15rem; color: var(--rouge); letter-spacing: .5px; }
+
+.acces__alerte {
+  margin: 0; padding: 11px 14px; border-radius: var(--radius-sm);
+  background: var(--alerte-clair); color: var(--texte); font-size: .88rem;
+}
+
+.acces__actions {
+  display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;
+  padding-top: 16px; border-top: 1px solid var(--bordure);
+}
+.acces__actions a { text-decoration: none; }
+
+@media (max-width: 600px) {
+  .acces__actions .btn { flex: 1 1 100%; }
+}

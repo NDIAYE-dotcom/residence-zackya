@@ -1,0 +1,41 @@
+.employe-modal { display: flex; flex-direction: column; gap: 16px; }
+.employe-modal__texte { margin: 0; line-height: 1.55; }
+
+.employe-modal__roles { border: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.employe-modal__roles legend { font-size: .85rem; font-weight: 600; color: var(--texte-doux); margin-bottom: 8px; padding: 0; }
+.employe-modal__role {
+  display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+  padding: 10px 12px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+  transition: border-color .15s, background .15s;
+}
+.employe-modal__role input { margin-top: 3px; accent-color: var(--bleu); }
+.employe-modal__role span { display: flex; flex-direction: column; gap: 2px; }
+.employe-modal__role strong { font-size: .9rem; }
+.employe-modal__role small { font-size: .76rem; color: var(--texte-doux); line-height: 1.35; }
+.employe-modal__role--choisi { border-color: var(--bleu); background: var(--bleu-clair); }
+.employe-modal__role--choisi strong { color: var(--bleu); }
+
+.employe-modal__mdp { display: flex; gap: 8px; }
+.employe-modal__mdp input { flex: 1; min-width: 0; font-family: monospace; font-size: 1.05rem; letter-spacing: .5px; }
+.employe-modal__mdp .btn { padding: 10px 12px; font-size: .84rem; }
+
+.employe-modal__actif {
+  display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+  padding: 12px 14px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+}
+.employe-modal__actif input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--bleu); flex-shrink: 0; }
+.employe-modal__actif span { display: flex; flex-direction: column; gap: 2px; font-size: .9rem; }
+.employe-modal__actif small { color: var(--texte-doux); font-size: .78rem; }
+
+.employe-modal__actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding-top: 16px; border-top: 1px solid var(--bordure);
+}
+
+@media (max-width: 600px) {
+  .employe-modal__roles { grid-template-columns: 1fr; }
+  .employe-modal__mdp { flex-wrap: wrap; }
+  .employe-modal__mdp input { flex: 1 1 100%; }
+  .employe-modal__mdp .btn { flex: 1; }
+  .employe-modal__actions .btn { flex: 1; }
+}

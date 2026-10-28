@@ -44,11 +44,14 @@ export function AuthProvider({ children }) {
 
   const signOut = () => supabase.auth.signOut();
 
+  // Après modification de son propre profil (nom, téléphone…)
+  const rechargerProfil = () => chargerProfil(session?.user);
+
   const resetPassword = (email) =>
     supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/admin/login` });
 
   return (
-    <AuthContext.Provider value={{ session, profile, loading, signIn, signOut, resetPassword }}>
+    <AuthContext.Provider value={{ session, profile, loading, signIn, signOut, resetPassword, rechargerProfil }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1849,7 +1849,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 0.7 Premier test OK
 - [x] 0.8 Git
 - [x] 1 Studios & tarifs
-- [ ] 2 Personnel & rôles
+- [x] 2 Personnel & rôles
 - [ ] 3 Clients
 - [ ] 4 Réservations
 - [ ] 5 Fiche réservation
@@ -1893,3 +1893,9 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-10-28 · Site public (en avance sur l'étape 13)** : à la demande d'Ousmane, toutes les photos sont visibles sur les cartes de l'accueil.
   Nouveaux composants réutilisables : `components/Carrousel` (scroll-snap, flèches, points, compteur) et `components/Galerie` (plein écran, ← → Échap, glisser, miniatures) → à réutiliser pour `/studios/:id`.
   Menu ☰ mobile ajouté à l'entête de l'accueil (les liens étaient masqués sous 860 px).
+- **2026-10-28 · Étape 2 Personnel & rôles** : testée et validée. Migration `003_personnel.sql` exécutée (`profiles.email` + trigger `proteger_dernier_admin`).
+  Edge Function `creer-employe` (actions `creer` / `changer_mot_de_passe`, admin actif vérifié dans le code) déployée **via l'éditeur du Dashboard**
+  (la CLI de ce Mac est connectée à un AUTRE compte Supabase → ne pas l'utiliser pour ce projet sans `supabase login` dédié). « Verify JWT with legacy secret » = **OFF**.
+  Pour redéployer : Edge Functions > creer-employe > Code > coller `supabase/functions/creer-employe/index.js` > Deploy.
+  Comptes créés confirmés d'office (pas d'email envoyé) ; l'admin transmet les accès (Copier / WhatsApp). Utilitaires : `lib/telephone.js`, `lib/motDePasse.js`, `ROLES_STAFF` dans format.js.
+  Compte de test « Awa Test » (awa@test.sn) créé pendant les tests → à désactiver ou supprimer (Supabase > Authentication > Users).

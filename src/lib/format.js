@@ -64,3 +64,21 @@ export const UNITES_FORMULE = {
   semaine: 'semaine',
   mois: 'mois',
 };
+
+// Rôles du personnel (type role_staff)
+export const ROLES_STAFF = {
+  admin: 'Administrateur',
+  gerant: 'Gérant',
+  receptionniste: 'Réception',
+  menage: 'Ménage',
+  comptable: 'Comptable',
+};
+
+// Ce que chaque rôle peut faire (aide au choix du rôle)
+export const DESCRIPTIONS_ROLES = {
+  admin: 'Accès complet, gère le personnel et les paramètres.',
+  gerant: 'Tout sauf le personnel et les paramètres.',
+  receptionniste: 'Réservations, clients, caisse, planning.',
+  menage: 'Ménage, maintenance et planning.',
+  comptable: 'Caisse, dépenses, rapports (réservations en lecture).',
+};

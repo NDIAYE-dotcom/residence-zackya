@@ -9,6 +9,7 @@ export const messageErreur = (err, defaut = 'Une erreur est survenue. Réessayez
     case '23503': return 'Impossible : cet élément est lié à d’autres données.';
     case '42501': return 'Vous n’avez pas les droits pour cette action.';
     case 'P0001': return msg; // exceptions levées par nos fonctions SQL (déjà en français)
+    case 'FONCTION': return msg; // message déjà traduit par une Edge Function
     case 'FORMAT_PHOTO': return 'Format de photo non supporté (utilisez JPG, PNG ou WEBP).';
     default: break;
   }
