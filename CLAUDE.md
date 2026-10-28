@@ -1883,3 +1883,4 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   📍 **La résidence est à ZIGUINCHOR, pas à Dakar.** Corrigé : Home.jsx, README, CLAUDE.md § 1/§ 8. Migration `001_adresse_ziguinchor.sql`
   (paramètre `adresse`). `schema.sql`/§ 7 laissés tels qu'exécutés (contiennent encore 'Dakar' → la migration 001 corrige). Fuseau `Africa/Dakar` conservé (fuseau de tout le Sénégal).
 - **2026-10-28 · Étape 0.8** : `git init` dans le projet, branche `main`, remote `https://github.com/NDIAYE-dotcom/residence-zackya.git`. **Phase 0 terminée.**
+- **2026-10-28 · Migration 001** exécutée et vérifiée (`adresse` = « Ziguinchor, Sénégal »). Prochaine étape : **1 · Studios & tarifs**.
