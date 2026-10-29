@@ -91,3 +91,21 @@ export const NATIONALITES = [
   'Sénégalaise', 'Gambienne', 'Bissau-guinéenne', 'Guinéenne', 'Malienne', 'Mauritanienne',
   'Ivoirienne', 'Capverdienne', 'Française', 'Belge', 'Espagnole', 'Italienne', 'Américaine',
 ];
+
+// Unités au pluriel (« 3 nuits »)
+export const UNITES_FORMULE_PLURIEL = {
+  heure: 'heures',
+  demi_journee: 'demi-journées',
+  journee: 'journées',
+  nuitee: 'nuits',
+  semaine: 'semaines',
+  mois: 'mois',
+};
+
+export const SOURCES_RESERVATION = {
+  sur_place: 'Sur place',
+  telephone: 'Téléphone',
+  whatsapp: 'WhatsApp',
+  site: 'Site web',
+  partenaire: 'Partenaire',
+};

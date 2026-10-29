@@ -8,11 +8,14 @@ import Studios from './pages/admin/Studios/Studios.jsx';
 import Personnel from './pages/admin/Personnel/Personnel.jsx';
 import Clients from './pages/admin/Clients/Clients.jsx';
 import ClientFiche from './pages/admin/Clients/ClientFiche.jsx';
+import Reservations from './pages/admin/Reservations/Reservations.jsx';
+import NouvelleReservation from './pages/admin/Reservations/NouvelleReservation.jsx';
 import Home from './pages/public/Home/Home.jsx';
 import EnConstruction from './components/EnConstruction.jsx';
 
 // Rôles autorisés par module
 const ROLES_CLIENTS = ['admin', 'gerant', 'receptionniste'];
+const ROLES_RESERVATIONS = ['admin', 'gerant', 'receptionniste', 'comptable']; // comptable : lecture seule
 
 export default function App() {
   return (
@@ -35,7 +38,8 @@ export default function App() {
       >
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/planning" element={<EnConstruction titre="Planning" />} />
-        <Route path="/admin/reservations" element={<EnConstruction titre="Réservations" />} />
+        <Route path="/admin/reservations" element={<ProtectedRoute roles={ROLES_RESERVATIONS}><Reservations /></ProtectedRoute>} />
+        <Route path="/admin/reservations/nouvelle" element={<ProtectedRoute roles={ROLES_CLIENTS}><NouvelleReservation /></ProtectedRoute>} />
         <Route path="/admin/studios" element={<ProtectedRoute roles={['admin', 'gerant']}><Studios /></ProtectedRoute>} />
         <Route path="/admin/clients" element={<ProtectedRoute roles={ROLES_CLIENTS}><Clients /></ProtectedRoute>} />
         <Route path="/admin/clients/:id" element={<ProtectedRoute roles={ROLES_CLIENTS}><ClientFiche /></ProtectedRoute>} />

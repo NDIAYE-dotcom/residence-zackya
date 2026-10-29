@@ -86,3 +86,10 @@ export async function supprimerFichiersPhotos(urls) {
   const chemins = urls.map(cheminPhoto).filter(Boolean);
   if (chemins.length) await supabase.storage.from(BUCKET).remove(chemins);
 }
+
+// Liste courte (filtres, listes déroulantes)
+export async function listerStudiosResume() {
+  const { data, error } = await supabase.from('studios').select('id, code, nom').order('code');
+  if (error) throw error;
+  return data;
+}

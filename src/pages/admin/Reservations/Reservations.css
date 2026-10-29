@@ -1,0 +1,80 @@
+.resas__entete {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.resas__entete h1 { margin: 0; color: var(--bleu); font-size: 1.6rem; }
+.resas__entete p { margin: 4px 0 0; color: var(--texte-doux); font-size: .9rem; }
+.resas__entete .btn { text-decoration: none; }
+
+/* ---- Filtres ---- */
+.resas__filtres {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 14px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px;
+}
+.resas__filtres input, .resas__filtres select {
+  padding: 10px 12px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+  background: var(--blanc); outline: none; font-size: .9rem;
+}
+.resas__filtres input:focus, .resas__filtres select:focus { border-color: var(--bleu); }
+.resas__recherche { width: 100%; }
+.resas__selects { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; }
+
+.resas__periode { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.resas__periode label { display: flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--texte-doux); }
+.resas__periode input { padding: 7px 10px; }
+.resas__puce {
+  padding: 7px 13px; border-radius: 999px; border: 1.5px solid var(--bordure);
+  background: var(--blanc); font-size: .82rem; font-weight: 600; color: var(--texte-doux);
+}
+.resas__puce--active { background: var(--bleu); border-color: var(--bleu); color: var(--blanc); }
+.resas__effacer { margin-left: auto; background: none; border: none; color: var(--rouge); font-weight: 600; font-size: .85rem; }
+
+.resas__etat {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 36px 24px; text-align: center; color: var(--texte-doux);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.resas__etat p { margin: 0; }
+.resas__etat .btn { text-decoration: none; }
+.resas__etat--erreur { color: var(--rouge); }
+
+/* ---- Tableau ---- */
+.resas__tableau { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); overflow: hidden; }
+.resas__ligne {
+  display: grid; grid-template-columns: 1.1fr 1.4fr .8fr 1.5fr 1fr 1fr; align-items: center; gap: 12px;
+  padding: 12px 18px; border-bottom: 1px solid var(--bordure); font-size: .88rem;
+}
+.resas__ligne:last-child { border-bottom: none; }
+.resas__ligne--titre {
+  background: var(--fond); font-size: .74rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--texte-doux); padding-top: 10px; padding-bottom: 10px;
+}
+.resas__ligne--nouvelle { background: var(--succes-clair); animation: resas-nouvelle 2.5s ease-out; }
+.resas__ligne--close { opacity: .6; }
+
+.resas__ligne > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.resas__ligne small { color: var(--texte-doux); font-size: .76rem; }
+.resas__ref strong { font-family: monospace; font-size: .86rem; color: var(--bleu); }
+.resas__client a { font-weight: 600; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.resas__client a:hover { text-decoration: underline; }
+.resas__dates span { white-space: nowrap; }
+.resas__montant { text-align: right; align-items: flex-end; }
+.resas__montant strong { color: var(--texte); }
+.resas__ligne .resas__reste { color: var(--rouge); font-weight: 600; }
+.resas__ligne .resas__solde { color: var(--succes); font-weight: 600; }
+
+.resas__plus { display: flex; justify-content: center; margin-top: 16px; }
+
+@keyframes resas-nouvelle { from { box-shadow: inset 4px 0 0 var(--succes); } to { box-shadow: inset 4px 0 0 transparent; } }
+
+@media (max-width: 1000px) {
+  .resas__ligne--titre { display: none; }
+  .resas__ligne { grid-template-columns: 1fr auto; gap: 8px 12px; padding: 14px 16px; }
+  .resas__client, .resas__dates { grid-column: 1 / -1; }
+  .resas__ligne > .resas__studio { flex-direction: row; gap: 8px; align-items: baseline; }
+}
+@media (max-width: 600px) {
+  .resas__selects { grid-template-columns: 1fr; }
+  .resas__entete .btn { width: 100%; }
+  .resas__effacer { margin-left: 0; }
+}

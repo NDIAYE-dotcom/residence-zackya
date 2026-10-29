@@ -1,0 +1,32 @@
+.edates h2 { margin: 0 0 12px; font-size: 1.05rem; }
+
+.edates__formules { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 22px; }
+.edates__formule {
+  padding: 12px 6px; border-radius: var(--radius-sm); border: 1.5px solid var(--bordure);
+  background: var(--blanc); font-weight: 600; font-size: .86rem; color: var(--texte);
+  transition: border-color .15s, background .15s;
+}
+.edates__formule:hover { border-color: var(--bleu); }
+.edates__formule--choisie { background: var(--bleu); border-color: var(--bleu); color: var(--blanc); }
+
+.edates__grille { display: grid; grid-template-columns: 1.3fr 1fr 1.3fr; gap: 14px; align-items: end; }
+.edates__grille label small { font-weight: 400; }
+
+.edates__quantite { display: flex; align-items: stretch; }
+.edates__quantite button {
+  width: 44px; border: 1.5px solid var(--bordure); background: var(--fond);
+  font-size: 1.2rem; font-weight: 700; color: var(--bleu);
+}
+.edates__quantite button:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); border-right: none; }
+.edates__quantite button:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; border-left: none; }
+.edates__quantite button:disabled { color: var(--texte-doux); cursor: not-allowed; }
+.edates__quantite input { width: 100%; min-width: 0; text-align: center; font-weight: 700; border-radius: 0; }
+
+.edates__aide { margin: 14px 0 0; font-size: .86rem; color: var(--texte-doux); line-height: 1.5; }
+.edates__aide strong { color: var(--bleu); }
+.edates__erreur { margin: 10px 0 0; color: var(--rouge); font-weight: 600; font-size: .88rem; }
+
+@media (max-width: 760px) {
+  .edates__formules { grid-template-columns: repeat(3, 1fr); }
+  .edates__grille { grid-template-columns: 1fr; }
+}
