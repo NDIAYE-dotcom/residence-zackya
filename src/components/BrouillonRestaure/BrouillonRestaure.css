@@ -1,0 +1,10 @@
+.brouillon {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 10px 14px; margin-bottom: 14px; border-radius: var(--radius-sm);
+  background: var(--alerte-clair); border-left: 4px solid var(--alerte);
+  font-size: .86rem; color: var(--texte);
+}
+.brouillon button {
+  background: none; border: none; padding: 0;
+  color: var(--rouge); font-weight: 600; font-size: .84rem; text-decoration: underline;
+}

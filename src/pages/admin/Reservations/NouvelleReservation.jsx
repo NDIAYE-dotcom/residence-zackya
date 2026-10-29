@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../../../components/Toast/Toast.jsx';
+import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
+import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { lireParametres } from '../../../services/parametres.js';
 import { creerReservation } from '../../../services/reservations.js';
 import { creerClient, trouverParTelephone } from '../../../services/clients.js';
@@ -21,6 +23,17 @@ const DETAILS_INITIAUX = {
   listeNoireAcceptee: false,
 };
 
+// Tout ce que l'employé a saisi (gardé en brouillon jusqu'à la création)
+const SAISIE_INITIALE = {
+  etape: 1,
+  sejour: null, // { formule, debut, fin, quantite } — null = séjour proposé par défaut
+  studio: null,
+  client: null, // client existant
+  modeClient: 'existant', // 'existant' | 'nouveau'
+  nouveauClient: { full_name: '', phone: '', nationalite: 'Sénégalaise' },
+  details: DETAILS_INITIAUX,
+};
+
 const entier = (v) => (v === '' || v == null ? 0 : Number(v));
 
 /**
@@ -31,27 +44,34 @@ export default function NouvelleReservation() {
   const navigate = useNavigate();
   const toast = useToast();
   const [params, setParams] = useState(null);
-  const [etape, setEtape] = useState(1);
-  const [sejour, setSejour] = useState(null); // { formule, debut, fin, quantite } (champs datetime-local)
-  const [studio, setStudio] = useState(null);
-  const [client, setClient] = useState(null); // client existant
-  const [nouveauClient, setNouveauClient] = useState({ full_name: '', phone: '', nationalite: 'Sénégalaise' });
-  const [modeClient, setModeClient] = useState('existant'); // 'existant' | 'nouveau'
-  const [details, setDetails] = useState(DETAILS_INITIAUX);
+  const [sejourParDefaut, setSejourParDefaut] = useState(null);
+  const [saisie, setSaisie, brouillon] = useBrouillon('nouvelle-reservation', SAISIE_INITIALE);
   const [envoi, setEnvoi] = useState(false);
+
+  const { etape, studio, client, modeClient, nouveauClient, details } = saisie;
+  const sejour = saisie.sejour ?? sejourParDefaut;
+
+  // Setter d'un champ de la saisie (accepte une valeur ou une fonction, comme useState)
+  const champ = (nom) => (v) => setSaisie((s) => ({ ...s, [nom]: typeof v === 'function' ? v(s[nom]) : v }));
+  const setEtape = champ('etape');
+  const setStudio = champ('studio');
+  const setClient = champ('client');
+  const setModeClient = champ('modeClient');
+  const setNouveauClient = champ('nouveauClient');
+  const setDetails = champ('details');
 
   // Paramètres (horaires de nuitée, check-in/out, % d'acompte) puis séjour proposé
   useEffect(() => {
     const demarrer = (p) => {
       setParams(p);
       const debut = debutParDefaut('nuitee', p);
-      setSejour({ formule: 'nuitee', quantite: 1, debut: versChampDate(debut), fin: versChampDate(calculerFin('nuitee', debut, 1, p)) });
+      setSejourParDefaut({ formule: 'nuitee', quantite: 1, debut: versChampDate(debut), fin: versChampDate(calculerFin('nuitee', debut, 1, p)) });
     };
     lireParametres().then(demarrer).catch(() => demarrer({}));
   }, []);
 
   // Changer les dates annule le studio choisi (sa disponibilité n'est plus garantie)
-  const changerSejour = (s) => { setSejour(s); setStudio(null); };
+  const changerSejour = (s) => setSaisie((x) => ({ ...x, sejour: s, studio: null }));
 
   const montant = studio?.prix ?? 0;
   const remise = entier(details.remise);
@@ -103,11 +123,12 @@ export default function NouvelleReservation() {
         remise, caution: entier(details.caution), notes: details.notes,
         acompte, mode: details.mode, referenceTransaction: details.referenceTransaction,
       });
+      brouillon.marquerEnregistre();
       toast.succes(`Réservation ${res.reference} créée.`);
       navigate('/admin/reservations', { state: { nouvelle: res.reference } });
     } catch (err) {
       toast.erreur(messageErreur(err));
-      if (err.code === '23P01') { setStudio(null); setEtape(2); } // créneau pris entre-temps
+      if (err.code === '23P01') setSaisie((s) => ({ ...s, studio: null, etape: 2 })); // créneau pris entre-temps
     } finally {
       setEnvoi(false);
     }
@@ -119,6 +140,7 @@ export default function NouvelleReservation() {
     <div className="nresa">
       <Link to="/admin/reservations" className="nresa__retour">← Réservations</Link>
       <h1>Nouvelle réservation</h1>
+      <BrouillonRestaure visible={brouillon.restaure} onEffacer={brouillon.abandonner} libelle="Recommencer à zéro" />
 
       <ol className="nresa__etapes">
         {ETAPES.map((libelle, i) => (

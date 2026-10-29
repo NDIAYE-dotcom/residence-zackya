@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Modal from '../../../components/Modal/Modal.jsx';
 import { useToast } from '../../../components/Toast/Toast.jsx';
+import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
+import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { creerEmploye, modifierEmploye } from '../../../services/personnel.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { ROLES_STAFF, DESCRIPTIONS_ROLES } from '../../../lib/format.js';
@@ -16,14 +18,15 @@ import './EmployeModal.css';
 export default function EmployeModal({ employe, onFermer, onEnregistre }) {
   const toast = useToast();
   const creation = !employe;
-  const [form, setForm] = useState({
+  // Brouillon SANS le mot de passe (jamais stocké dans le navigateur)
+  const [form, setForm, brouillon] = useBrouillon(creation ? 'employe:nouveau' : `employe:${employe.id}`, () => ({
     full_name: employe?.full_name ?? '',
     email: '',
     phone: employe?.phone ? formatTelephone(employe.phone) : '',
     role: 'receptionniste',
-    password: creation ? genererMotDePasse() : '',
     actif: true,
-  });
+  }));
+  const [password, setPassword] = useState(() => (creation ? genererMotDePasse() : ''));
   const [voirMdp, setVoirMdp] = useState(true);
   const [erreurs, setErreurs] = useState({});
   const [envoi, setEnvoi] = useState(false);
@@ -38,7 +41,7 @@ export default function EmployeModal({ employe, onFermer, onEnregistre }) {
     if (form.phone.trim() && !normaliserTelephone(form.phone)) e.phone = 'Numéro sénégalais invalide (ex : 77 123 45 67).';
     if (creation) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = 'Adresse email invalide.';
-      if (form.password.length < 8) e.password = 'Au moins 8 caractères.';
+      if (password.length < 8) e.password = 'Au moins 8 caractères.';
     }
     setErreurs(e);
     return !Object.keys(e).length;
@@ -52,11 +55,13 @@ export default function EmployeModal({ employe, onFermer, onEnregistre }) {
     try {
       if (creation) {
         const email = form.email.trim().toLowerCase();
-        await creerEmploye({ email, password: form.password, full_name: form.full_name.trim(), phone, role: form.role, actif: form.actif });
-        setAcces({ nom: form.full_name.trim(), email, password: form.password, actif: form.actif });
+        await creerEmploye({ email, password, full_name: form.full_name.trim(), phone, role: form.role, actif: form.actif });
+        brouillon.marquerEnregistre();
+        setAcces({ nom: form.full_name.trim(), email, password, actif: form.actif });
         onEnregistre(null);
       } else {
         await modifierEmploye(employe.id, { full_name: form.full_name.trim(), phone });
+        brouillon.marquerEnregistre();
         toast.succes('Informations enregistrées.');
         onEnregistre(employe);
         onFermer();
@@ -83,6 +88,7 @@ export default function EmployeModal({ employe, onFermer, onEnregistre }) {
   return (
     <Modal ouvert titre={creation ? 'Nouvel employé' : `Modifier ${employe.full_name}`} onFermer={envoi ? undefined : onFermer}>
       <form className="employe-modal" onSubmit={enregistrer} noValidate>
+        <BrouillonRestaure visible={brouillon.restaure} onEffacer={brouillon.abandonner} />
         <div className={champ('full_name')}>
           <label htmlFor="emp-nom">Nom complet *</label>
           <input id="emp-nom" value={form.full_name} onChange={maj('full_name')} placeholder="Awa Diatta" autoFocus />
@@ -119,12 +125,12 @@ export default function EmployeModal({ employe, onFermer, onEnregistre }) {
               <label htmlFor="emp-mdp">Mot de passe provisoire *</label>
               <div className="employe-modal__mdp">
                 <input id="emp-mdp" type={voirMdp ? 'text' : 'password'} autoComplete="new-password"
-                  value={form.password} onChange={maj('password')} />
+                  value={password} onChange={(e) => setPassword(e.target.value)} />
                 <button type="button" className="btn btn-contour" onClick={() => setVoirMdp((v) => !v)}>
                   {voirMdp ? 'Masquer' : 'Afficher'}
                 </button>
                 <button type="button" className="btn btn-contour"
-                  onClick={() => { setForm((f) => ({ ...f, password: genererMotDePasse() })); setVoirMdp(true); }}>
+                  onClick={() => { setPassword(genererMotDePasse()); setVoirMdp(true); }}>
                   Générer
                 </button>
               </div>
@@ -142,7 +148,7 @@ export default function EmployeModal({ employe, onFermer, onEnregistre }) {
         )}
 
         <div className="employe-modal__actions">
-          <button type="button" className="btn btn-contour" onClick={onFermer} disabled={envoi}>Annuler</button>
+          <button type="button" className="btn btn-contour" onClick={() => { brouillon.abandonner(); onFermer(); }} disabled={envoi}>Annuler</button>
           <button type="submit" className="btn btn-rouge" disabled={envoi}>
             {envoi ? 'Enregistrement…' : creation ? 'Créer le compte' : 'Enregistrer'}
           </button>

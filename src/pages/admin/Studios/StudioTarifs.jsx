@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useToast } from '../../../components/Toast/Toast.jsx';
+import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
+import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { listerTarifs, enregistrerTarifs } from '../../../services/studios.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { FORMULES, DUREES_FORMULE, formatFCFA } from '../../../lib/format.js';
@@ -23,20 +25,26 @@ const versGrille = (tarifs) => grilleVide().map((l) => {
 // Onglet Tarifs : un prix par formule, activer/désactiver, copier la grille d'un autre studio
 export default function StudioTarifs({ studio, studios, setOccupe, onEnregistre }) {
   const toast = useToast();
-  const [lignes, setLignes] = useState(grilleVide);
+  const [lignes, setLignes, brouillon] = useBrouillon(`tarifs:${studio.id}`, grilleVide);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState('');
   const [envoi, setEnvoi] = useState(false);
   const [info, setInfo] = useState('');
+  const [essai, setEssai] = useState(0); // recharge les tarifs enregistrés
 
   useEffect(() => {
     let annule = false;
     listerTarifs(studio.id)
-      .then((t) => { if (!annule) setLignes(versGrille(t)); })
+      .then((t) => {
+        if (annule || brouillon.restaure) return; // un brouillon non enregistré garde la priorité
+        const grille = versGrille(t);
+        brouillon.marquerEnregistre(grille);
+        setLignes(grille);
+      })
       .catch((err) => { if (!annule) setErreur(messageErreur(err, 'Impossible de charger les tarifs.')); })
       .finally(() => { if (!annule) setChargement(false); });
     return () => { annule = true; };
-  }, [studio.id]);
+  }, [studio.id, essai]);
 
   const maj = (formule, champ, valeur) =>
     setLignes((ls) => ls.map((l) => (l.formule === formule ? { ...l, [champ]: valeur } : l)));
@@ -74,7 +82,9 @@ export default function StudioTarifs({ studio, studios, setOccupe, onEnregistre 
     setOccupe(true);
     try {
       await enregistrerTarifs(studio.id, aEnvoyer);
-      setLignes((ls) => ls.map((l) => (aEnvoyer.some((a) => a.formule === l.formule) ? { ...l, existe: true } : l)));
+      const enregistrees = lignes.map((l) => (aEnvoyer.some((a) => a.formule === l.formule) ? { ...l, existe: true } : l));
+      brouillon.marquerEnregistre(enregistrees);
+      setLignes(enregistrees);
       setInfo('');
       toast.succes(`Tarifs de ${studio.code} enregistrés.`);
       onEnregistre();
@@ -91,6 +101,8 @@ export default function StudioTarifs({ studio, studios, setOccupe, onEnregistre 
 
   return (
     <div className="tarifs">
+      <BrouillonRestaure visible={brouillon.restaure} libelle="Revenir aux tarifs enregistrés"
+        onEffacer={() => { brouillon.abandonner(); setChargement(true); setEssai((n) => n + 1); }} />
       <p className="tarifs__aide">
         Prix en FCFA pour <strong>une unité</strong> de chaque formule. Le prix final est calculé automatiquement
         selon la durée du séjour. Une formule vide ou désactivée n’est pas proposée aux clients.

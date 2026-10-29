@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from '../../../components/Modal/Modal.jsx';
 import { useToast } from '../../../components/Toast/Toast.jsx';
+import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
+import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { creerClient, modifierClient, trouverParTelephone } from '../../../services/clients.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { PIECES_IDENTITE, NATIONALITES } from '../../../lib/format.js';
@@ -12,7 +14,7 @@ import './ClientModal.css';
 export default function ClientModal({ client, onFermer, onEnregistre }) {
   const toast = useToast();
   const creation = !client;
-  const [form, setForm] = useState({
+  const [form, setForm, brouillon] = useBrouillon(creation ? 'client:nouveau' : `client:${client.id}`, () => ({
     full_name: client?.full_name ?? '',
     phone: client?.phone ? formatTelephone(client.phone) : '',
     email: client?.email ?? '',
@@ -20,7 +22,7 @@ export default function ClientModal({ client, onFermer, onEnregistre }) {
     piece_type: client?.piece_type ?? '',
     piece_numero: client?.piece_numero ?? '',
     notes: client?.notes ?? '',
-  });
+  }));
   const [erreurs, setErreurs] = useState({});
   const [doublon, setDoublon] = useState(null); // client existant avec le même numéro
   const [envoi, setEnvoi] = useState(false);
@@ -60,6 +62,7 @@ export default function ClientModal({ client, onFermer, onEnregistre }) {
         notes: form.notes.trim() || null,
       };
       const enregistre = creation ? await creerClient(valeurs) : await modifierClient(client.id, valeurs);
+      brouillon.marquerEnregistre();
       toast.succes(creation ? `Client ${enregistre.full_name} ajouté.` : 'Fiche client enregistrée.');
       onEnregistre(enregistre);
       onFermer();
@@ -75,6 +78,7 @@ export default function ClientModal({ client, onFermer, onEnregistre }) {
   return (
     <Modal ouvert titre={creation ? 'Nouveau client' : `Modifier ${client.full_name}`} onFermer={envoi ? undefined : onFermer}>
       <form className="client-modal" onSubmit={enregistrer} noValidate>
+        <BrouillonRestaure visible={brouillon.restaure} onEffacer={brouillon.abandonner} />
         <div className={champ('full_name')}>
           <label htmlFor="cl-nom">Nom complet *</label>
           <input id="cl-nom" value={form.full_name} onChange={maj('full_name')} placeholder="Fatou Sané" autoFocus />
@@ -133,7 +137,7 @@ export default function ClientModal({ client, onFermer, onEnregistre }) {
         </div>
 
         <div className="client-modal__actions">
-          <button type="button" className="btn btn-contour" onClick={onFermer} disabled={envoi}>Annuler</button>
+          <button type="button" className="btn btn-contour" onClick={() => { brouillon.abandonner(); onFermer(); }} disabled={envoi}>Annuler</button>
           <button type="submit" className="btn btn-rouge" disabled={envoi}>
             {envoi ? 'Enregistrement…' : creation ? 'Ajouter le client' : 'Enregistrer'}
           </button>

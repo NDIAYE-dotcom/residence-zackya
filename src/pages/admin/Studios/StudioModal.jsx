@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Modal from '../../../components/Modal/Modal.jsx';
 import { useToast } from '../../../components/Toast/Toast.jsx';
+import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
+import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { creerStudio, modifierStudio } from '../../../services/studios.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { STATUTS_STUDIO } from '../../../lib/format.js';
@@ -42,7 +44,7 @@ export default function StudioModal({ studio: studioInitial, ongletInitial, cate
   const toast = useToast();
   const [studio, setStudio] = useState(studioInitial);
   const [onglet, setOnglet] = useState(studioInitial ? ongletInitial : 'infos');
-  const [form, setForm] = useState(() => versFormulaire(studioInitial));
+  const [form, setForm, brouillon] = useBrouillon(studio ? `studio:${studio.id}` : 'studio:nouveau', () => versFormulaire(studioInitial));
   const [autre, setAutre] = useState('');
   const [erreurs, setErreurs] = useState({});
   const [envoi, setEnvoi] = useState(false);
@@ -95,10 +97,13 @@ export default function StudioModal({ studio: studioInitial, ongletInitial, cate
     };
     try {
       if (studio) {
-        setStudio(await modifierStudio(studio.id, valeurs));
+        const maj = await modifierStudio(studio.id, valeurs);
+        brouillon.marquerEnregistre();
+        setStudio(maj);
         toast.succes('Informations enregistrées.');
       } else {
         const cree = await creerStudio(valeurs);
+        brouillon.marquerEnregistre(); // efface « studio:nouveau » avant de passer à la clé du studio créé
         setStudio(cree);
         setOnglet('tarifs');
         toast.succes(`Studio ${cree.code} créé. Ajoutez maintenant ses tarifs.`);
@@ -140,6 +145,7 @@ export default function StudioModal({ studio: studioInitial, ongletInitial, cate
 
       {/* ----- Onglet Informations ----- */}
       <form className="studio-modal__form" onSubmit={enregistrer} noValidate hidden={onglet !== 'infos'}>
+        <BrouillonRestaure visible={brouillon.restaure} onEffacer={brouillon.abandonner} />
         <div className="studio-modal__ligne studio-modal__ligne--2">
           <div className={champ('code')}>
             <label htmlFor="st-code">Code *</label>

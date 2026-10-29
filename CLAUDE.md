@@ -1907,3 +1907,8 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   RPC `creer_reservation_staff(...)` : prix recalculé en base, résa + acompte + journal en une transaction, renvoie `res_id, res_reference, res_montant`.
   `lib/dates.js` : `debutParDefaut`, `calculerFin` (horaires lus dans `parametres` via `services/parametres.js`, mis en cache → `viderCacheParametres()` à l'étape 12).
   La liste n'a pas encore de lien vers la fiche → **étape 5 : rendre les lignes cliquables vers `/admin/reservations/:id`** (+ historique de la fiche client).
+- **2026-10-29 · Brouillons de formulaires** (demande d'Ousmane : la saisie disparaissait en quittant / actualisant la page) :
+  hook `src/hooks/useBrouillon.js` (= useState persistant en localStorage, clé par employé, 24 h, rien de stocké tant que la valeur = valeur de départ)
+  → `[valeur, setValeur, { restaure, marquerEnregistre, abandonner }]` + bandeau `components/BrouillonRestaure`. Effacés à la déconnexion (`effacerTousLesBrouillons` dans signOut).
+  Appliqué à : Nouvelle réservation (étape incluse), ClientModal, StudioModal (infos), StudioTarifs, EmployeModal (**jamais le mot de passe**).
+  Règle : « Annuler » = abandonne le brouillon ; ×, Échap, changement de page, actualisation = brouillon conservé. **À utiliser pour tous les futurs formulaires.**

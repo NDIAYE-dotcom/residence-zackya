@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase.js';
+import { effacerTousLesBrouillons } from '../lib/brouillons.js';
 
 const AuthContext = createContext(null);
 
@@ -42,7 +43,10 @@ export function AuthProvider({ children }) {
     return p;
   };
 
-  const signOut = () => supabase.auth.signOut();
+  const signOut = () => {
+    effacerTousLesBrouillons(); // pas de données clients laissées pour le collègue suivant
+    return supabase.auth.signOut();
+  };
 
   // Après modification de son propre profil (nom, téléphone…)
   const rechargerProfil = () => chargerProfil(session?.user);
