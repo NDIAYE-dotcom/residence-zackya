@@ -1851,7 +1851,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 1 Studios & tarifs
 - [x] 2 Personnel & rôles
 - [x] 3 Clients
-- [ ] 4 Réservations
+- [x] 4 Réservations
 - [ ] 5 Fiche réservation
 - [ ] 6 Planning
 - [ ] 7 Caisse
@@ -1902,3 +1902,8 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-10-28 · Étape 3 Clients** : testée et validée. Migration `004_clients.sql` exécutée (`liste_noire_motif`, `liste_noire_le`, vue `v_clients` avec nb_reservations / nb_sejours / dernier_sejour / total_depense).
   Téléphones clients **normalisés** `+221XXXXXXXXX` (ou international `+33…`) via `normaliserTelephoneClient()` — à utiliser PARTOUT (résa admin, site public avant `creer_reservation_publique`, `suivre_reservation`), sinon doublons.
   Fiche `/admin/clients/:id` ; historique sans lien pour l'instant → **ajouter le lien vers `/admin/reservations/:id` à l'étape 5**. `lienWhatsApp(tel, message)` dans lib/telephone.js pour l'étape 5.
+- **2026-10-29 · Étape 4 Réservations** : testée et validée (ZQ-261029-0001 créée, double réservation bloquée, dashboard OK). Migration `005_reservations.sql` exécutée.
+  RPC `studios_libres_staff(formule, debut, fin, p_exclure)` (security invoker, inclut les non publiés) → **réutiliser `p_exclure` pour Prolonger / Changer de studio à l'étape 5**.
+  RPC `creer_reservation_staff(...)` : prix recalculé en base, résa + acompte + journal en une transaction, renvoie `res_id, res_reference, res_montant`.
+  `lib/dates.js` : `debutParDefaut`, `calculerFin` (horaires lus dans `parametres` via `services/parametres.js`, mis en cache → `viderCacheParametres()` à l'étape 12).
+  La liste n'a pas encore de lien vers la fiche → **étape 5 : rendre les lignes cliquables vers `/admin/reservations/:id`** (+ historique de la fiche client).
