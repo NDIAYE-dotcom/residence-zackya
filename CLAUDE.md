@@ -1863,7 +1863,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 13 Pages studios
 - [x] 14 Tunnel de réservation
 - [x] 15 Notifications (alertes admin ✓ — email client reporté à l'étape 18)
-- [ ] 16 PayDunya
+- [ ] 16 PayDunya — ⏸ en attente de l'accord du propriétaire (compte marchand à son nom, RCCM)
 - [ ] 17 Qualité
 - [ ] 18 Déploiement
 
@@ -1970,3 +1970,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-10-31 · Suivi par référence seule** (demande d'Ousmane) : migration `017_statut_par_reference.sql` → RPC `statut_reservation_public(reference)` (anon) qui ne renvoie **aucune donnée personnelle** (statut, studio, formule, dates).
   Les montants restent derrière `suivre_reservation` (référence + téléphone, téléphone mémorisé en sessionStorage sur l'appareil qui a réservé).
   `/suivi` : un seul champ, recherche automatique dès qu'une référence complète est saisie (`lib/reference.js` `normaliserReference`), actualisation auto 15 s ; encadré « Déjà réservé ? » sur l'accueil.
+- **2026-10-31 · Suivi par référence testé** (migration 017 exécutée).
+- **2026-10-31 · Étape 16 PayDunya REPORTÉE** : Ousmane doit d'abord obtenir l'accord du propriétaire (compte marchand PayDunya au nom de la résidence + RCCM).
+  Déjà prêt : mode `paydunya` dans `mode_paiement`, trigger caisse qui laisse passer `paydunya` un jour clôturé. Prévoir : Edge Functions `paydunya-checkout` + `paydunya-webhook` (IPN), secrets PayDunya, bouton « Payer l'acompte » sur /confirmation et /suivi.
+  → On passe à l'étape 17 (Qualité) sur « continue ».
