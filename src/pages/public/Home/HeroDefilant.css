@@ -17,12 +17,12 @@
 .hero__voile {
   position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(90deg, var(--bleu-fonce) 0%, var(--bleu-fonce) 26%, transparent 76%),
-    linear-gradient(0deg, var(--bleu-fonce) 0%, transparent 40%);
-  opacity: .86;
+    linear-gradient(90deg, var(--bleu-fonce) 0%, var(--bleu-fonce) 10%, transparent 60%),
+    linear-gradient(0deg, var(--bleu-fonce) 0%, transparent 28%);
+  opacity: .8;
 }
 
-.hero__contenu { position: relative; padding: 90px 6vw 120px; max-width: 760px; display: flex; flex-direction: column; gap: 18px; text-shadow: 0 2px 14px var(--voile); }
+.hero__contenu { position: relative; padding: 90px 6vw 120px; max-width: 760px; display: flex; flex-direction: column; gap: 18px; text-shadow: 0 1px 3px var(--voile), 0 2px 18px var(--voile); }
 .hero__surtitre {
   align-self: flex-start; padding: 6px 14px; border-radius: 999px;
   background: var(--rouge); font-size: .8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
@@ -53,7 +53,7 @@
   position: relative; overflow: hidden; width: 26px; height: 5px; padding: 0; border: none; border-radius: 999px;
   background: var(--blanc); opacity: .45; transition: width .3s, opacity .3s;
 }
-.hero__points .hero__point--actif { width: 56px; opacity: 1; background: var(--voile); }
+.hero__points .hero__point--actif { width: 56px; opacity: 1; background: transparent; box-shadow: inset 0 0 0 1px var(--blanc); }
 .hero__points span { position: absolute; inset: 0; width: 0; background: var(--blanc); animation: hero-progression linear forwards; }
 .hero--arrete .hero__points span { animation-play-state: paused; }
 .hero__pause {
@@ -73,11 +73,21 @@
   .hero__points span { display: none; }
 }
 
+/* Téléphone : la photo reste la vedette — texte compact en bas, haut de l'image dégagé */
 @media (max-width: 700px) {
-  .hero { min-height: 74vh; align-items: flex-end; }
-  .hero__voile { background: linear-gradient(0deg, var(--bleu-fonce) 0%, var(--bleu-fonce) 38%, transparent 96%); opacity: .9; }
-  .hero__contenu { padding: 80px 6vw 120px; }
+  .hero { min-height: 84vh; min-height: 84svh; align-items: flex-end; }
+  .hero__voile { background: linear-gradient(0deg, var(--bleu-fonce) 0%, var(--bleu-fonce) 20%, transparent 58%); opacity: .88; }
+  .hero__contenu { padding: 0 5vw 86px; gap: 10px; }
+  .hero__surtitre { padding: 4px 11px; font-size: .7rem; }
+  .hero h1 { font-size: 2rem; }
+  .hero h1 em { margin-top: 4px; }
+  .hero__legende { font-size: .92rem; }
+  .hero__legende span { display: none; } /* seulement le titre de la photo */
+  .hero__boutons { gap: 8px; margin-top: 2px; }
+  .hero__boutons .btn { flex: 1; padding: 11px 10px; font-size: .88rem; }
   .hero__fleche { display: none; } /* on glisse au doigt */
-  .hero__boutons .btn { flex: 1; padding: 13px 14px; }
-  .hero__commandes { bottom: 82px; }
+  .hero__commandes { top: 14px; right: 4vw; left: auto; bottom: auto; padding: 6px 10px; border-radius: 999px; background: var(--voile); }
+  .hero__points button { width: 16px; }
+  .hero__points .hero__point--actif { width: 34px; }
+  .hero__pause { width: 24px; height: 24px; }
 }

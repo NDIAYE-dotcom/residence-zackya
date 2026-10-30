@@ -73,7 +73,7 @@ export default function HeroDefilant({ children }) {
         <span className="hero__surtitre">Ziguinchor · Goumel</span>
         <h1>Studios meublés<br /><em>à l’heure, à la nuit ou au mois</em></h1>
         <p key={index} className="hero__legende" aria-live="polite">
-          <strong>{diapo.titre}.</strong> {diapo.texte}
+          <strong>{diapo.titre}.</strong> <span>{diapo.texte}</span>
         </p>
         <div className="hero__boutons">{children}</div>
       </div>
