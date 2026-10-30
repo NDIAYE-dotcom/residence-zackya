@@ -1963,3 +1963,6 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   `suivre_reservation` (drop/recreate) renvoie aussi `studio_code, studio_id, remise, total_paye, nb_personnes`.
   Pages `/reserver` (vérif dispo + prix en direct, honeypot `site_web`, brouillon « public »), `/confirmation/:ref` (téléphone gardé en sessionStorage `zaquia:suivi:REF`), `/suivi`.
   Le visiteur n'a pas le temps réel (RLS) → `hooks/useActualisationAuto.js` (toutes les 15 s + retour sur l'onglet) sur Suivi et Confirmation.
+- **2026-10-31 · Étape 15 Notifications (en cours)** : alertes admin en temps réel (`hooks/useAlertesReservations.js` + `components/AlertesReservations` + cloche/pastille dans AdminLayout, carillon `lib/son.js`, notification navigateur si onglet caché).
+  Edge Function `supabase/functions/notifier/index.js` écrite (email de confirmation via Resend + emplacement WhatsApp Business API), appelée par « Confirmer » dans la fiche (échec silencieux si non déployée).
+  ⏳ **Décision d'Ousmane : Resend attendra l'achat du nom de domaine.** `notifier` N'EST PAS déployée. **À faire à l'étape 18** : compte Resend + vérification du domaine (DNS) → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer `notifier` (Verify JWT OFF).
