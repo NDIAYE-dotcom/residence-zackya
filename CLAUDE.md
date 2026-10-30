@@ -1857,7 +1857,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 7 Caisse
 - [x] 8 Dépenses
 - [x] 9 Rapports
-- [ ] 10 Ménage
+- [x] 10 Ménage
 - [ ] 11 Maintenance & inventaire
 - [ ] 12 Paramètres
 - [ ] 13 Pages studios
@@ -1940,3 +1940,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   🐞 Leçon : `LEAST`/`GREATEST` ignorent les NULL → après un LEFT JOIN, toujours `sum(...) filter (where r.id is not null)` (bug occupation 100 % corrigé en 011).
   `recharts` chargé à la demande (`React.lazy`, GraphiqueEvolution) ; couleurs graphiques `--graphe-1` (#1f4fa8, bleu éclairci) / `--graphe-2` (rouge) validées daltonisme (script dataviz) ; composant `BarresHorizontales`.
   `formatDate()` lit désormais « AAAA-MM-JJ » en heure locale (évitait un décalage d'un jour).
+- **2026-10-31 · Étape 10 Ménage** : testée et validée (commencer/terminer, studio → disponible, tâche manuelle, assignation, temps réel, rôle ménage sur téléphone).
+  Migration `012_menage.sql` exécutée : `taches_menage.commencee_le / terminee_par`, trigger `menage_termine` (disponible seulement si plus aucune tâche ouverte sur le studio),
+  vue `v_taches_menage` (avec `prochaine_arrivee`), RPC `personnel_menage()` (les non-admins ne lisent pas `profiles`), publication realtime `taches_menage`.
+  Le rôle `menage` est redirigé vers `/admin/menage` au login et après l'écran de chargement.

@@ -27,8 +27,8 @@ export default function Login() {
     setErreur(''); setInfo('');
     setChargement(true);
     try {
-      await signIn(email.trim(), password);
-      navigate('/admin/dashboard', { replace: true });
+      const p = await signIn(email.trim(), password);
+      navigate(p.role === 'menage' ? '/admin/menage' : '/admin/dashboard', { replace: true });
     } catch (err) {
       setErreur(traduireErreur(err.message));
     } finally {

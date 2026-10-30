@@ -1,0 +1,39 @@
+.menage { display: flex; flex-direction: column; gap: 14px; max-width: 980px; }
+
+.menage__entete { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.menage__entete h1 { margin: 0; color: var(--bleu); font-size: 1.6rem; }
+.menage__entete .btn { padding: 11px 18px; }
+
+.menage__direct { margin: 4px 0 0; display: flex; align-items: center; gap: 6px; font-size: .8rem; color: var(--texte-doux); }
+.menage__direct span { width: 8px; height: 8px; border-radius: 50%; background: var(--texte-doux); }
+.menage__direct--actif span { background: var(--succes); }
+.menage__direct--erreur { color: var(--alerte); font-weight: 600; }
+.menage__direct--erreur span { background: var(--alerte); }
+
+/* Filtre Mes tâches / Toutes : grandes zones tactiles */
+.menage__filtres { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; gap: 4px; border-radius: var(--radius-sm); background: var(--blanc); box-shadow: var(--ombre); }
+.menage__filtres button { padding: 12px; border: none; border-radius: 6px; background: none; font-weight: 700; font-size: .92rem; color: var(--texte-doux); }
+.menage__filtres .menage__filtre--actif { background: var(--bleu); color: var(--blanc); }
+.menage__aide { margin: -4px 0 0; color: var(--texte-doux); font-size: .8rem; }
+
+.menage__etat {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 32px 22px; text-align: center; color: var(--texte-doux);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.menage__etat p { margin: 0; line-height: 1.5; }
+.menage__etat--erreur { color: var(--rouge); }
+.menage__etat--ok strong { color: var(--succes); font-size: 1.15rem; }
+
+.menage__liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+
+.menage__terminees { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 14px 16px; }
+.menage__terminees summary { cursor: pointer; font-weight: 700; color: var(--succes); }
+.menage__terminees ul { list-style: none; margin: 10px 0 0; padding: 0; }
+.menage__terminees li { display: flex; align-items: baseline; gap: 10px; padding: 8px 0; border-top: 1px solid var(--bordure); font-size: .88rem; }
+.menage__terminees li span { flex: 1; color: var(--texte-doux); }
+.menage__terminees small { color: var(--texte-doux); }
+
+@media (max-width: 600px) {
+  .menage__liste { grid-template-columns: 1fr; }
+}

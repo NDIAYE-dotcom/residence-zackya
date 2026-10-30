@@ -37,7 +37,8 @@ export default function SplashScreen() {
   useEffect(() => {
     if (progression < 100 || loading) return;
     setSortie(true);
-    const destination = session && profile?.actif ? '/admin/dashboard' : '/admin/login';
+    const accueil = profile?.role === 'menage' ? '/admin/menage' : '/admin/dashboard'; // ménage : ses tâches d'abord
+    const destination = session && profile?.actif ? accueil : '/admin/login';
     const timer = setTimeout(() => navigate(destination, { replace: true }), 450);
     return () => clearTimeout(timer);
   }, [progression, loading, session, profile, navigate]);
