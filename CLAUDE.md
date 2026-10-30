@@ -1860,7 +1860,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 10 Ménage
 - [x] 11 Maintenance & inventaire
 - [x] 12 Paramètres
-- [ ] 13 Pages studios
+- [x] 13 Pages studios
 - [ ] 14 Tunnel de réservation
 - [ ] 15 Notifications
 - [ ] 16 PayDunya
@@ -1953,3 +1953,8 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Onglets Résidence (paramètres → `viderCacheParametres()` après enregistrement ; `whatsapp` stocké au format wa.me `221XXXXXXXXX`), Catégories (studios + dépenses : renommer/masquer/ordre/supprimer), Journal (filtres module/employé/dates, liens vers fiches).
   ⚠️ `resoudre_maintenance` écrit la catégorie en dur « Réparations / maintenance » : si elle est renommée, les nouvelles dépenses de maintenance reprendront l'ancien nom (affiché quand même dans Dépenses).
   `EnConstruction.jsx` supprimé : **les 12 modules de l'administration sont faits**. Phase 4 terminée → **prochaine : Phase 5, site public (étape 13)**.
+- **2026-10-31 · Étape 13 Pages studios** : validée. Migration `015_calendrier_public.sql` exécutée (`calendrier_studio(studio, du, au)` libre/partiel/complet, anon ; coordonnées : `telephone_fixe`, `email`, `rccm`).
+  `layouts/PublicLayout` : barre flottante **verre dépoli** (`--verre`, `--verre-bord`), logo agrandi, pied de page coordonnées complètes + RCCM ; variable `--hauteur-entete` → le diaporama de l'accueil remonte sous la barre.
+  Accueil : `HeroDefilant` (5 photos `public/hero/hero-N.jpg` + `-mobile.jpg`, fondu + zoom, pause, glisser, bouton « Voir la galerie »), recherche à cheval, bandeau d'atouts. Originaux déplacés dans `photos-originales/` (non publiés).
+  `/studios` et `/studios/:id` (`services/public.js` : `catalogueStudios`, `studioPublic` avec `.eq('tarifs.actif', true)` car le personnel connecté voit aussi les tarifs inactifs).
+  Vérification visuelle possible sans connexion : Playwright + Chrome système (scratchpad, `channel: 'chrome'`).
