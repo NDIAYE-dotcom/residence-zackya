@@ -87,7 +87,7 @@ export default function Studios() {
                   )}
                   <div className="pcarte__pied">
                     <div className="pcarte__prix">
-                      {min ? <>À partir de <strong>{formatFCFA(min.prix)}</strong> / {UNITES_FORMULE[min.formule]}</> : 'Tarifs sur demande'}
+                      <span>{min ? <>À partir de <strong>{formatFCFA(min.prix)}</strong> / {UNITES_FORMULE[min.formule]}</> : 'Tarifs sur demande'}</span>
                       {nuit && min?.formule !== 'nuitee' && <small>Nuitée : {formatFCFA(nuit.prix)}</small>}
                     </div>
                     <Link className="btn btn-primaire" to={`/studios/${s.id}`}>Voir</Link>

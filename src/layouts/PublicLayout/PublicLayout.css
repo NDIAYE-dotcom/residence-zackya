@@ -1,19 +1,33 @@
 .site { min-height: 100vh; display: flex; flex-direction: column; background: var(--blanc); }
 
-/* ---- Entête ---- */
+/* ---- Entête : barre flottante en verre dépoli ---- */
+.site { --hauteur-entete: 116px; } /* l'accueil remonte ses photos sous la barre */
 .site__entete {
   position: sticky; top: 0; z-index: 30;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 10px 6vw; background: var(--blanc); border-bottom: 1px solid var(--bordure);
+  padding: 12px 4vw; pointer-events: none; /* seule la barre est cliquable */
 }
-.site__logo img { height: 74px; display: block; margin: -6px 0; } /* logo carré avec marges : un peu plus grand */
-.site__menu { display: flex; align-items: center; gap: 26px; }
-.site__menu a { text-decoration: none; font-weight: 600; font-size: .92rem; color: var(--bleu); }
-.site__menu a:hover { color: var(--rouge); }
-.site__menu .site__lien--actif { color: var(--rouge); }
-.site__menu .site__whatsapp { color: var(--blanc); padding: 10px 18px; }
-.site__menu .site__whatsapp:hover { color: var(--blanc); }
-.site__burger { display: none; background: none; border: none; color: var(--bleu); font-size: 1.7rem; line-height: 1; padding: 6px 10px; border-radius: var(--radius-sm); }
+.site__barre {
+  position: relative; pointer-events: auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 6px 10px 6px 16px; border-radius: 20px;
+  background: var(--verre); border: 1px solid var(--verre-bord);
+  -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
+  box-shadow: var(--ombre);
+}
+.site__logo img { height: 104px; display: block; margin: -14px 0; } /* logo carré avec marges intégrées */
+.site__menu { display: flex; align-items: center; gap: 6px; }
+.site__menu a {
+  padding: 10px 14px; border-radius: 12px; text-decoration: none;
+  font-weight: 600; font-size: .92rem; color: var(--bleu); transition: background .2s, color .2s;
+}
+.site__menu a:hover { background: var(--bleu-clair); }
+.site__menu .site__lien--actif { color: var(--rouge); background: var(--rouge-clair); }
+.site__menu .site__whatsapp { margin-left: 8px; color: var(--blanc); padding: 11px 20px; border-radius: 12px; }
+.site__menu .site__whatsapp:hover { color: var(--blanc); background: var(--rouge-fonce); }
+.site__burger {
+  display: none; width: 46px; height: 46px; border: none; border-radius: 12px;
+  background: var(--bleu-clair); color: var(--bleu); font-size: 1.5rem; line-height: 1;
+}
 
 .site__contenu { flex: 1; }
 
@@ -27,15 +41,23 @@
 .site__pied .site__copyright { margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--voile); text-align: center; font-size: .8rem; }
 
 @media (max-width: 860px) {
-  .site__logo img { height: 60px; margin: -4px 0; }
+  .site { --hauteur-entete: 92px; }
+  .site__entete { padding: 8px 3vw; }
+  .site__barre { padding: 4px 6px 4px 10px; border-radius: 16px; }
+  .site__logo img { height: 82px; margin: -12px 0 -12px -4px; }
   .site__burger { display: block; }
   .site__menu { display: none; }
+  /* Menu déroulé : panneau de verre sous la barre */
   .site__menu--ouvert {
-    display: flex; flex-direction: column; align-items: stretch; gap: 0;
-    position: absolute; top: 100%; left: 0; right: 0;
-    background: var(--blanc); border-bottom: 3px solid var(--rouge); box-shadow: var(--ombre);
+    display: flex; flex-direction: column; align-items: stretch; gap: 4px;
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0; padding: 10px;
+    border-radius: 16px; background: var(--verre); border: 1px solid var(--verre-bord);
+    -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%);
+    box-shadow: var(--ombre-forte); animation: site-menu .2s ease-out;
   }
-  .site__menu--ouvert a { padding: 15px 6vw; border-top: 1px solid var(--bordure); }
-  .site__menu--ouvert .site__whatsapp { margin: 12px 6vw; border-radius: var(--radius-sm); }
+  .site__menu--ouvert a { padding: 14px 16px; font-size: 1rem; }
+  .site__menu--ouvert .site__whatsapp { margin: 6px 0 0; text-align: center; }
   .site__pied-grille { grid-template-columns: 1fr; gap: 20px; }
 }
+
+@keyframes site-menu { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }

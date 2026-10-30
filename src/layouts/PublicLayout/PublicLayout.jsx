@@ -24,7 +24,9 @@ export default function PublicLayout() {
 
   return (
     <div className="site">
+      {/* Barre flottante en verre dépoli (passe par-dessus les photos de l'accueil) */}
       <header className="site__entete">
+        <div className="site__barre">
         <Link to="/" className="site__logo" aria-label="Zaquia Résidence – accueil">
           <img src="/logo-zaquia.png" alt="Zaquia Résidence" />
         </Link>
@@ -38,6 +40,7 @@ export default function PublicLayout() {
           ))}
           {whatsapp && <a className="btn btn-rouge site__whatsapp" href={whatsapp} target="_blank" rel="noreferrer">WhatsApp</a>}
         </nav>
+        </div>
       </header>
 
       <main className="site__contenu">

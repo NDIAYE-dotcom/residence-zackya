@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import Galerie from '../../../components/Galerie/Galerie.jsx';
 import './HeroDefilant.css';
 
 // Photos de la résidence (public/hero : 1600 px ordinateur, 900 px téléphone)
@@ -10,16 +11,18 @@ const DIAPOS = [
   { n: 5, titre: 'Comme chez vous', texte: 'Posez vos valises, on s’occupe du reste.', alt: 'Salon lumineux avec tableaux africains' },
 ];
 const DUREE_MS = 6000;
+const PHOTOS_GALERIE = DIAPOS.map((d) => `/hero/hero-${d.n}.jpg`); // pleine qualité pour le plein écran
 
 /**
  * Grand diaporama de l'accueil : fondu + léger zoom, défilement automatique,
- * pause au survol, flèches, points, glisser au doigt. « children » = boutons d'action.
+ * pause au survol, flèches, points, glisser au doigt, galerie plein écran. « children » = boutons d'action.
  */
 export default function HeroDefilant({ children }) {
   const [index, setIndex] = useState(0);
   const [charges, setCharges] = useState(() => new Set([0, 1])); // images téléchargées seulement quand nécessaire
   const [survol, setSurvol] = useState(false);
   const [pause, setPause] = useState(false);
+  const [galerie, setGalerie] = useState(false);
   const [mouvementReduit, setMouvementReduit] = useState(false);
   const debutToucher = useRef(null);
   const n = DIAPOS.length;
@@ -39,7 +42,7 @@ export default function HeroDefilant({ children }) {
   };
 
   // Défilement automatique (arrêté au survol, en pause, ou si l'appareil demande moins d'animations)
-  const arrete = survol || pause || mouvementReduit;
+  const arrete = survol || pause || galerie || mouvementReduit;
   useEffect(() => {
     if (arrete) return undefined;
     const t = setTimeout(() => aller(index + 1), DUREE_MS);
@@ -75,7 +78,13 @@ export default function HeroDefilant({ children }) {
         <p key={index} className="hero__legende" aria-live="polite">
           <strong>{diapo.titre}.</strong> <span>{diapo.texte}</span>
         </p>
-        <div className="hero__boutons">{children}</div>
+        <div className="hero__boutons">
+          {children}
+          <button type="button" className="btn hero__bouton-galerie" onClick={() => setGalerie(true)}>
+            <span aria-hidden="true">▦</span>
+            <span className="hero__texte-long">Voir la galerie</span><span className="hero__texte-court">Galerie</span>
+          </button>
+        </div>
       </div>
 
       <button type="button" className="hero__fleche hero__fleche--gauche" onClick={() => aller(index - 1)} aria-label="Photo précédente">‹</button>
@@ -98,6 +107,10 @@ export default function HeroDefilant({ children }) {
           </button>
         )}
       </div>
+
+      {galerie && (
+        <Galerie photos={PHOTOS_GALERIE} indexInitial={index} titre="Zaquia Résidence" onFermer={() => setGalerie(false)} />
+      )}
     </section>
   );
 }

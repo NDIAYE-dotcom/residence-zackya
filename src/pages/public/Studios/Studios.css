@@ -36,7 +36,7 @@
 
 .pcarte__pied { margin-top: auto; padding-top: 10px; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; border-top: 1px solid var(--bordure); }
 .pcarte__prix { display: flex; flex-direction: column; gap: 2px; font-size: .84rem; color: var(--texte-doux); }
-.pcarte__prix strong { color: var(--rouge); font-size: 1.1rem; }
+.pcarte__prix strong { color: var(--rouge); font-size: 1.1rem; white-space: nowrap; }
 .pcarte__prix small { font-size: .78rem; color: var(--texte); font-weight: 600; }
 .pcarte__pied .btn { padding: 9px 18px; text-decoration: none; }
 

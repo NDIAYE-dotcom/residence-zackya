@@ -33,6 +33,10 @@
   --graphe-1: #1f4fa8;
   --graphe-2: var(--rouge);
   --grille-graphe: #eef1f6;
+
+  /* Effet « verre dépoli » (barre de navigation du site public) */
+  --verre: rgba(255, 255, 255, 0.72);
+  --verre-bord: rgba(255, 255, 255, 0.6);
 }
 
 *, *::before, *::after { box-sizing: border-box; }

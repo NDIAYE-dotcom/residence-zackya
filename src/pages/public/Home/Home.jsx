@@ -41,8 +41,12 @@ export default function Home() {
   return (
     <div className="home">
       <HeroDefilant>
-        <a className="btn btn-rouge" href="#recherche">Vérifier les disponibilités</a>
-        <Link className="btn btn-contour" to="/studios">Voir nos studios</Link>
+        <a className="btn btn-rouge" href="#recherche">
+          <span className="hero__texte-long">Vérifier les disponibilités</span><span className="hero__texte-court">Réserver</span>
+        </a>
+        <Link className="btn btn-contour" to="/studios">
+          <span className="hero__texte-long">Voir nos studios</span><span className="hero__texte-court">Nos studios</span>
+        </Link>
       </HeroDefilant>
 
       {/* Recherche posée à cheval sur le bas des photos */}
