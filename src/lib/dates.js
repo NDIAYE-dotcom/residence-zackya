@@ -86,3 +86,11 @@ export function ajouterUnites(formule, date, n = 1) {
     default: return ajouterHeures(date, n);
   }
 }
+
+// Vrai si la date tombe un jour déjà passé (avant aujourd'hui) : probable faute de frappe
+export const jourPasse = (d) => {
+  if (!d) return false;
+  const debutAujourdhui = new Date();
+  debutAujourdhui.setHours(0, 0, 0, 0);
+  return new Date(d) < debutAujourdhui;
+};

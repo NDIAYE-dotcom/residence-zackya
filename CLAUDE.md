@@ -1854,7 +1854,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 4 Réservations
 - [x] 5 Fiche réservation
 - [x] 6 Planning
-- [ ] 7 Caisse
+- [x] 7 Caisse
 - [ ] 8 Dépenses
 - [ ] 9 Rapports
 - [ ] 10 Ménage
@@ -1923,3 +1923,11 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   `services/planning.js` : `abonnerPlanning(rappel, surStatut)` (canal postgres_changes, état SUBSCRIBED/CHANNEL_ERROR affiché) → **réutiliser pour Ménage (étape 10) et notifications (étape 15)**.
   Vue + date dans l'URL (`?vue=semaine&date=AAAA-MM-JJ`). Nouvelle réservation accepte `?studio=&formule=&debut=` (abandonne le brouillon, va à l'étape 2, studio présélectionné si libre).
   Barres : terminée = jusqu'au `checkout_at` réel ; annulées / no-show non affichées.
+- **2026-10-30 · Étape 7 Caisse** : testée et validée. Migration `008_caisse.sql` exécutée :
+  vraies coordonnées (`adresse` = « Ziguinchor, Goumel », `telephone` = +221 77 656 28 04, `whatsapp` = 221776562804) ; type `restitution_caution` ;
+  `paiements.numero_recu` (séquence `recu_seq`) ; table `clotures_caisse` (+ `cloturer_caisse(jour, comptees, notes)`, réouverture = delete admin) ;
+  trigger `verifier_caisse_ouverte` (aucun paiement sur un jour clôturé, sauf mode `paydunya` → **à garder en tête pour l'étape 16**).
+  Règles d'argent dans `format.js` : `TYPES_ENTREE`, `TYPES_SORTIE`, `signeCA(type)` (CA = acompte + solde + extra − remboursement ; cautions hors CA) → **à réutiliser pour Rapports (étape 9)**.
+  Reçu PDF au format du carnet papier d'Ousmane (A5 paysage) : `lib/recuDessin.js` (dessin pur, testable hors navigateur) + `lib/recu.js` (`imprimerRecu(paiementId)`, jsPDF chargé à la demande) + `lib/nombres.js` (montant en lettres).
+  Ajout demandé : avertissement « arrivée dans le passé » (`jourPasse()` dans dates.js) à l'étape 1 et dans le récapitulatif de Nouvelle réservation.
+  ⚠️ Build : avertissement « chunk > 500 kB » (pas une erreur) → **étape 17 : découper les routes avec React.lazy**.

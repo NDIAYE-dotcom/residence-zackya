@@ -24,6 +24,10 @@
 
 .edates__aide { margin: 14px 0 0; font-size: .86rem; color: var(--texte-doux); line-height: 1.5; }
 .edates__aide strong { color: var(--bleu); }
+.edates__passe {
+  margin: 12px 0 0; padding: 10px 12px; border-radius: var(--radius-sm);
+  background: var(--alerte-clair); border-left: 4px solid var(--alerte); font-weight: 600; font-size: .88rem;
+}
 .edates__erreur { margin: 10px 0 0; color: var(--rouge); font-weight: 600; font-size: .88rem; }
 
 @media (max-width: 760px) {

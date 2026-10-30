@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '../../../components/Modal/Modal.jsx';
 import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
 import { useToast } from '../../../components/Toast/Toast.jsx';
 import { useBrouillon } from '../../../hooks/useBrouillon.js';
-import { enregistrerPaiement } from '../../../services/paiements.js';
+import { enregistrerPaiement, paiementsReservation } from '../../../services/paiements.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { formatFCFA, MODES_PAIEMENT, TYPES_PAIEMENT } from '../../../lib/format.js';
 import './PaiementModal.css';
@@ -23,11 +23,19 @@ export default function PaiementModal({ resa, onFermer, onTermine }) {
   }));
   const [erreur, setErreur] = useState('');
   const [envoi, setEnvoi] = useState(false);
+  const [cautionDispo, setCautionDispo] = useState(0); // caution versée et pas encore rendue
+
+  useEffect(() => {
+    paiementsReservation(resa.id)
+      .then((ps) => setCautionDispo(ps.reduce((t, p) => t + (p.type === 'caution' ? p.montant : p.type === 'restitution_caution' ? -p.montant : 0), 0)))
+      .catch(() => setCautionDispo(0));
+  }, [resa.id]);
 
   const maj = (champ) => (e) => setForm((f) => ({ ...f, [champ]: e.target.value }));
 
-  // Types proposés : remboursement seulement si le client a déjà payé
-  const types = Object.entries(TYPES_PAIEMENT).filter(([k]) => k !== 'remboursement' || resa.total_paye > 0);
+  // Types proposés : remboursement si le client a payé, restitution si une caution est détenue
+  const types = Object.entries(TYPES_PAIEMENT).filter(([k]) =>
+    (k !== 'remboursement' || resa.total_paye > 0) && (k !== 'restitution_caution' || cautionDispo > 0));
 
   const valider = async (e) => {
     e.preventDefault();
@@ -35,6 +43,9 @@ export default function PaiementModal({ resa, onFermer, onTermine }) {
     if (!Number.isInteger(montant) || montant <= 0) return setErreur('Montant invalide (nombre entier en FCFA).');
     if (['acompte', 'solde'].includes(form.type) && montant > reste) {
       return setErreur(`Le montant dépasse le reste à payer (${formatFCFA(reste)}). Utilisez « Extra » pour un service en plus.`);
+    }
+    if (form.type === 'restitution_caution' && montant > cautionDispo) {
+      return setErreur(`La caution détenue est de ${formatFCFA(cautionDispo)}.`);
     }
     if (form.type === 'remboursement' && montant > resa.total_paye) {
       return setErreur(`On ne peut pas rembourser plus que le montant payé (${formatFCFA(resa.total_paye)}).`);
@@ -93,6 +104,8 @@ export default function PaiementModal({ resa, onFermer, onTermine }) {
 
         {form.type === 'caution' && <p className="paiement__aide">La caution n’entre pas dans le chiffre d’affaires : elle est rendue au départ.</p>}
         {form.type === 'remboursement' && <p className="paiement__aide">Le remboursement diminue le montant payé par le client.</p>}
+        {form.type === 'restitution_caution' && <p className="paiement__aide">Caution détenue : {formatFCFA(cautionDispo)}. Sa restitution ne change pas le chiffre d’affaires.</p>}
+        {cautionDispo > 0 && form.type !== 'restitution_caution' && <p className="paiement__aide">Caution détenue pour ce client : {formatFCFA(cautionDispo)}.</p>}
         {erreur && <p className="paiement__erreur">{erreur}</p>}
 
         <div className="paiement__actions">

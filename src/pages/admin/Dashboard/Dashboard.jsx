@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../../lib/supabase.js';
-import { formatFCFA, formatDateHeure, FORMULES, STATUTS_RESERVATION, STATUTS_STUDIO } from '../../../lib/format.js';
+import { formatFCFA, formatDateHeure, FORMULES, STATUTS_RESERVATION, STATUTS_STUDIO, signeCA } from '../../../lib/format.js';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -31,7 +31,7 @@ export default function Dashboard() {
       setArrivees(a.data ?? []);
       setDeparts(d.data ?? []);
       setEnAttente(att.count ?? 0);
-      setEncaisseJour((p.data ?? []).reduce((t, x) => t + (x.type === 'remboursement' ? -x.montant : x.type === 'caution' ? 0 : x.montant), 0));
+      setEncaisseJour((p.data ?? []).reduce((t, x) => t + signeCA(x.type) * x.montant, 0)); // hors cautions
       setChargement(false);
     };
     charger();

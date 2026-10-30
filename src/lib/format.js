@@ -116,7 +116,14 @@ export const TYPES_PAIEMENT = {
   extra: 'Extra (service en plus)',
   caution: 'Caution',
   remboursement: 'Remboursement',
+  restitution_caution: 'Restitution de caution',
 };
+
+// Sens des mouvements de caisse
+export const TYPES_ENTREE = ['acompte', 'solde', 'extra', 'caution'];
+export const TYPES_SORTIE = ['remboursement', 'restitution_caution'];
+// Chiffre d'affaires : hors cautions (une caution est rendue)
+export const signeCA = (type) => (type === 'remboursement' ? -1 : ['acompte', 'solde', 'extra'].includes(type) ? 1 : 0);
 
 // Libellés de l'historique (journal_activite.action)
 export const ACTIONS_JOURNAL = {
@@ -129,4 +136,6 @@ export const ACTIONS_JOURNAL = {
   'reservation.prolongee': 'Départ modifié',
   'reservation.studio_change': 'Changement de studio',
   'paiement.ajoute': 'Paiement enregistré',
+  'caisse.cloturee': 'Caisse clôturée',
+  'caisse.rouverte': 'Caisse rouverte',
 };

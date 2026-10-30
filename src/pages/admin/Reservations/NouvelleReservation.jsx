@@ -8,7 +8,7 @@ import { creerReservation } from '../../../services/reservations.js';
 import { creerClient, trouverParTelephone } from '../../../services/clients.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { formatFCFA, FORMULES } from '../../../lib/format.js';
-import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, versChampDate } from '../../../lib/dates.js';
+import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, jourPasse, versChampDate } from '../../../lib/dates.js';
 import { normaliserTelephoneClient } from '../../../lib/telephone.js';
 import EtapeDates from './EtapeDates.jsx';
 import EtapeStudio from './EtapeStudio.jsx';
@@ -188,6 +188,7 @@ export default function NouvelleReservation() {
 
         <aside className="nresa__recap" aria-label="Récapitulatif">
           <h2>Récapitulatif</h2>
+          {jourPasse(sejour.debut) && <p className="nresa__passe">⚠ Arrivée dans le passé : vérifiez le jour et le mois.</p>}
           <dl>
             <dt>Formule</dt><dd>{FORMULES[sejour.formule]}</dd>
             <dt>Arrivée</dt><dd>{sejour.debut ? formatJourHeure(sejour.debut) : '—'}</dd>

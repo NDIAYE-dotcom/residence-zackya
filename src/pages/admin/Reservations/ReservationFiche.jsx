@@ -7,9 +7,10 @@ import { lireReservation, historiqueReservation, changerStatut } from '../../../
 import { paiementsReservation } from '../../../services/paiements.js';
 import { lireClient } from '../../../services/clients.js';
 import { messageErreur } from '../../../lib/erreurs.js';
+import { imprimerRecu } from '../../../lib/recu.js';
 import {
   formatFCFA, formatDateHeure, FORMULES, STATUTS_RESERVATION, SOURCES_RESERVATION,
-  MODES_PAIEMENT, TYPES_PAIEMENT, ACTIONS_JOURNAL,
+  MODES_PAIEMENT, TYPES_PAIEMENT, TYPES_SORTIE, ACTIONS_JOURNAL,
 } from '../../../lib/format.js';
 import { formatDuree, formatJourHeure } from '../../../lib/dates.js';
 import { formatTelephone, lienWhatsApp } from '../../../lib/telephone.js';
@@ -109,7 +110,13 @@ export default function ReservationFiche() {
   const net = resa.montant_total - resa.remise;
   const actif = ACTIVES.includes(resa.statut);
   const close = ['annulee', 'no_show'].includes(resa.statut);
-  const cautionVersee = paiements.filter((p) => p.type === 'caution').reduce((t, p) => t + p.montant, 0);
+  // Caution détenue = versée − rendue
+  const cautionVersee = paiements.reduce((t, p) => t + (p.type === 'caution' ? p.montant : p.type === 'restitution_caution' ? -p.montant : 0), 0);
+  const cautionRendue = paiements.some((p) => p.type === 'restitution_caution');
+
+  const imprimer = async (paiementId) => {
+    try { await imprimerRecu(paiementId); } catch (err) { toast.erreur(messageErreur(err, 'Impossible de générer le reçu.')); }
+  };
 
   const messageWhatsApp = [
     `Bonjour ${resa.client_nom},`,
@@ -222,7 +229,7 @@ export default function ReservationFiche() {
             )}
             {resa.caution > 0 && (
               <div className="rfiche__caution">
-                <span>Caution prévue</span><strong>{formatFCFA(resa.caution)} {cautionVersee ? '(versée)' : '(non versée)'}</strong>
+                <span>Caution prévue</span><strong>{formatFCFA(resa.caution)} {cautionVersee > 0 ? '(détenue)' : cautionRendue ? '(rendue)' : '(non versée)'}</strong>
               </div>
             )}
           </div>
@@ -238,9 +245,14 @@ export default function ReservationFiche() {
                     <strong>{TYPES_PAIEMENT[p.type]}</strong>
                     <small>{MODES_PAIEMENT[p.mode]}{p.reference_transaction ? ` · n° ${p.reference_transaction}` : ''} · {formatDateHeure(p.created_at)}{p.recu?.full_name ? ` · ${p.recu.full_name}` : ''}</small>
                   </div>
-                  <strong className={p.type === 'remboursement' ? 'rfiche__negatif' : ''}>
-                    {p.type === 'remboursement' ? '− ' : ''}{formatFCFA(p.montant)}
-                  </strong>
+                  <div className="rfiche__paiement-droite">
+                    <strong className={TYPES_SORTIE.includes(p.type) ? 'rfiche__negatif' : ''}>
+                      {TYPES_SORTIE.includes(p.type) ? '− ' : ''}{formatFCFA(p.montant)}
+                    </strong>
+                    {!TYPES_SORTIE.includes(p.type) && (
+                      <button type="button" className="rfiche__recu" onClick={() => imprimer(p.id)}>Reçu n° {p.numero_recu}</button>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -303,7 +315,7 @@ export default function ReservationFiche() {
           </div>
         )}
         {cautionVersee > 0 && (
-          <p className="rfiche__rappel">Pensez à rendre la caution de {formatFCFA(cautionVersee)} après vérification du studio.</p>
+          <p className="rfiche__rappel">Pensez à rendre la caution de {formatFCFA(cautionVersee)} après vérification du studio (« Encaisser » → Restitution de caution).</p>
         )}
       </Confirm>
 

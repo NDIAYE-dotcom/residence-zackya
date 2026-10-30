@@ -72,6 +72,12 @@
 .rfiche__paiements li div { display: flex; flex-direction: column; gap: 2px; }
 .rfiche__paiements small { color: var(--texte-doux); font-size: .78rem; }
 .rfiche__negatif { color: var(--rouge); }
+.rfiche__paiements .rfiche__paiement-droite { align-items: flex-end; gap: 4px; }
+.rfiche__recu {
+  padding: 3px 9px; border-radius: 999px; border: 1.5px solid var(--bleu);
+  background: var(--blanc); color: var(--bleu); font-size: .72rem; font-weight: 700; white-space: nowrap;
+}
+.rfiche__recu:hover { background: var(--bleu-clair); }
 
 /* Historique en frise */
 .rfiche__historique { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 2px solid var(--bordure); }

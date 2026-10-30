@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FORMULES, UNITES_FORMULE, UNITES_FORMULE_PLURIEL } from '../../../lib/format.js';
-import { calculerFin, debutParDefaut, formatDuree, versChampDate } from '../../../lib/dates.js';
+import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, jourPasse, versChampDate } from '../../../lib/dates.js';
 import './EtapeDates.css';
 
 // Étape 1 : formule, arrivée, nombre d'unités → départ calculé (modifiable)
@@ -71,6 +71,12 @@ export default function EtapeDates({ sejour, params, onChange, onSuivant }) {
         {['heure', 'demi_journee', 'journee'].includes(formule) && `Prix par ${UNITES_FORMULE[formule]} commencée.`}
         {valide && <strong> Durée : {formatDuree(debut, fin)}.</strong>}
       </p>
+
+      {jourPasse(debut) && (
+        <p className="edates__passe" role="alert">
+          ⚠ Attention : l’arrivée ({formatJourHeure(debut)}) est dans le passé. Vérifiez le jour et le mois.
+        </p>
+      )}
 
       {erreur && <p className="edates__erreur">{erreur}</p>}
 

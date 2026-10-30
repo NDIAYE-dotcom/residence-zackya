@@ -1,0 +1,20 @@
+.choixresa { display: flex; flex-direction: column; gap: 12px; }
+.choixresa input {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); outline: none;
+}
+.choixresa input:focus { border-color: var(--bleu); }
+.choixresa__etat { margin: 0; color: var(--texte-doux); font-size: .88rem; }
+.choixresa__etat--erreur { color: var(--rouge); }
+
+.choixresa__liste { list-style: none; margin: 0; padding: 0; border: 1px solid var(--bordure); border-radius: var(--radius-sm); overflow: hidden; }
+.choixresa__liste li + li { border-top: 1px solid var(--bordure); }
+.choixresa__liste button {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 11px 14px; border: none; background: var(--blanc); text-align: left;
+}
+.choixresa__liste button:hover { background: var(--bleu-clair); }
+.choixresa__gauche { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.choixresa__gauche strong { font-size: .88rem; }
+.choixresa__gauche small { color: var(--texte-doux); font-size: .76rem; }
+.choixresa__reste { color: var(--rouge); font-weight: 700; font-size: .82rem; white-space: nowrap; }
+.choixresa__solde { color: var(--succes); font-weight: 700; font-size: .82rem; }
