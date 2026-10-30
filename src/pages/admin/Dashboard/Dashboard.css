@@ -15,6 +15,8 @@
 .carte { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 20px; }
 .carte h2 { margin: 0 0 14px; font-size: 1.05rem; color: var(--texte); }
 .vide { color: var(--texte-doux); font-size: .9rem; margin: 0; }
+.dash__erreur { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--rouge); text-align: center; }
+.dash__erreur p { margin: 0; }
 
 .dash__studios { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
 .studio-tuile { border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; display: flex; flex-direction: column; gap: 2px; }

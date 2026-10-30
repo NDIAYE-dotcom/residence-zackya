@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import './Login.css';
@@ -21,6 +21,8 @@ export default function Login() {
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState('');
   const [info, setInfo] = useState('');
+
+  useEffect(() => { document.title = 'Connexion · Zaquia Admin'; }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

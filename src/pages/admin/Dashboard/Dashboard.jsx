@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../../../lib/supabase.js';
-import { formatFCFA, formatDateHeure, FORMULES, STATUTS_RESERVATION, STATUTS_STUDIO, signeCA } from '../../../lib/format.js';
+import { chargerTableauDeBord } from '../../../services/dashboard.js';
+import { messageErreur } from '../../../lib/erreurs.js';
+import { formatFCFA, formatDateHeure, FORMULES, STATUTS_RESERVATION, STATUTS_STUDIO } from '../../../lib/format.js';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -11,31 +12,34 @@ export default function Dashboard() {
   const [enAttente, setEnAttente] = useState(0);
   const [encaisseJour, setEncaisseJour] = useState(0);
   const [chargement, setChargement] = useState(true);
+  const [erreur, setErreur] = useState('');
 
-  useEffect(() => {
-    const charger = async () => {
-      const debutJour = new Date(); debutJour.setHours(0, 0, 0, 0);
-      const finJour = new Date(); finJour.setHours(23, 59, 59, 999);
-
-      const [s, a, d, att, p] = await Promise.all([
-        supabase.from('studios').select('id, code, nom, statut').order('code'),
-        supabase.from('v_reservations').select('*').in('statut', ['confirmee', 'en_attente'])
-          .gte('date_debut', debutJour.toISOString()).lte('date_debut', finJour.toISOString()).order('date_debut'),
-        supabase.from('v_reservations').select('*').eq('statut', 'en_cours')
-          .lte('date_fin', finJour.toISOString()).order('date_fin'),
-        supabase.from('reservations').select('id', { count: 'exact', head: true }).eq('statut', 'en_attente'),
-        supabase.from('paiements').select('montant, type').gte('created_at', debutJour.toISOString()),
-      ]);
-
-      setStudios(s.data ?? []);
-      setArrivees(a.data ?? []);
-      setDeparts(d.data ?? []);
-      setEnAttente(att.count ?? 0);
-      setEncaisseJour((p.data ?? []).reduce((t, x) => t + signeCA(x.type) * x.montant, 0)); // hors cautions
+  const charger = async () => {
+    setErreur('');
+    try {
+      const t = await chargerTableauDeBord();
+      setStudios(t.studios);
+      setArrivees(t.arrivees);
+      setDeparts(t.departs);
+      setEnAttente(t.enAttente);
+      setEncaisseJour(t.encaisseJour);
+    } catch (err) {
+      setErreur(messageErreur(err, 'Impossible de charger le tableau de bord.'));
+    } finally {
       setChargement(false);
-    };
-    charger();
-  }, []);
+    }
+  };
+
+  useEffect(() => { charger(); }, []);
+
+  if (erreur) {
+    return (
+      <div className="dash">
+        <h1 className="dash__titre">Tableau de bord</h1>
+        <div className="carte dash__erreur"><p>{erreur}</p><button className="btn btn-contour" onClick={charger}>Réessayer</button></div>
+      </div>
+    );
+  }
 
   const occupes = studios.filter((s) => s.statut === 'occupe').length;
   const taux = studios.length ? Math.round((occupes / studios.length) * 100) : 0;

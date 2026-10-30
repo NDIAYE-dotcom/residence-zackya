@@ -11,6 +11,7 @@
 .presid__lien { margin-left: 6px; background: none; border: none; padding: 0; color: var(--bleu); font-size: .78rem; font-weight: 600; text-decoration: underline; }
 
 .presid__actions { display: flex; justify-content: flex-end; }
+.presid__court { max-width: 280px; }
 
 @media (max-width: 900px) {
   .presid__grille--5 { grid-template-columns: 1fr 1fr; }

@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Suspense, useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROLES_STAFF } from '../../lib/format.js';
 import { useAlertesReservations } from '../../hooks/useAlertesReservations.js';
 import AlertesReservations from '../../components/AlertesReservations/AlertesReservations.jsx';
+import Chargement from '../../components/Chargement/Chargement.jsx';
 import './AdminLayout.css';
 
 // Menu : "roles" = qui voit l'entrée (absent = tout le personnel)
@@ -26,6 +27,13 @@ export default function AdminLayout() {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
   const [menuOuvert, setMenuOuvert] = useState(false);
+  const { pathname } = useLocation();
+
+  // Titre de l'onglet : nom du module (pratique avec plusieurs onglets ouverts)
+  useEffect(() => {
+    const module = MENU.find((m) => pathname.startsWith(m.to));
+    document.title = `${module?.label ?? 'Administration'} · Zaquia Admin`;
+  }, [pathname]);
 
   const items = MENU.filter((m) => !m.roles || m.roles.includes(profile?.role));
 
@@ -40,6 +48,7 @@ export default function AdminLayout() {
 
   return (
     <div className="admin">
+      <a className="lien-evitement" href="#contenu-admin">Aller au contenu</a>
       <aside className={`admin__sidebar ${menuOuvert ? 'admin__sidebar--ouvert' : ''}`}>
         <div className="admin__marque">
           <img src="/logo-zaquia.png" alt="Zaquia Résidence" />
@@ -79,8 +88,10 @@ export default function AdminLayout() {
           </div>
         </header>
         <AlertesReservations alertes={alertes} onFermer={fermer} />
-        <main className="admin__contenu">
-          <Outlet />
+        <main className="admin__contenu" id="contenu-admin" tabIndex={-1}>
+          <Suspense fallback={<Chargement />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

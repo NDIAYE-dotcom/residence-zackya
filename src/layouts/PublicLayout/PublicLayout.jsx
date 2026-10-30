@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { lireParametres } from '../../services/public.js';
+import Chargement from '../../components/Chargement/Chargement.jsx';
 import './PublicLayout.css';
 
 const LIENS = [
@@ -24,6 +25,7 @@ export default function PublicLayout() {
 
   return (
     <div className="site">
+      <a className="lien-evitement" href="#contenu">Aller au contenu</a>
       {/* Barre flottante en verre dépoli (passe par-dessus les photos de l'accueil) */}
       <header className="site__entete">
         <div className="site__barre">
@@ -43,8 +45,10 @@ export default function PublicLayout() {
         </div>
       </header>
 
-      <main className="site__contenu">
-        <Outlet />
+      <main className="site__contenu" id="contenu" tabIndex={-1}>
+        <Suspense fallback={<Chargement />}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <footer className="site__pied">

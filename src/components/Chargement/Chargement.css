@@ -1,0 +1,9 @@
+.chargement { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 60px 20px; color: var(--texte-doux); font-size: .9rem; }
+.chargement--plein { min-height: 100vh; background: var(--blanc); }
+.chargement__roue {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 3px solid var(--bleu-clair); border-top-color: var(--rouge);
+  animation: chargement-tour .8s linear infinite;
+}
+@keyframes chargement-tour { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .chargement__roue { animation-duration: 2.4s; } }

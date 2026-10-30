@@ -13,6 +13,7 @@ const whatsappNormalise = (v) => normaliserTelephone(v) ?? normaliserTelephone(`
 const CHAMPS_VIDES = {
   nom_residence: '', adresse: '', telephone: '', telephone_fixe: '', whatsapp: '', email: '', rccm: '',
   heure_checkin: '14:00', heure_checkout: '12:00', nuitee_debut: '18:00', nuitee_fin: '12:00', acompte_pourcent: '30',
+  expiration_attente_heures: '24',
 };
 
 // Onglet « Résidence » : coordonnées, horaires, acompte
@@ -50,6 +51,8 @@ export default function ParamResidence() {
     if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = 'Adresse email invalide.';
     const pct = Number(form.acompte_pourcent);
     if (!Number.isInteger(pct) || pct < 0 || pct > 100) e.acompte_pourcent = 'Entre 0 et 100.';
+    const exp = Number(form.expiration_attente_heures);
+    if (!Number.isInteger(exp) || exp < 0 || exp > 720) e.expiration_attente_heures = 'Entre 0 (jamais) et 720 heures.';
     setErreurs(e);
     return !Object.keys(e).length;
   };
@@ -151,6 +154,16 @@ export default function ParamResidence() {
             <input id="pr-ac" type="number" min="0" max="100" inputMode="numeric" value={form.acompte_pourcent} onChange={maj('acompte_pourcent')} />
             {erreur('acompte_pourcent')}
           </div>
+        </div>
+      </section>
+
+      <section className="presid__carte">
+        <h2>Demandes en ligne non confirmées</h2>
+        <p className="presid__aide">Une réservation faite sur le site et laissée « En attente » est annulée automatiquement après ce délai (sauf si le client a déjà payé), pour libérer le studio. 0 = jamais.</p>
+        <div className={`${champ('expiration_attente_heures')} presid__court`}>
+          <label htmlFor="pr-exp">Annulation automatique après (heures)</label>
+          <input id="pr-exp" type="number" min="0" max="720" inputMode="numeric" value={form.expiration_attente_heures} onChange={maj('expiration_attente_heures')} />
+          {erreur('expiration_attente_heures')}
         </div>
       </section>
 

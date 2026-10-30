@@ -96,3 +96,17 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 /* Erreur de validation sous un champ */
 .champ--erreur input, .champ--erreur select, .champ--erreur textarea { border-color: var(--rouge); }
 .champ__erreur { color: var(--rouge); font-size: .8rem; font-weight: 500; }
+
+/* ===== Accessibilité ===== */
+/* Contour visible quand on navigue au clavier (pas au clic) */
+:focus-visible { outline: 3px solid var(--bleu); outline-offset: 2px; }
+.btn-rouge:focus-visible, .btn-primaire:focus-visible { outline-color: var(--rouge); }
+main:focus { outline: none; }
+
+/* Lien « Aller au contenu » : apparaît seulement avec la touche Tab */
+.lien-evitement {
+  position: fixed; top: 10px; left: 10px; z-index: 200;
+  padding: 10px 16px; border-radius: var(--radius-sm); background: var(--bleu); color: var(--blanc);
+  font-weight: 700; text-decoration: none; transform: translateY(-150%); transition: transform .2s;
+}
+.lien-evitement:focus { transform: none; }
