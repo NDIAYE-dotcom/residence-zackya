@@ -1865,7 +1865,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 15 Notifications (alertes admin ✓ — email client reporté à l'étape 18)
 - [ ] 16 PayDunya — ⏸ en attente de l'accord du propriétaire (compte marchand à son nom, RCCM)
 - [x] 17 Qualité
-- [ ] 18 Déploiement
+- [x] 18 Déploiement — en ligne sur https://residence-zackya.vercel.app (nom de domaine à venir)
 
 ### Notes de progression
 *(Claude Code : note ici les décisions importantes, problèmes rencontrés, et où on s'est arrêté.)*
@@ -1980,3 +1980,15 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   policy « ménage: statut studio » supprimée ; delete ménage/maintenance = admin+gérant ; journal `user_id = auth.uid()` ; paiements `recu_par = auth.uid()`.
   `expirer_reservations_en_attente()` (site, en_attente, sans paiement, après `parametres.expiration_attente_heures` = 24) planifiée par **pg_cron** toutes les 15 min (job `zaquia-expiration-attente`).
   Front : `React.lazy` sur toutes les pages sauf Home (bundle initial 425 Ko), `components/Chargement`, page `Introuvable` (404 public), `/admin/*` inconnu → dashboard, titres d'onglet admin, lien d'évitement + `:focus-visible`, `services/dashboard.js` (plus aucun `supabase.from` dans les pages).
+- **2026-10-31 · Étape 18 Déploiement** : ✅ en ligne sur **https://residence-zackya.vercel.app** (Vercel, projet `residence-zackya`, déploiement automatique à chaque push sur `main`).
+  `vercel.json` : réécriture SPA vers index.html, cache 1 an `/assets`, 30 j `/hero`, en-têtes nosniff / DENY / referrer. Variables Vercel : `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (clé anon seulement).
+  Supabase Auth : Site URL = https://residence-zackya.vercel.app ; Redirect URLs = localhost:5173/admin/login + https://residence-zackya.vercel.app/admin/login.
+  Sauvegardes : offre gratuite = pas de sauvegarde automatique → **Paramètres > Sauvegarde** (export JSON 15 tables, `parametres.derniere_sauvegarde`) + rappel sur le tableau de bord admin après 30 j. Projet gratuit mis en pause après 7 j sans activité.
+  Testé en ligne par Ousmane (4G : site, réservation, suivi, admin, cloche, sauvegarde).
+
+### ⏳ RESTE À FAIRE (plus tard)
+1. **Nom de domaine** (ex. zaquia-residence.sn) : Vercel > Settings > Domains ; puis mettre à jour Site URL / Redirect URLs Supabase.
+2. **Resend** (après le domaine) : compte + vérification DNS du domaine → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer l'Edge Function `notifier` (Verify JWT OFF). Utiliser aussi Resend comme **SMTP personnalisé** de Supabase Auth (emails « Mot de passe oublié » sans la limite de l'expéditeur par défaut).
+3. **PayDunya** (étape 16) : après accord du propriétaire (compte marchand + RCCM).
+4. Facultatif : offre **Supabase Pro** pour des sauvegardes automatiques quotidiennes.
+5. Données réelles : saisir les vrais studios / prix / photos, créer les comptes du personnel, supprimer les données de test (réservations ZQ-2610xx, clients Fatou Sané / Jean Dupont / DEMBA, compte Awa Test).
