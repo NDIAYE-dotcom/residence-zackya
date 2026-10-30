@@ -1,0 +1,45 @@
+.pstudios { padding: 36px 6vw 0; display: flex; flex-direction: column; gap: 20px; }
+.pstudios__entete h1 { margin: 0 0 6px; font-family: var(--police-titre); color: var(--bleu); font-size: clamp(1.8rem, 4vw, 2.4rem); }
+.pstudios__entete p { margin: 0; color: var(--texte-doux); }
+
+.pstudios__filtres { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.pstudios__puces { display: flex; gap: 8px; flex-wrap: wrap; }
+.pstudios__puces button {
+  padding: 8px 15px; border-radius: 999px; border: 1.5px solid var(--bordure);
+  background: var(--blanc); font-weight: 600; font-size: .86rem; color: var(--texte-doux);
+}
+.pstudios__puces .pstudios__puce--active { background: var(--bleu); border-color: var(--bleu); color: var(--blanc); }
+.pstudios__personnes { display: flex; align-items: center; gap: 8px; font-size: .88rem; color: var(--texte-doux); font-weight: 600; }
+.pstudios__personnes select { padding: 8px 10px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); background: var(--blanc); }
+
+.pstudios__etat { padding: 40px 0; text-align: center; color: var(--texte-doux); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.pstudios__etat p { margin: 0; }
+.pstudios__etat--erreur { color: var(--rouge); }
+
+.pstudios__grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+
+/* Carte d'un studio */
+.pcarte { border-radius: var(--radius); overflow: hidden; box-shadow: var(--ombre); border: 1px solid var(--bordure); display: flex; flex-direction: column; background: var(--blanc); }
+.pcarte__photo { position: relative; height: 220px; }
+.pcarte__indispo {
+  position: absolute; left: 10px; bottom: 10px; z-index: 1;
+  padding: 4px 10px; border-radius: 999px; background: var(--voile); color: var(--blanc); font-size: .74rem; font-weight: 700;
+}
+.pcarte__corps { padding: 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.pcarte__categorie { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--rouge); }
+.pcarte h2 { margin: 0; font-size: 1.2rem; }
+.pcarte h2 a { color: var(--texte); text-decoration: none; }
+.pcarte h2 a:hover { color: var(--bleu); text-decoration: underline; }
+.pcarte__infos { margin: 0; color: var(--texte-doux); font-size: .88rem; }
+.pcarte__equipements { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pcarte__equipements li { padding: 4px 9px; border-radius: 999px; background: var(--fond); font-size: .76rem; color: var(--texte); }
+
+.pcarte__pied { margin-top: auto; padding-top: 10px; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; border-top: 1px solid var(--bordure); }
+.pcarte__prix { display: flex; flex-direction: column; gap: 2px; font-size: .84rem; color: var(--texte-doux); }
+.pcarte__prix strong { color: var(--rouge); font-size: 1.1rem; }
+.pcarte__prix small { font-size: .78rem; color: var(--texte); font-weight: 600; }
+.pcarte__pied .btn { padding: 9px 18px; text-decoration: none; }
+
+@media (max-width: 600px) {
+  .pstudios__grille { grid-template-columns: 1fr; }
+}

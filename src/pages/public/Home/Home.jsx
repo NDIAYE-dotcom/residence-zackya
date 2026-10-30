@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../../../lib/supabase.js';
+import { rechercherDisponibles, lireParametres } from '../../../services/public.js';
 import { FORMULES, formatFCFA } from '../../../lib/format.js';
 import Carrousel from '../../../components/Carrousel/Carrousel.jsx';
 import Galerie from '../../../components/Galerie/Galerie.jsx';
+import HeroDefilant from './HeroDefilant.jsx';
 import './Home.css';
 
-// Site public : recherche de disponibilité (étape suivante : tunnel /reserver)
+// Site public : accueil et recherche de disponibilité
 export default function Home() {
   const [debut, setDebut] = useState('');
   const [fin, setFin] = useState('');
@@ -15,70 +16,74 @@ export default function Home() {
   const [erreur, setErreur] = useState('');
   const [chargement, setChargement] = useState(false);
   const [galerie, setGalerie] = useState(null); // { photos, index, titre }
-  const [menuOuvert, setMenuOuvert] = useState(false); // menu ☰ sur mobile
+  const [whatsapp, setWhatsapp] = useState('');
+
+  useEffect(() => {
+    document.title = 'Zaquia Résidence · Studios meublés à Ziguinchor';
+    lireParametres().then((p) => setWhatsapp(p.whatsapp ?? '')).catch(() => {});
+  }, []);
 
   const rechercher = async (e) => {
     e.preventDefault();
     setErreur('');
     if (!debut || !fin || new Date(fin) <= new Date(debut)) return setErreur('Choisissez des dates valides.');
     setChargement(true);
-    const p = { p_debut: new Date(debut).toISOString(), p_fin: new Date(fin).toISOString() };
-    const { data, error } = await supabase.rpc('studios_disponibles', p);
-    if (error) { setErreur('Recherche impossible pour le moment.'); setChargement(false); return; }
-
-    // Prix de chaque studio pour la formule choisie
-    const avecPrix = await Promise.all((data ?? []).map(async (s) => {
-      const { data: prix } = await supabase.rpc('calculer_prix', { p_studio: s.id, p_formule: formule, ...p });
-      return { ...s, prix };
-    }));
-    setResultats(avecPrix);
-    setChargement(false);
+    try {
+      // Seuls les studios proposant la formule choisie (prix calculé) sont affichés
+      setResultats((await rechercherDisponibles(formule, debut, fin)).filter((s) => s.prix != null));
+    } catch {
+      setErreur('Recherche impossible pour le moment.');
+    } finally {
+      setChargement(false);
+    }
   };
 
   return (
     <div className="home">
-      <header className="home__nav">
-        <img src="/logo-zaquia.png" alt="Zaquia Résidence" />
-        <button type="button" className="home__burger" onClick={() => setMenuOuvert((o) => !o)}
-          aria-expanded={menuOuvert} aria-controls="home-menu" aria-label={menuOuvert ? 'Fermer le menu' : 'Ouvrir le menu'}>
-          {menuOuvert ? '×' : '☰'}
-        </button>
-        <nav id="home-menu" className={menuOuvert ? 'home__menu--ouvert' : ''}>
-          <a href="#studios" onClick={() => setMenuOuvert(false)}>Nos studios</a>
-          <Link to="/suivi" onClick={() => setMenuOuvert(false)}>Suivre ma réservation</Link>
-        </nav>
-      </header>
+      <HeroDefilant>
+        <a className="btn btn-rouge" href="#recherche">Vérifier les disponibilités</a>
+        <Link className="btn btn-contour" to="/studios">Voir nos studios</Link>
+      </HeroDefilant>
 
-      <section className="home__hero">
-        <div className="home__hero-texte">
-          <h1>Studios meublés à Ziguinchor,<br /><em>à l’heure, à la journée ou à la nuit.</em></h1>
-          <p>Réservez en ligne en 2 minutes. Confirmation rapide par WhatsApp.</p>
-        </div>
-
+      {/* Recherche posée à cheval sur le bas des photos */}
+      <section className="home__cadre-recherche" id="recherche">
         <form className="home__recherche" onSubmit={rechercher}>
           <div className="champ">
-            <label>Formule</label>
-            <select value={formule} onChange={(e) => setFormule(e.target.value)}>
+            <label htmlFor="h-formule">Formule</label>
+            <select id="h-formule" value={formule} onChange={(e) => setFormule(e.target.value)}>
               {Object.entries(FORMULES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
           </div>
           <div className="champ">
-            <label>Arrivée</label>
-            <input type="datetime-local" value={debut} onChange={(e) => setDebut(e.target.value)} />
+            <label htmlFor="h-debut">Arrivée</label>
+            <input id="h-debut" type="datetime-local" value={debut} onChange={(e) => setDebut(e.target.value)} />
           </div>
           <div className="champ">
-            <label>Départ</label>
-            <input type="datetime-local" value={fin} onChange={(e) => setFin(e.target.value)} />
+            <label htmlFor="h-fin">Départ</label>
+            <input id="h-fin" type="datetime-local" value={fin} onChange={(e) => setFin(e.target.value)} />
           </div>
           <button className="btn btn-rouge" disabled={chargement}>{chargement ? 'Recherche…' : 'Voir les disponibilités'}</button>
           {erreur && <p className="home__erreur">{erreur}</p>}
         </form>
       </section>
 
+      <ul className="home__atouts">
+        <li><span aria-hidden="true">🏠</span><strong>Studios meublés et équipés</strong><small>Prêts à vivre dès votre arrivée</small></li>
+        <li><span aria-hidden="true">⏱</span><strong>À l’heure, à la nuit ou au mois</strong><small>La formule qui vous convient</small></li>
+        <li><span aria-hidden="true">💬</span><strong>Confirmation par WhatsApp</strong><small>{whatsapp ? <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer">Écrivez-nous</a> : 'Réponse rapide'}</small></li>
+        <li><span aria-hidden="true">📱</span><strong>Wave, Orange Money, espèces</strong><small>Payez comme vous voulez</small></li>
+      </ul>
+
       <section id="studios" className="home__resultats">
-        {resultats && (
+        {!resultats ? (
+          <div className="home__invitation">
+            <p>Choisissez vos dates pour voir les studios libres et leur prix, ou découvrez tous nos studios.</p>
+            <Link className="btn btn-contour" to="/studios">Voir tous nos studios</Link>
+          </div>
+        ) : (
           <>
-            <h2>{resultats.length} studio(s) disponible(s)</h2>
+            <h2>{resultats.length ? `${resultats.length} studio(s) disponible(s)` : 'Aucun studio disponible sur ces dates'}</h2>
+            {!resultats.length && <p className="home__vide">Essayez d’autres dates ou une autre formule, ou contactez-nous sur WhatsApp.</p>}
             <div className="home__cartes">
               {resultats.map((s) => (
                 <article key={s.id} className="home__carte">
@@ -87,10 +92,10 @@ export default function Home() {
                       onOuvrir={(index) => setGalerie({ photos: s.photos, index, titre: s.nom })} />
                   </div>
                   <div className="home__carte-corps">
-                    <h3>{s.nom}</h3>
+                    <h3><Link to={`/studios/${s.id}`}>{s.nom}</Link></h3>
                     <p>{s.capacite} pers. · {s.equipements.slice(0, 3).join(' · ')}</p>
                     <div className="home__carte-pied">
-                      <strong>{s.prix != null ? formatFCFA(s.prix) : '—'}</strong>
+                      <strong>{formatFCFA(s.prix)}</strong>
                       <Link className="btn btn-primaire"
                         to={`/reserver?studio=${s.id}&formule=${formule}&debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}`}>
                         Réserver
@@ -108,10 +113,6 @@ export default function Home() {
         <Galerie photos={galerie.photos} indexInitial={galerie.index} titre={galerie.titre}
           onFermer={() => setGalerie(null)} />
       )}
-
-      <footer className="home__pied">
-        © {new Date().getFullYear()} Zaquia Résidence · <Link to="/admin">Administration</Link>
-      </footer>
     </div>
   );
 }

@@ -11,7 +11,7 @@ import './ParamResidence.css';
 const whatsappNormalise = (v) => normaliserTelephone(v) ?? normaliserTelephone(`+${v.replace(/\D/g, '')}`);
 
 const CHAMPS_VIDES = {
-  nom_residence: '', adresse: '', telephone: '', whatsapp: '',
+  nom_residence: '', adresse: '', telephone: '', telephone_fixe: '', whatsapp: '', email: '', rccm: '',
   heure_checkin: '14:00', heure_checkout: '12:00', nuitee_debut: '18:00', nuitee_fin: '12:00', acompte_pourcent: '30',
 };
 
@@ -30,6 +30,7 @@ export default function ParamResidence() {
       .then((p) => {
         const valeurs = { ...CHAMPS_VIDES, ...Object.fromEntries(Object.keys(CHAMPS_VIDES).map((k) => [k, p[k] ?? CHAMPS_VIDES[k]])) };
         valeurs.telephone = formatTelephone(valeurs.telephone);
+        valeurs.telephone_fixe = formatTelephone(valeurs.telephone_fixe);
         brouillon.marquerEnregistre(valeurs);
         if (!brouillon.restaure) setForm(valeurs); // un brouillon non enregistré garde la priorité
       })
@@ -45,6 +46,8 @@ export default function ParamResidence() {
     if (!form.adresse.trim()) e.adresse = 'L’adresse est obligatoire.';
     if (!normaliserTelephone(form.telephone)) e.telephone = 'Numéro sénégalais invalide (ex : 77 656 28 04).';
     if (!whatsappNormalise(form.whatsapp)) e.whatsapp = 'Numéro WhatsApp invalide (ex : 77 656 28 04).';
+    if (form.telephone_fixe.trim() && !normaliserTelephone(form.telephone_fixe)) e.telephone_fixe = 'Numéro invalide (ex : 33 992 52 12).';
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = 'Adresse email invalide.';
     const pct = Number(form.acompte_pourcent);
     if (!Number.isInteger(pct) || pct < 0 || pct > 100) e.acompte_pourcent = 'Entre 0 et 100.';
     setErreurs(e);
@@ -62,6 +65,9 @@ export default function ParamResidence() {
         nom_residence: form.nom_residence.trim(),
         adresse: form.adresse.trim(),
         telephone: formatTelephone(tel), // affiché tel quel sur les reçus
+        telephone_fixe: form.telephone_fixe.trim() ? formatTelephone(normaliserTelephone(form.telephone_fixe)) : '',
+        email: form.email.trim().toLowerCase(),
+        rccm: form.rccm.trim(),
         whatsapp: whatsappNormalise(form.whatsapp).replace('+', ''), // format wa.me : 221776562804
       };
       await enregistrerParametres(valeurs);
@@ -106,9 +112,23 @@ export default function ParamResidence() {
             {erreur('adresse')}
           </div>
           <div className={champ('telephone')}>
-            <label htmlFor="pr-tel">Téléphone de la réception</label>
+            <label htmlFor="pr-tel">Mobile de la réception</label>
             <input id="pr-tel" type="tel" inputMode="tel" value={form.telephone} onChange={maj('telephone')} />
             {erreur('telephone')}
+          </div>
+          <div className={champ('telephone_fixe')}>
+            <label htmlFor="pr-fixe">Téléphone fixe</label>
+            <input id="pr-fixe" type="tel" inputMode="tel" value={form.telephone_fixe} onChange={maj('telephone_fixe')} placeholder="33 992 52 12" />
+            {erreur('telephone_fixe')}
+          </div>
+          <div className={champ('email')}>
+            <label htmlFor="pr-mail">Email</label>
+            <input id="pr-mail" type="email" value={form.email} onChange={maj('email')} />
+            {erreur('email')}
+          </div>
+          <div className="champ">
+            <label htmlFor="pr-rccm">RCCM</label>
+            <input id="pr-rccm" value={form.rccm} onChange={maj('rccm')} placeholder="N° du registre du commerce" />
           </div>
           <div className={champ('whatsapp')}>
             <label htmlFor="pr-wa">Numéro WhatsApp <button type="button" className="presid__lien" onClick={copierTelephone}>= téléphone</button></label>

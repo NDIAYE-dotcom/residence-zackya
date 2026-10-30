@@ -18,7 +18,10 @@ import Rapports from './pages/admin/Rapports/Rapports.jsx';
 import Menage from './pages/admin/Menage/Menage.jsx';
 import Maintenance from './pages/admin/Maintenance/Maintenance.jsx';
 import Parametres from './pages/admin/Parametres/Parametres.jsx';
+import PublicLayout from './layouts/PublicLayout/PublicLayout.jsx';
 import Home from './pages/public/Home/Home.jsx';
+import StudiosPublic from './pages/public/Studios/Studios.jsx';
+import StudioDetail from './pages/public/StudioDetail/StudioDetail.jsx';
 
 // Rôles autorisés par module
 const ROLES_CLIENTS = ['admin', 'gerant', 'receptionniste'];
@@ -29,7 +32,11 @@ export default function App() {
   return (
     <Routes>
       {/* ===== SITE PUBLIC DE RÉSERVATION ===== */}
-      <Route path="/" element={<Home />} />
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/studios" element={<StudiosPublic />} />
+        <Route path="/studios/:id" element={<StudioDetail />} />
+      </Route>
       {/* À venir : /studios, /studios/:id, /reserver, /confirmation/:ref, /suivi */}
 
       {/* ===== APPLICATION D'ADMINISTRATION ===== */}

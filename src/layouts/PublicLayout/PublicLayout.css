@@ -1,0 +1,41 @@
+.site { min-height: 100vh; display: flex; flex-direction: column; background: var(--blanc); }
+
+/* ---- Entête ---- */
+.site__entete {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 10px 6vw; background: var(--blanc); border-bottom: 1px solid var(--bordure);
+}
+.site__logo img { height: 74px; display: block; margin: -6px 0; } /* logo carré avec marges : un peu plus grand */
+.site__menu { display: flex; align-items: center; gap: 26px; }
+.site__menu a { text-decoration: none; font-weight: 600; font-size: .92rem; color: var(--bleu); }
+.site__menu a:hover { color: var(--rouge); }
+.site__menu .site__lien--actif { color: var(--rouge); }
+.site__menu .site__whatsapp { color: var(--blanc); padding: 10px 18px; }
+.site__menu .site__whatsapp:hover { color: var(--blanc); }
+.site__burger { display: none; background: none; border: none; color: var(--bleu); font-size: 1.7rem; line-height: 1; padding: 6px 10px; border-radius: var(--radius-sm); }
+
+.site__contenu { flex: 1; }
+
+/* ---- Pied de page ---- */
+.site__pied { background: var(--bleu); color: var(--blanc); padding: 40px 6vw 18px; margin-top: 40px; border-top: 5px solid var(--rouge); }
+.site__pied-grille { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; }
+.site__pied-logo { width: 110px; margin-bottom: 12px; background: var(--blanc); border-radius: var(--radius-sm); padding: 6px; }
+.site__pied h2 { margin: 0 0 10px; font-size: .95rem; text-transform: uppercase; letter-spacing: .5px; }
+.site__pied p { margin: 0 0 6px; opacity: .85; font-size: .9rem; line-height: 1.5; }
+.site__pied a { color: var(--blanc); }
+.site__pied .site__copyright { margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--voile); text-align: center; font-size: .8rem; }
+
+@media (max-width: 860px) {
+  .site__logo img { height: 60px; margin: -4px 0; }
+  .site__burger { display: block; }
+  .site__menu { display: none; }
+  .site__menu--ouvert {
+    display: flex; flex-direction: column; align-items: stretch; gap: 0;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--blanc); border-bottom: 3px solid var(--rouge); box-shadow: var(--ombre);
+  }
+  .site__menu--ouvert a { padding: 15px 6vw; border-top: 1px solid var(--bordure); }
+  .site__menu--ouvert .site__whatsapp { margin: 12px 6vw; border-radius: var(--radius-sm); }
+  .site__pied-grille { grid-template-columns: 1fr; gap: 20px; }
+}

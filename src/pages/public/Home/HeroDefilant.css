@@ -1,0 +1,83 @@
+.hero {
+  position: relative; overflow: hidden; isolation: isolate;
+  min-height: min(86vh, 760px);
+  display: flex; align-items: center;
+  background: var(--bleu-fonce); color: var(--blanc);
+}
+
+/* Photos superposées : fondu enchaîné */
+.hero__diapo { position: absolute; inset: 0; z-index: -2; opacity: 0; transition: opacity 1.2s ease; }
+.hero__diapo--active { opacity: 1; }
+.hero__diapo picture, .hero__diapo img { display: block; width: 100%; height: 100%; }
+.hero__diapo img { object-fit: cover; transform: scale(1.02); }
+/* Zoom lent sur la photo affichée (« Ken Burns ») */
+.hero__diapo--active img { animation: hero-zoom 7.5s ease-out forwards; }
+
+/* Voile bleu pour la lisibilité du texte (gauche + bas) */
+.hero__voile {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(90deg, var(--bleu-fonce) 0%, var(--bleu-fonce) 26%, transparent 76%),
+    linear-gradient(0deg, var(--bleu-fonce) 0%, transparent 40%);
+  opacity: .86;
+}
+
+.hero__contenu { position: relative; padding: 90px 6vw 120px; max-width: 760px; display: flex; flex-direction: column; gap: 18px; text-shadow: 0 2px 14px var(--voile); }
+.hero__surtitre {
+  align-self: flex-start; padding: 6px 14px; border-radius: 999px;
+  background: var(--rouge); font-size: .8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+}
+.hero h1 { margin: 0; font-family: var(--police-titre); font-size: clamp(2.2rem, 5.5vw, 4rem); line-height: 1.08; }
+.hero h1 em { font-style: normal; color: var(--rouge-clair); font-size: .62em; display: inline-block; margin-top: 8px; }
+.hero__legende { margin: 0; max-width: 520px; font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.55; opacity: .95; animation: hero-texte .7s ease-out; }
+.hero__boutons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+.hero__boutons .btn { padding: 14px 24px; font-size: 1rem; text-decoration: none; }
+.hero__boutons .btn-contour { color: var(--blanc); border-color: var(--blanc); }
+.hero__boutons .btn-contour:hover { background: var(--blanc); color: var(--bleu); }
+
+/* Flèches */
+.hero__fleche {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--blanc);
+  background: transparent; color: var(--blanc); font-size: 1.8rem; line-height: 1; padding-bottom: 4px;
+  opacity: .7; transition: opacity .2s, background .2s;
+}
+.hero__fleche:hover, .hero__fleche:focus-visible { opacity: 1; background: var(--voile); }
+.hero__fleche--gauche { left: 18px; }
+.hero__fleche--droite { right: 18px; }
+
+/* Points + pause */
+.hero__commandes { position: absolute; left: 6vw; bottom: 86px; z-index: 2; display: flex; align-items: center; gap: 14px; }
+.hero__points { display: flex; gap: 8px; }
+.hero__points button {
+  position: relative; overflow: hidden; width: 26px; height: 5px; padding: 0; border: none; border-radius: 999px;
+  background: var(--blanc); opacity: .45; transition: width .3s, opacity .3s;
+}
+.hero__points .hero__point--actif { width: 56px; opacity: 1; background: var(--voile); }
+.hero__points span { position: absolute; inset: 0; width: 0; background: var(--blanc); animation: hero-progression linear forwards; }
+.hero--arrete .hero__points span { animation-play-state: paused; }
+.hero__pause {
+  width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--blanc);
+  background: transparent; color: var(--blanc); font-size: .7rem; padding: 0; opacity: .75;
+}
+.hero__pause:hover { opacity: 1; }
+
+@keyframes hero-zoom { from { transform: scale(1.02); } to { transform: scale(1.1); } }
+@keyframes hero-texte { from { opacity: 0; transform: translateY(10px); } to { opacity: .95; transform: none; } }
+@keyframes hero-progression { from { width: 0; } to { width: 100%; } }
+
+/* Moins d'animations si l'appareil le demande */
+@media (prefers-reduced-motion: reduce) {
+  .hero__diapo { transition: none; }
+  .hero__diapo--active img, .hero__legende { animation: none; }
+  .hero__points span { display: none; }
+}
+
+@media (max-width: 700px) {
+  .hero { min-height: 74vh; align-items: flex-end; }
+  .hero__voile { background: linear-gradient(0deg, var(--bleu-fonce) 0%, var(--bleu-fonce) 38%, transparent 96%); opacity: .9; }
+  .hero__contenu { padding: 80px 6vw 120px; }
+  .hero__fleche { display: none; } /* on glisse au doigt */
+  .hero__boutons .btn { flex: 1; padding: 13px 14px; }
+  .hero__commandes { bottom: 82px; }
+}

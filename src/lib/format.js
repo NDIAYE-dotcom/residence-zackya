@@ -186,3 +186,13 @@ export const MODULES_JOURNAL = {
 export const PRIORITES = { urgente: 'Urgente', haute: 'Haute', normale: 'Normale', basse: 'Basse' };
 export const STATUTS_TACHE = { a_faire: 'À faire', en_cours: 'En cours', terminee: 'Résolue' };
 export const ETATS_INVENTAIRE = { bon: 'Bon état', use: 'Usé', a_remplacer: 'À remplacer' };
+
+// Icônes des équipements (site public)
+export const ICONES_EQUIPEMENTS = {
+  Climatisation: '❄️', Ventilateur: '🌀', Wifi: '📶', TV: '📺', 'Canal+': '📡', 'Cuisine équipée': '🍳', Kitchenette: '🍳',
+  'Réfrigérateur': '🧊', 'Micro-ondes': '♨️', 'Eau chaude': '🚿', 'Machine à laver': '🧺', 'Fer à repasser': '👔',
+  'Lit double': '🛏️', Bureau: '💼', Balcon: '🌇', Parking: '🅿️', 'Groupe électrogène': '⚡', 'Gardiennage 24h/24': '🛡️',
+};
+
+// Tarif le moins cher d'un studio (« à partir de ») — tarifs : [{ formule, prix }]
+export const tarifMinimum = (tarifs = []) => tarifs.reduce((min, t) => (!min || t.prix < min.prix ? t : min), null);
