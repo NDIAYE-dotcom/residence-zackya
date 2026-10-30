@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '../../../context/AuthContext.jsx';
+import { lireParametres } from '../../../services/parametres.js';
 import { Link } from 'react-router-dom';
 import { chargerTableauDeBord } from '../../../services/dashboard.js';
 import { messageErreur } from '../../../lib/erreurs.js';
@@ -13,6 +15,17 @@ export default function Dashboard() {
   const [encaisseJour, setEncaisseJour] = useState(0);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState('');
+  const { profile } = useAuth();
+  const [rappelSauvegarde, setRappelSauvegarde] = useState(false);
+
+  // Admin : rappel si aucune sauvegarde depuis 30 jours
+  useEffect(() => {
+    if (profile?.role !== 'admin') return;
+    lireParametres().then((p) => {
+      const derniere = p.derniere_sauvegarde ? new Date(p.derniere_sauvegarde) : null;
+      setRappelSauvegarde(!derniere || Date.now() - derniere > 30 * 86400000);
+    }).catch(() => {});
+  }, [profile?.role]);
 
   const charger = async () => {
     setErreur('');
@@ -47,6 +60,13 @@ export default function Dashboard() {
   return (
     <div className="dash">
       <h1 className="dash__titre">Tableau de bord</h1>
+
+      {rappelSauvegarde && (
+        <div className="dash__rappel">
+          💾 Aucune sauvegarde des données depuis plus de 30 jours.
+          <Link to="/admin/parametres?onglet=sauvegarde">Faire une sauvegarde</Link>
+        </div>
+      )}
 
       <section className="dash__kpis">
         <div className="kpi"><span>Taux d’occupation</span><strong>{taux} %</strong><small>{occupes} / {studios.length} studios</small></div>

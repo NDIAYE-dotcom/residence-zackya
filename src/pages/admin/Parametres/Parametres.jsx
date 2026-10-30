@@ -2,9 +2,10 @@ import { useSearchParams } from 'react-router-dom';
 import ParamResidence from './ParamResidence.jsx';
 import ParamCategories from './ParamCategories.jsx';
 import Journal from './Journal.jsx';
+import Sauvegarde from './Sauvegarde.jsx';
 import './Parametres.css';
 
-const ONGLETS = { residence: 'Résidence', categories: 'Catégories', journal: 'Journal d’activité' };
+const ONGLETS = { residence: 'Résidence', categories: 'Catégories', journal: 'Journal d’activité', sauvegarde: 'Sauvegarde' };
 
 // Module « Paramètres » (admin)
 export default function Parametres() {
@@ -28,6 +29,7 @@ export default function Parametres() {
       {onglet === 'residence' && <ParamResidence />}
       {onglet === 'categories' && <ParamCategories />}
       {onglet === 'journal' && <Journal />}
+      {onglet === 'sauvegarde' && <Sauvegarde />}
     </div>
   );
 }

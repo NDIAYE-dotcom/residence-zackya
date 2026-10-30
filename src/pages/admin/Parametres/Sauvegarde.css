@@ -1,0 +1,11 @@
+.sauv { display: flex; flex-direction: column; gap: 14px; max-width: 760px; }
+.sauv__etat { padding: 12px 16px; border-radius: var(--radius-sm); font-size: .9rem; }
+.sauv__etat--ok { background: var(--succes-clair); color: var(--texte); }
+.sauv__etat--retard { background: var(--alerte-clair); color: var(--texte); border-left: 4px solid var(--alerte); }
+
+.sauv__carte { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.sauv__carte h2 { margin: 0; font-size: 1.05rem; }
+.sauv__carte p { margin: 0; line-height: 1.6; color: var(--texte); font-size: .9rem; }
+.sauv__carte small { color: var(--texte-doux); font-size: .78rem; }
+.sauv__barre { width: 100%; height: 8px; border-radius: 999px; background: var(--fond); overflow: hidden; }
+.sauv__barre span { display: block; height: 100%; background: var(--rouge); transition: width .2s; }
