@@ -5,7 +5,7 @@ import { formatFCFA, FORMULES, STATUTS_STUDIO, UNITES_FORMULE, UNITES_FORMULE_PL
 import './EtapeStudio.css';
 
 // Étape 2 : studios libres sur la période, avec le prix calculé par la base
-export default function EtapeStudio({ sejour, choisi, onChoisir, onRetour, onSuivant }) {
+export default function EtapeStudio({ sejour, choisi, onChoisir, prefere, onRetour, onSuivant }) {
   const [studios, setStudios] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState('');
@@ -16,11 +16,17 @@ export default function EtapeStudio({ sejour, choisi, onChoisir, onRetour, onSui
     setChargement(true);
     setErreur('');
     studiosLibres(sejour.formule, sejour.debut, sejour.fin)
-      .then((s) => { if (!annule) setStudios(s); })
+      .then((s) => {
+        if (annule) return;
+        setStudios(s);
+        // Studio cliqué dans le planning : sélectionné automatiquement s'il est libre
+        const p = !choisi && prefere && s.find((x) => x.studio_id === prefere);
+        if (p) onChoisir(p);
+      })
       .catch((err) => { if (!annule) setErreur(messageErreur(err, 'Impossible de vérifier les disponibilités.')); })
       .finally(() => { if (!annule) setChargement(false); });
     return () => { annule = true; };
-  }, [sejour.formule, sejour.debut, sejour.fin, essai]);
+  }, [sejour.formule, sejour.debut, sejour.fin, essai]); // choisi / prefere lus au moment du chargement seulement
 
   return (
     <div className="estudio">

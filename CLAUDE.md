@@ -1853,7 +1853,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 3 Clients
 - [x] 4 Réservations
 - [x] 5 Fiche réservation
-- [ ] 6 Planning
+- [x] 6 Planning
 - [ ] 7 Caisse
 - [ ] 8 Dépenses
 - [ ] 9 Rapports
@@ -1918,3 +1918,8 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Colonnes ajoutées : `reservations.motif_annulation / annulee_le / annulee_par` ; **`v_reservations` recréée** (r.* figé à la création → la recréer si on ajoute encore des colonnes à reservations).
   Bouton « Encaisser » sur la fiche (`PaiementModal` + `services/paiements.js`) en avance sur l'étape 7 → la Caisse réutilisera `enregistrerPaiement`. Journal des paiements rattaché à la réservation (`paiement.ajoute`).
   Restitution de caution non gérée (type `remboursement` réduirait total_paye) → **à traiter à l'étape 7**.
+- **2026-10-30 · Étape 6 Planning** : testé et validé (vues Jour/Semaine/Mois, clic barre → fiche, clic case vide → nouvelle résa pré-remplie, temps réel entre 2 fenêtres).
+  Migration `007_realtime_planning.sql` exécutée (publication `supabase_realtime` : reservations + studios ; RLS appliquée → le ménage ne voit pas les noms clients).
+  `services/planning.js` : `abonnerPlanning(rappel, surStatut)` (canal postgres_changes, état SUBSCRIBED/CHANNEL_ERROR affiché) → **réutiliser pour Ménage (étape 10) et notifications (étape 15)**.
+  Vue + date dans l'URL (`?vue=semaine&date=AAAA-MM-JJ`). Nouvelle réservation accepte `?studio=&formule=&debut=` (abandonne le brouillon, va à l'étape 2, studio présélectionné si libre).
+  Barres : terminée = jusqu'au `checkout_at` réel ; annulées / no-show non affichées.

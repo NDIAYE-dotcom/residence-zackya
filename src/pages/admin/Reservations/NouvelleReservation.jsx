@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '../../../components/Toast/Toast.jsx';
 import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
 import { useBrouillon } from '../../../hooks/useBrouillon.js';
@@ -28,6 +28,7 @@ const SAISIE_INITIALE = {
   etape: 1,
   sejour: null, // { formule, debut, fin, quantite } — null = séjour proposé par défaut
   studio: null,
+  studioPrefere: null, // studio cliqué dans le planning (choisi automatiquement s'il est libre)
   client: null, // client existant
   modeClient: 'existant', // 'existant' | 'nouveau'
   nouveauClient: { full_name: '', phone: '', nationalite: 'Sénégalaise' },
@@ -43,6 +44,7 @@ const entier = (v) => (v === '' || v == null ? 0 : Number(v));
 export default function NouvelleReservation() {
   const navigate = useNavigate();
   const toast = useToast();
+  const [recherche, setRecherche] = useSearchParams();
   const [params, setParams] = useState(null);
   const [sejourParDefaut, setSejourParDefaut] = useState(null);
   const [saisie, setSaisie, brouillon] = useBrouillon('nouvelle-reservation', SAISIE_INITIALE);
@@ -66,6 +68,19 @@ export default function NouvelleReservation() {
       setParams(p);
       const debut = debutParDefaut('nuitee', p);
       setSejourParDefaut({ formule: 'nuitee', quantite: 1, debut: versChampDate(debut), fin: versChampDate(calculerFin('nuitee', debut, 1, p)) });
+
+      // Arrivée depuis un clic dans le planning : nouvelle saisie, directement à l'étape « Studio »
+      const formuleUrl = recherche.get('formule');
+      const debutUrl = recherche.get('debut');
+      if (debutUrl && FORMULES[formuleUrl]) {
+        const d = debutParDefaut(formuleUrl, p, new Date(debutUrl));
+        brouillon.abandonner();
+        setSaisie({
+          ...SAISIE_INITIALE, etape: 2, studioPrefere: recherche.get('studio'),
+          sejour: { formule: formuleUrl, quantite: 1, debut: versChampDate(d), fin: versChampDate(calculerFin(formuleUrl, d, 1, p)) },
+        });
+        setRecherche({}, { replace: true }); // une actualisation ne doit pas écraser la saisie suivante
+      }
     };
     lireParametres().then(demarrer).catch(() => demarrer({}));
   }, []);
@@ -156,7 +171,7 @@ export default function NouvelleReservation() {
             <EtapeDates sejour={sejour} params={params} onChange={changerSejour} onSuivant={() => setEtape(2)} />
           )}
           {etape === 2 && (
-            <EtapeStudio sejour={sejour} choisi={studio} onChoisir={setStudio}
+            <EtapeStudio sejour={sejour} choisi={studio} onChoisir={setStudio} prefere={saisie.studioPrefere}
               onRetour={() => setEtape(1)} onSuivant={() => setEtape(3)} />
           )}
           {etape === 3 && (

@@ -11,6 +11,7 @@ import ClientFiche from './pages/admin/Clients/ClientFiche.jsx';
 import Reservations from './pages/admin/Reservations/Reservations.jsx';
 import NouvelleReservation from './pages/admin/Reservations/NouvelleReservation.jsx';
 import ReservationFiche from './pages/admin/Reservations/ReservationFiche.jsx';
+import Planning from './pages/admin/Planning/Planning.jsx';
 import Home from './pages/public/Home/Home.jsx';
 import EnConstruction from './components/EnConstruction.jsx';
 
@@ -38,7 +39,7 @@ export default function App() {
         }
       >
         <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/planning" element={<EnConstruction titre="Planning" />} />
+        <Route path="/admin/planning" element={<Planning />} />
         <Route path="/admin/reservations" element={<ProtectedRoute roles={ROLES_RESERVATIONS}><Reservations /></ProtectedRoute>} />
         <Route path="/admin/reservations/:id" element={<ProtectedRoute roles={ROLES_RESERVATIONS}><ReservationFiche /></ProtectedRoute>} />
         <Route path="/admin/reservations/nouvelle" element={<ProtectedRoute roles={ROLES_CLIENTS}><NouvelleReservation /></ProtectedRoute>} />
