@@ -31,6 +31,28 @@
 .admin__utilisateur .btn { padding: 8px 14px; }
 
 .admin__contenu { padding: 28px; }
+
+/* Pastille « à confirmer » dans le menu */
+.admin__lien { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.admin__pastille {
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--rouge); color: var(--blanc); font-size: .74rem; font-weight: 700;
+}
+
+/* Bouton cloche (alertes sonores) */
+.admin__cloche {
+  position: relative; display: inline-flex; align-items: center; gap: 6px; margin-left: auto;
+  padding: 8px 12px; border-radius: 999px; border: 1.5px solid var(--bordure); background: var(--blanc);
+  font-size: .82rem; font-weight: 600; color: var(--texte-doux);
+}
+.admin__cloche--active { border-color: var(--succes); color: var(--succes); background: var(--succes-clair); }
+.admin__cloche em {
+  position: absolute; top: -6px; right: -6px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px;
+  background: var(--rouge); color: var(--blanc); font-style: normal; font-size: .7rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.admin__cloche + .admin__utilisateur { margin-left: 16px; }
 .admin__voile { display: none; }
 
 @media (max-width: 900px) {
@@ -40,4 +62,5 @@
   .admin__burger { display: block; }
   .admin__contenu { padding: 18px; }
   .admin__utilisateur div { display: none; }
+  .admin__cloche span { display: none; }
 }

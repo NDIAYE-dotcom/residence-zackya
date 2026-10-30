@@ -6,6 +6,7 @@ import Confirm from '../../../components/Confirm/Confirm.jsx';
 import { lireReservation, historiqueReservation, changerStatut } from '../../../services/reservations.js';
 import { paiementsReservation } from '../../../services/paiements.js';
 import { lireClient } from '../../../services/clients.js';
+import { notifierClient } from '../../../services/notifications.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { imprimerRecu } from '../../../lib/recu.js';
 import {
@@ -21,6 +22,7 @@ import PaiementModal from './PaiementModal.jsx';
 import './ReservationFiche.css';
 
 const ACTIVES = ['en_attente', 'confirmee', 'en_cours'];
+const ETATS_ENVOI = { envoye: 'envoyé', sans_email: 'pas d’email', non_configure: 'non configuré', erreur: 'échec' };
 
 // Détail lisible d'une ligne d'historique
 const detailHistorique = (h) => {
@@ -29,6 +31,8 @@ const detailHistorique = (h) => {
   if (h.action === 'reservation.prolongee') return `Départ : ${formatDateHeure(d.nouveau_depart)} · ${formatFCFA(d.nouveau_montant)}`;
   if (h.action === 'reservation.studio_change') return `${d.ancien_studio} → ${d.nouveau_studio} · ${formatFCFA(d.nouveau_montant)}`;
   if (h.action === 'reservation.creee' && d.acompte) return `Acompte ${formatFCFA(d.acompte)}`;
+  if (h.action === 'reservation.creee' && d.source === 'site') return 'Réservée en ligne par le client';
+  if (h.action === 'notification.confirmation') return `Email : ${ETATS_ENVOI[d.email] ?? d.email}`;
   return d.motif ? `Motif : ${d.motif}` : '';
 };
 
@@ -88,6 +92,28 @@ export default function ReservationFiche() {
   };
 
   const apresModale = (message) => { toast.succes(message); fermer(); charger(); };
+
+  // Confirmer, puis prévenir le client (email ; WhatsApp Business plus tard) sans bloquer la réception
+  const confirmer = async () => {
+    setEnCours(true);
+    try {
+      await changerStatut(resa.id, 'confirmee');
+      toast.succes('Réservation confirmée.');
+      await charger();
+      notifierClient(resa.id, 'confirmee')
+        .then((r) => {
+          if (r.email === 'envoye') toast.succes('Email de confirmation envoyé au client.');
+          else if (r.email === 'erreur') toast.erreur('L’email de confirmation n’a pas pu être envoyé.');
+          else if (r.email === 'sans_email') toast.succes('Le client n’a pas d’email : prévenez-le avec le bouton WhatsApp.');
+          charger(); // l'envoi apparaît dans l'historique
+        })
+        .catch(() => { /* fonction non déployée ou non configurée : la confirmation reste valable */ });
+    } catch (err) {
+      toast.erreur(messageErreur(err));
+    } finally {
+      setEnCours(false);
+    }
+  };
 
   if (chargement) return <div className="rfiche__etat">Chargement de la réservation…</div>;
   if (erreur) {
@@ -149,8 +175,7 @@ export default function ReservationFiche() {
       {peutAgir && (
         <section className="rfiche__actions">
           {resa.statut === 'en_attente' && (
-            <button className="btn btn-primaire" disabled={enCours}
-              onClick={() => agir(() => changerStatut(resa.id, 'confirmee'), 'Réservation confirmée.')}>
+            <button className="btn btn-primaire" disabled={enCours} onClick={confirmer}>
               Confirmer
             </button>
           )}

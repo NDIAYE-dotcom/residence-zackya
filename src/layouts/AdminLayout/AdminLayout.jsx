@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROLES_STAFF } from '../../lib/format.js';
+import { useAlertesReservations } from '../../hooks/useAlertesReservations.js';
+import AlertesReservations from '../../components/AlertesReservations/AlertesReservations.jsx';
 import './AdminLayout.css';
 
 // Menu : "roles" = qui voit l'entrée (absent = tout le personnel)
@@ -27,6 +29,10 @@ export default function AdminLayout() {
 
   const items = MENU.filter((m) => !m.roles || m.roles.includes(profile?.role));
 
+  // Alertes temps réel des réservations en ligne (personnes qui les confirment)
+  const recoitAlertes = ['admin', 'gerant', 'receptionniste'].includes(profile?.role);
+  const { enAttente, alertes, son, activerSon, couperSon, fermer } = useAlertesReservations(recoitAlertes);
+
   const deconnexion = async () => {
     await signOut();
     navigate('/admin/login', { replace: true });
@@ -43,6 +49,9 @@ export default function AdminLayout() {
             <NavLink key={m.to} to={m.to} onClick={() => setMenuOuvert(false)}
               className={({ isActive }) => `admin__lien ${isActive ? 'admin__lien--actif' : ''}`}>
               {m.label}
+              {m.to === '/admin/reservations' && recoitAlertes && enAttente > 0 && (
+                <span className="admin__pastille" title={`${enAttente} réservation(s) à confirmer`}>{enAttente}</span>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -53,6 +62,14 @@ export default function AdminLayout() {
       <div className="admin__principal">
         <header className="admin__entete">
           <button className="admin__burger" onClick={() => setMenuOuvert(true)} aria-label="Ouvrir le menu">☰</button>
+          {recoitAlertes && (
+            <button type="button" className={`admin__cloche ${son ? 'admin__cloche--active' : ''}`}
+              onClick={son ? couperSon : activerSon}
+              title={son ? 'Alertes sonores activées (cliquer pour couper)' : 'Activer les alertes sonores des réservations en ligne'}>
+              {son ? '🔔' : '🔕'}<span>{son ? 'Alertes' : 'Activer le son'}</span>
+              {enAttente > 0 && <em>{enAttente}</em>}
+            </button>
+          )}
           <div className="admin__utilisateur">
             <div>
               <strong>{profile?.full_name || 'Utilisateur'}</strong>
@@ -61,6 +78,7 @@ export default function AdminLayout() {
             <button className="btn btn-contour" onClick={deconnexion}>Déconnexion</button>
           </div>
         </header>
+        <AlertesReservations alertes={alertes} onFermer={fermer} />
         <main className="admin__contenu">
           <Outlet />
         </main>
