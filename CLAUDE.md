@@ -1861,7 +1861,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 11 Maintenance & inventaire
 - [x] 12 Paramètres
 - [x] 13 Pages studios
-- [ ] 14 Tunnel de réservation
+- [x] 14 Tunnel de réservation
 - [ ] 15 Notifications
 - [ ] 16 PayDunya
 - [ ] 17 Qualité
@@ -1958,3 +1958,8 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Accueil : `HeroDefilant` (5 photos `public/hero/hero-N.jpg` + `-mobile.jpg`, fondu + zoom, pause, glisser, bouton « Voir la galerie »), recherche à cheval, bandeau d'atouts. Originaux déplacés dans `photos-originales/` (non publiés).
   `/studios` et `/studios/:id` (`services/public.js` : `catalogueStudios`, `studioPublic` avec `.eq('tarifs.actif', true)` car le personnel connecté voit aussi les tarifs inactifs).
   Vérification visuelle possible sans connexion : Playwright + Chrome système (scratchpad, `channel: 'chrome'`).
+- **2026-10-31 · Étape 14 Tunnel de réservation** : testé et validé (réservation en ligne réelle, WhatsApp, suivi, confirmation admin visible côté client). Migration `016_reservation_publique.sql` exécutée :
+  `creer_reservation_publique` renforcée (téléphone `+221…` obligatoire — le front normalise avec `normaliserTelephone`, capacité, ≤ 93 j, liste noire, max 3 `en_attente` site par client, journal user_id null) ;
+  `suivre_reservation` (drop/recreate) renvoie aussi `studio_code, studio_id, remise, total_paye, nb_personnes`.
+  Pages `/reserver` (vérif dispo + prix en direct, honeypot `site_web`, brouillon « public »), `/confirmation/:ref` (téléphone gardé en sessionStorage `zaquia:suivi:REF`), `/suivi`.
+  Le visiteur n'a pas le temps réel (RLS) → `hooks/useActualisationAuto.js` (toutes les 15 s + retour sur l'onglet) sur Suivi et Confirmation.
