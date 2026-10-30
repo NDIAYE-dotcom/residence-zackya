@@ -1,10 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { suivreReservation, lireParametres } from '../../../services/public.js';
+import { useActualisationAuto } from '../../../hooks/useActualisationAuto.js';
 import { formatFCFA, FORMULES, STATUTS_RESERVATION } from '../../../lib/format.js';
 import { formatDuree, formatJourHeure } from '../../../lib/dates.js';
 import { normaliserTelephone } from '../../../lib/telephone.js';
 import './Suivi.css';
+
+// Message affiché quand le statut change pendant que la page est ouverte
+const NOUVELLES = {
+  confirmee: 'Bonne nouvelle : votre réservation est confirmée !',
+  en_cours: 'Bienvenue ! Votre séjour a commencé.',
+  terminee: 'Merci pour votre séjour, à bientôt !',
+  annulee: 'Votre réservation a été annulée. Contactez la réception pour toute question.',
+  no_show: 'Votre réservation a été clôturée. Contactez la réception pour toute question.',
+};
 
 const ETAPES = [
   { statut: 'en_attente', libelle: 'Demande reçue' },
@@ -23,6 +33,9 @@ export default function Suivi() {
   const [erreur, setErreur] = useState('');
   const [recherche, setRecherche] = useState(false);
   const [coordonnees, setCoordonnees] = useState({});
+  const [suivie, setSuivie] = useState(null); // { ref, phone } de la réservation affichée
+  const [nouvelle, setNouvelle] = useState(''); // changement de statut détecté
+  const [majLe, setMajLe] = useState(null);
 
   useEffect(() => {
     document.title = 'Suivre ma réservation · Zaquia Résidence';
@@ -43,12 +56,28 @@ export default function Suivi() {
       const r = await suivreReservation(ref.trim().toUpperCase(), phone);
       setResa(r);
       setIntrouvable(!r);
+      setSuivie(r ? { ref: r.reference, phone } : null);
+      setNouvelle('');
+      setMajLe(new Date());
     } catch {
       setErreur('Recherche impossible pour le moment. Réessayez dans un instant.');
     } finally {
       setRecherche(false);
     }
   }
+
+  // Revérifie toute seule la réservation affichée (toutes les 15 s et au retour sur l'onglet)
+  useActualisationAuto(async () => {
+    try {
+      const r = await suivreReservation(suivie.ref, suivie.phone);
+      if (!r) return;
+      setResa((avant) => {
+        if (avant && avant.statut !== r.statut) setNouvelle(NOUVELLES[r.statut] ?? 'Votre réservation a été mise à jour.');
+        return r;
+      });
+      setMajLe(new Date());
+    } catch { /* réseau coupé : on réessaiera au prochain passage */ }
+  }, 15000, !!suivie);
 
   const valider = (e) => {
     e.preventDefault();
@@ -95,6 +124,7 @@ export default function Suivi() {
 
       {resa && (
         <section className="suivi__resultat">
+          {nouvelle && <p className="suivi__nouvelle" role="status">{nouvelle}</p>}
           <div className="suivi__titre">
             <strong>{resa.reference}</strong>
             <span className={`badge badge-${resa.statut}`}>{resa.statut === 'en_attente' ? 'En attente de confirmation' : STATUTS_RESERVATION[resa.statut]}</span>
@@ -127,6 +157,9 @@ export default function Suivi() {
           </div>
 
           {whatsapp && <a className="btn btn-contour suivi__contact" href={whatsapp} target="_blank" rel="noreferrer">Une question ? Écrire sur WhatsApp</a>}
+          {majLe && (
+            <p className="suivi__auto"><span aria-hidden="true" />Mise à jour automatique · vérifié à {majLe.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</p>
+          )}
         </section>
       )}
     </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { suivreReservation, lireParametres } from '../../../services/public.js';
+import { useActualisationAuto } from '../../../hooks/useActualisationAuto.js';
 import { formatFCFA, FORMULES, STATUTS_RESERVATION } from '../../../lib/format.js';
 import { formatDuree, formatJourHeure } from '../../../lib/dates.js';
 import './Confirmation.css';
@@ -25,6 +26,11 @@ export default function Confirmation() {
     suivreReservation(reference, phone).then(setResa).catch(() => setResa(null)).finally(() => setChargement(false));
   }, [reference, phone]);
 
+  // Statut revérifié toutes les 15 s : le client voit « Confirmée » sans actualiser
+  useActualisationAuto(() => {
+    suivreReservation(reference, phone).then((r) => { if (r) setResa(r); }).catch(() => {});
+  }, 15000, !!phone && !!resa);
+
   const copier = async () => {
     try { await navigator.clipboard.writeText(reference); setCopie(true); setTimeout(() => setCopie(false), 2000); } catch { /* ignoré */ }
   };
@@ -40,7 +46,7 @@ export default function Confirmation() {
     <div className="confirm-page">
       <div className="confirm-page__carte">
         <div className="confirm-page__icone" aria-hidden="true">✓</div>
-        <h1>Demande de réservation envoyée !</h1>
+        <h1>{resa?.statut === 'confirmee' ? 'Réservation confirmée !' : 'Demande de réservation envoyée !'}</h1>
         <p className="confirm-page__intro">Merci ! Gardez bien votre référence : elle vous permet de suivre votre réservation.</p>
 
         <div className="confirm-page__ref">
