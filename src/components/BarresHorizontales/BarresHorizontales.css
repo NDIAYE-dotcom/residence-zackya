@@ -1,0 +1,10 @@
+.barresh { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.barresh li { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+.barresh__titre { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 10px; font-size: .86rem; color: var(--texte); }
+.barresh__titre strong { white-space: nowrap; }
+.barresh__piste { height: 8px; border-radius: 999px; background: var(--fond); overflow: hidden; }
+.barresh__barre { display: block; height: 100%; border-radius: 999px; min-width: 2px; }
+.barresh__barre--bleu { background: var(--graphe-1); }
+.barresh__barre--rouge { background: var(--graphe-2); }
+.barresh small { font-size: .74rem; color: var(--texte-doux); font-weight: 600; text-align: right; min-width: 40px; white-space: nowrap; }
+.barresh__vide { margin: 0; color: var(--texte-doux); font-size: .88rem; }

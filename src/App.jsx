@@ -14,6 +14,7 @@ import ReservationFiche from './pages/admin/Reservations/ReservationFiche.jsx';
 import Planning from './pages/admin/Planning/Planning.jsx';
 import Caisse from './pages/admin/Caisse/Caisse.jsx';
 import Depenses from './pages/admin/Depenses/Depenses.jsx';
+import Rapports from './pages/admin/Rapports/Rapports.jsx';
 import Home from './pages/public/Home/Home.jsx';
 import EnConstruction from './components/EnConstruction.jsx';
 
@@ -53,7 +54,7 @@ export default function App() {
         <Route path="/admin/depenses" element={<ProtectedRoute roles={ROLES_ARGENT}><Depenses /></ProtectedRoute>} />
         <Route path="/admin/menage" element={<EnConstruction titre="Ménage" />} />
         <Route path="/admin/maintenance" element={<EnConstruction titre="Maintenance" />} />
-        <Route path="/admin/rapports" element={<EnConstruction titre="Rapports" />} />
+        <Route path="/admin/rapports" element={<ProtectedRoute roles={ROLES_ARGENT}><Rapports /></ProtectedRoute>} />
         <Route path="/admin/personnel" element={<ProtectedRoute roles={['admin']}><Personnel /></ProtectedRoute>} />
         <Route path="/admin/parametres" element={<EnConstruction titre="Paramètres" />} />
       </Route>

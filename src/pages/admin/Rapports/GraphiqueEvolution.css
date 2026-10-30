@@ -1,0 +1,15 @@
+.graphe { width: 100%; }
+.graphe__legende { color: var(--texte); font-size: .82rem; font-weight: 600; }
+
+.graphe__infobulle {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  background: var(--blanc); border: 1px solid var(--bordure); box-shadow: var(--ombre);
+  font-size: .82rem; color: var(--texte);
+}
+.graphe__infobulle strong { text-transform: capitalize; margin-bottom: 2px; }
+.graphe__infobulle span { display: flex; align-items: center; gap: 6px; }
+.graphe__puce { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+.graphe__puce--ca { background: var(--graphe-1); }
+.graphe__puce--dep { background: var(--graphe-2); }
+.graphe__resultat { padding-top: 4px; border-top: 1px solid var(--bordure); font-weight: 700; }

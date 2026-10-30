@@ -1856,7 +1856,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 6 Planning
 - [x] 7 Caisse
 - [x] 8 Dépenses
-- [ ] 9 Rapports
+- [x] 9 Rapports
 - [ ] 10 Ménage
 - [ ] 11 Maintenance & inventaire
 - [ ] 12 Paramètres
@@ -1934,3 +1934,9 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-10-30 · Étape 8 Dépenses** : testée et validée. Migration `009_depenses.sql` exécutée (table `categories_depenses` nom/ordre/actif + 12 catégories, ajout possible depuis le formulaire ; update admin → **gestion complète à l'étape 12**).
   Page par mois (`?mois=AAAA-MM`), évolution vs mois précédent, répartition par catégorie, filtres, export CSV (`lib/csv.js` : `telechargerCSV(nom, colonnes, lignes)` → **réutiliser à l'étape 9**).
   `depenses.studio_id` facultatif → coût par studio disponible pour les Rapports.
+- **2026-10-31 · Étape 9 Rapports** : testée et validée (bureau + téléphone). Migrations `010_rapports.sql` puis **`011_correctif_occupation.sql`** exécutées.
+  `rapport_periode(du, au)` renvoie tout en un JSON (CA, cautions, dépenses, heures occupées/période, par studio/formule/source, top clients, dépenses par catégorie, série jour ≤ 62 j sinon mois).
+  CA = comptabilité de **caisse** (date du paiement, cautions exclues) : une réservation annulée non remboursée garde son CA.
+  🐞 Leçon : `LEAST`/`GREATEST` ignorent les NULL → après un LEFT JOIN, toujours `sum(...) filter (where r.id is not null)` (bug occupation 100 % corrigé en 011).
+  `recharts` chargé à la demande (`React.lazy`, GraphiqueEvolution) ; couleurs graphiques `--graphe-1` (#1f4fa8, bleu éclairci) / `--graphe-2` (rouge) validées daltonisme (script dataviz) ; composant `BarresHorizontales`.
+  `formatDate()` lit désormais « AAAA-MM-JJ » en heure locale (évitait un décalage d'un jour).

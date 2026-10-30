@@ -3,8 +3,11 @@
 export const formatFCFA = (montant) =>
   new Intl.NumberFormat('fr-FR').format(montant ?? 0) + ' FCFA';
 
+// Une date seule « AAAA-MM-JJ » est lue en heure locale (sinon elle peut s'afficher la veille)
+const lireDate = (d) => (typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) ? new Date(`${d}T00:00:00`) : new Date(d));
+
 export const formatDate = (d) =>
-  new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  lireDate(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
 
 export const formatDateHeure = (d) =>
   new Date(d).toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });

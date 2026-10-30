@@ -28,6 +28,11 @@
   --ombre-forte: 0 20px 60px rgba(0, 20, 50, 0.25);
   --voile: rgba(0, 20, 50, 0.45);
   --fond-galerie: rgba(4, 10, 24, 0.96);
+
+  /* Graphiques : bleu éclairci (le bleu du logo est trop sombre pour des barres), validé daltonisme avec le rouge */
+  --graphe-1: #1f4fa8;
+  --graphe-2: var(--rouge);
+  --grille-graphe: #eef1f6;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
