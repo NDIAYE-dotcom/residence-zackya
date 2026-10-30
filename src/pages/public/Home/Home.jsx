@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { rechercherDisponibles, lireParametres } from '../../../services/public.js';
 import { FORMULES, formatFCFA } from '../../../lib/format.js';
 import Carrousel from '../../../components/Carrousel/Carrousel.jsx';
 import Galerie from '../../../components/Galerie/Galerie.jsx';
 import HeroDefilant from './HeroDefilant.jsx';
+import { REFERENCE_VALIDE } from '../../../services/public.js';
+import { normaliserReference } from '../../../lib/reference.js';
 import './Home.css';
 
 // Site public : accueil et recherche de disponibilité
@@ -17,6 +19,15 @@ export default function Home() {
   const [chargement, setChargement] = useState(false);
   const [galerie, setGalerie] = useState(null); // { photos, index, titre }
   const [whatsapp, setWhatsapp] = useState('');
+  const [refSuivi, setRefSuivi] = useState('');
+  const navigate = useNavigate();
+
+  // Référence complète collée ou tapée → page de suivi directement
+  const suivre = (valeur) => {
+    setRefSuivi(valeur);
+    const ref = normaliserReference(valeur);
+    if (REFERENCE_VALIDE.test(ref)) navigate(`/suivi?ref=${ref}`);
+  };
 
   useEffect(() => {
     document.title = 'Zaquia Résidence · Studios meublés à Ziguinchor';
@@ -77,6 +88,18 @@ export default function Home() {
         <li><span aria-hidden="true">💬</span><strong>Confirmation par WhatsApp</strong><small>{whatsapp ? <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer">Écrivez-nous</a> : 'Réponse rapide'}</small></li>
         <li><span aria-hidden="true">📱</span><strong>Wave, Orange Money, espèces</strong><small>Payez comme vous voulez</small></li>
       </ul>
+
+      <section className="home__suivi">
+        <div>
+          <h2>Déjà réservé ?</h2>
+          <p>Collez votre référence pour voir le statut de votre réservation.</p>
+        </div>
+        <form onSubmit={(e) => { e.preventDefault(); navigate(`/suivi?ref=${normaliserReference(refSuivi)}`); }}>
+          <input value={refSuivi} onChange={(e) => suivre(e.target.value)} placeholder="ZQ-261031-0012" aria-label="Référence de réservation"
+            autoComplete="off" autoCapitalize="characters" spellCheck="false" />
+          <button type="submit" className="btn btn-primaire">Suivre</button>
+        </form>
+      </section>
 
       <section id="studios" className="home__resultats">
         {!resultats ? (

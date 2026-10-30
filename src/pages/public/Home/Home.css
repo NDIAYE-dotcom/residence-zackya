@@ -22,6 +22,20 @@
 .home__atouts strong { font-size: .92rem; color: var(--bleu); }
 .home__atouts small { font-size: .8rem; color: var(--texte-doux); }
 
+.home__suivi {
+  margin: 30px 6vw 0; padding: 20px 24px; border-radius: var(--radius);
+  background: linear-gradient(120deg, var(--bleu-clair), var(--blanc)); border: 1px solid var(--bordure);
+  display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+}
+.home__suivi h2 { margin: 0 0 4px; font-size: 1.15rem; color: var(--bleu); }
+.home__suivi p { margin: 0; color: var(--texte-doux); font-size: .9rem; }
+.home__suivi form { display: flex; gap: 8px; flex: 1 1 340px; max-width: 460px; }
+.home__suivi input {
+  flex: 1; min-width: 0; padding: 12px 14px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+  font-family: monospace; font-size: 1.05rem; text-transform: uppercase; background: var(--blanc); outline: none;
+}
+.home__suivi input:focus { border-color: var(--bleu); }
+
 .home__resultats { padding: 34px 6vw 0; }
 .home__resultats h2 { color: var(--bleu); margin-top: 0; }
 .home__vide { color: var(--texte-doux); margin: -6px 0 0; }

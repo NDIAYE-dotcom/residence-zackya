@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { suivreReservation, lireParametres } from '../../../services/public.js';
+import { statutParReference, suivreReservation, lireParametres, REFERENCE_VALIDE } from '../../../services/public.js';
 import { useActualisationAuto } from '../../../hooks/useActualisationAuto.js';
 import { formatFCFA, FORMULES, STATUTS_RESERVATION } from '../../../lib/format.js';
 import { formatDuree, formatJourHeure } from '../../../lib/dates.js';
 import { normaliserTelephone } from '../../../lib/telephone.js';
+import { normaliserReference } from '../../../lib/reference.js';
 import './Suivi.css';
 
 // Message affiché quand le statut change pendant que la page est ouverte
@@ -23,138 +24,157 @@ const ETAPES = [
   { statut: 'terminee', libelle: 'Terminée' },
 ];
 
-// Site public : le client retrouve sa réservation (référence + téléphone)
+const telephoneMemorise = (ref) => { try { return sessionStorage.getItem(`zaquia:suivi:${ref}`); } catch { return null; } };
+const memoriserTelephone = (ref, tel) => { try { sessionStorage.setItem(`zaquia:suivi:${ref}`, tel); } catch { /* ignoré */ } };
+
+// Site public : la référence suffit pour voir le statut ; le téléphone débloque le détail du paiement
 export default function Suivi() {
-  const [params] = useSearchParams();
-  const [reference, setReference] = useState((params.get('ref') ?? '').toUpperCase());
+  const [params, setParams] = useSearchParams();
+  const [saisie, setSaisie] = useState(params.get('ref') ?? '');
+  const [statut, setStatut] = useState(null);   // infos sans données personnelles
+  const [detail, setDetail] = useState(null);   // infos complètes (avec téléphone)
   const [telephone, setTelephone] = useState('');
-  const [resa, setResa] = useState(null);
-  const [introuvable, setIntrouvable] = useState(false);
-  const [erreur, setErreur] = useState('');
-  const [recherche, setRecherche] = useState(false);
-  const [coordonnees, setCoordonnees] = useState({});
-  const [suivie, setSuivie] = useState(null); // { ref, phone } de la réservation affichée
-  const [nouvelle, setNouvelle] = useState(''); // changement de statut détecté
+  const [etat, setEtat] = useState('attente');  // attente | recherche | trouve | introuvable | erreur
+  const [erreurTel, setErreurTel] = useState('');
+  const [nouvelle, setNouvelle] = useState('');
   const [majLe, setMajLe] = useState(null);
+  const [coordonnees, setCoordonnees] = useState({});
+
+  const reference = normaliserReference(saisie);
+  const valide = REFERENCE_VALIDE.test(reference);
 
   useEffect(() => {
     document.title = 'Suivre ma réservation · Zaquia Résidence';
     lireParametres().then(setCoordonnees).catch(() => {});
-    // Retour depuis la confirmation : le téléphone est déjà connu dans cet onglet
-    const ref = (params.get('ref') ?? '').toUpperCase();
-    try {
-      const tel = ref && sessionStorage.getItem(`zaquia:suivi:${ref}`);
-      if (tel) { setTelephone(tel.replace('+221', '')); chercher(ref, tel); }
-    } catch { /* navigation privée */ }
   }, []);
 
-  async function chercher(ref, phone) {
-    setRecherche(true);
-    setErreur('');
-    setIntrouvable(false);
-    try {
-      const r = await suivreReservation(ref.trim().toUpperCase(), phone);
-      setResa(r);
-      setIntrouvable(!r);
-      setSuivie(r ? { ref: r.reference, phone } : null);
-      setNouvelle('');
-      setMajLe(new Date());
-    } catch {
-      setErreur('Recherche impossible pour le moment. Réessayez dans un instant.');
-    } finally {
-      setRecherche(false);
-    }
-  }
+  // Recherche automatique dès qu'une référence complète est saisie ou collée
+  useEffect(() => {
+    if (!valide) { setEtat('attente'); setStatut(null); setDetail(null); return undefined; }
+    let annule = false;
+    setEtat('recherche');
+    setNouvelle('');
+    const t = setTimeout(async () => {
+      try {
+        const s = await statutParReference(reference);
+        if (annule) return;
+        if (!s) { setEtat('introuvable'); setStatut(null); setDetail(null); return; }
+        setStatut(s);
+        setEtat('trouve');
+        setMajLe(new Date());
+        setParams({ ref: reference }, { replace: true }); // lien partageable, page actualisable
+        // Même appareil que la réservation : le détail s'affiche directement
+        const tel = telephoneMemorise(reference);
+        setDetail(tel ? await suivreReservation(reference, tel).catch(() => null) : null);
+      } catch {
+        if (!annule) setEtat('erreur');
+      }
+    }, 350);
+    return () => { annule = true; clearTimeout(t); };
+  }, [reference, valide]); // setParams : référence stable, inutile de relancer la recherche
 
-  // Revérifie toute seule la réservation affichée (toutes les 15 s et au retour sur l'onglet)
+  // Mise à jour automatique (15 s + retour sur l'onglet)
   useActualisationAuto(async () => {
     try {
-      const r = await suivreReservation(suivie.ref, suivie.phone);
-      if (!r) return;
-      setResa((avant) => {
-        if (avant && avant.statut !== r.statut) setNouvelle(NOUVELLES[r.statut] ?? 'Votre réservation a été mise à jour.');
-        return r;
-      });
+      const tel = detail ? telephoneMemorise(reference) : null;
+      const nouveau = tel ? await suivreReservation(reference, tel) : await statutParReference(reference);
+      if (!nouveau) return;
+      if (statut && nouveau.statut !== statut.statut) setNouvelle(NOUVELLES[nouveau.statut] ?? 'Votre réservation a été mise à jour.');
+      setStatut((s) => ({ ...s, ...nouveau }));
+      if (tel) setDetail(nouveau);
       setMajLe(new Date());
-    } catch { /* réseau coupé : on réessaiera au prochain passage */ }
-  }, 15000, !!suivie);
+    } catch { /* réseau coupé : prochain essai dans 15 s */ }
+  }, 15000, etat === 'trouve');
 
-  const valider = (e) => {
+  const afficherDetail = async (e) => {
     e.preventDefault();
-    const phone = normaliserTelephone(telephone);
-    if (!reference.trim()) return setErreur('Indiquez votre référence (ex : ZQ-261031-0012).');
-    if (!phone) return setErreur('Indiquez le numéro sénégalais utilisé pour réserver.');
-    chercher(reference, phone);
+    const tel = normaliserTelephone(telephone);
+    if (!tel) return setErreurTel('Indiquez le numéro sénégalais utilisé pour réserver.');
+    setErreurTel('');
+    const d = await suivreReservation(reference, tel).catch(() => null);
+    if (!d) return setErreurTel('Ce numéro ne correspond pas à cette réservation.');
+    memoriserTelephone(reference, tel);
+    setDetail(d);
   };
 
-  const annulee = resa && ['annulee', 'no_show'].includes(resa.statut);
-  const rang = resa ? ETAPES.findIndex((e) => e.statut === resa.statut) : -1;
-  const net = resa ? resa.montant_total - resa.remise : 0;
-  const reste = resa ? Math.max(0, net - resa.total_paye) : 0;
+  const s = statut;
+  const annulee = s && ['annulee', 'no_show'].includes(s.statut);
+  const rang = s ? ETAPES.findIndex((x) => x.statut === s.statut) : -1;
+  const net = detail ? detail.montant_total - detail.remise : 0;
+  const reste = detail ? Math.max(0, net - detail.total_paye) : 0;
   const whatsapp = coordonnees.whatsapp
-    ? `https://wa.me/${coordonnees.whatsapp}?text=${encodeURIComponent(`Bonjour, j’ai une question sur ma réservation ${resa?.reference ?? reference}.`)}`
+    ? `https://wa.me/${coordonnees.whatsapp}?text=${encodeURIComponent(`Bonjour, j’ai une question sur ma réservation ${valide ? reference : ''}.`)}`
     : null;
 
   return (
     <div className="suivi">
       <header className="suivi__entete">
         <h1>Suivre ma réservation</h1>
-        <p>Saisissez la référence reçue à la réservation et votre numéro de téléphone.</p>
+        <p>Collez ou tapez votre référence : le statut s’affiche automatiquement.</p>
       </header>
 
-      <form className="suivi__formulaire" onSubmit={valider} noValidate>
-        <div className="champ">
-          <label htmlFor="sv-ref">Référence</label>
-          <input id="sv-ref" value={reference} onChange={(e) => setReference(e.target.value.toUpperCase())} placeholder="ZQ-261031-0012" autoComplete="off" />
-        </div>
-        <div className="champ">
-          <label htmlFor="sv-tel">Téléphone</label>
-          <input id="sv-tel" type="tel" inputMode="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} placeholder="77 123 45 67" />
-        </div>
-        <button type="submit" className="btn btn-rouge" disabled={recherche}>{recherche ? 'Recherche…' : 'Rechercher'}</button>
-        {erreur && <p className="suivi__erreur">{erreur}</p>}
-      </form>
+      <div className="suivi__recherche">
+        <label htmlFor="sv-ref">Référence de réservation</label>
+        <input id="sv-ref" value={saisie} onChange={(e) => setSaisie(e.target.value)} placeholder="ZQ-261031-0012"
+          autoComplete="off" autoCapitalize="characters" spellCheck="false" autoFocus={!saisie} />
+        <small className={`suivi__indice suivi__indice--${etat}`}>
+          {etat === 'recherche' ? 'Recherche…'
+            : etat === 'introuvable' ? 'Aucune réservation avec cette référence. Vérifiez-la (ex : ZQ-261031-0012).'
+              : etat === 'erreur' ? 'Recherche impossible pour le moment. Réessayez dans un instant.'
+                : etat === 'trouve' ? '✓ Réservation trouvée'
+                  : 'La référence figure sur votre page de confirmation (ZQ-…).'}
+        </small>
+      </div>
 
-      {introuvable && (
-        <div className="suivi__message">
-          <p>Aucune réservation ne correspond à cette référence et ce numéro. Vérifiez-les, ou contactez la réception.</p>
-          {whatsapp && <a className="btn btn-contour" href={whatsapp} target="_blank" rel="noreferrer">Contacter sur WhatsApp</a>}
-        </div>
+      {etat === 'introuvable' && whatsapp && (
+        <a className="btn btn-contour suivi__aide" href={whatsapp} target="_blank" rel="noreferrer">Besoin d’aide ? Écrire sur WhatsApp</a>
       )}
 
-      {resa && (
+      {s && etat === 'trouve' && (
         <section className="suivi__resultat">
           {nouvelle && <p className="suivi__nouvelle" role="status">{nouvelle}</p>}
+
           <div className="suivi__titre">
-            <strong>{resa.reference}</strong>
-            <span className={`badge badge-${resa.statut}`}>{resa.statut === 'en_attente' ? 'En attente de confirmation' : STATUTS_RESERVATION[resa.statut]}</span>
+            <strong>{s.reference}</strong>
+            <span className={`badge badge-${s.statut}`}>{s.statut === 'en_attente' ? 'En attente de confirmation' : STATUTS_RESERVATION[s.statut]}</span>
           </div>
 
           {annulee ? (
-            <p className="suivi__annulee">Cette réservation a été {resa.statut === 'annulee' ? 'annulée' : 'clôturée (non présentation)'}. Pour toute question, contactez la réception.</p>
+            <p className="suivi__annulee">Cette réservation a été {s.statut === 'annulee' ? 'annulée' : 'clôturée (non présentation)'}. Pour toute question, contactez la réception.</p>
           ) : (
             <ol className="suivi__frise">
-              {ETAPES.map((e, i) => (
-                <li key={e.statut} className={i < rang ? 'suivi__etape--faite' : i === rang ? 'suivi__etape--actuelle' : ''}>
-                  <span aria-hidden="true">{i < rang ? '✓' : i + 1}</span>{e.libelle}
+              {ETAPES.map((x, i) => (
+                <li key={x.statut} className={i < rang ? 'suivi__etape--faite' : i === rang ? 'suivi__etape--actuelle' : ''}>
+                  <span aria-hidden="true">{i < rang ? '✓' : i + 1}</span>{x.libelle}
                 </li>
               ))}
             </ol>
           )}
 
           <div className="suivi__details">
-            <div><span>Studio</span><strong><Link to={`/studios/${resa.studio_id}`}>{resa.studio}</Link></strong></div>
-            <div><span>Formule</span><strong>{FORMULES[resa.formule]} · {formatDuree(resa.date_debut, resa.date_fin)}</strong></div>
-            <div><span>Arrivée</span><strong>{formatJourHeure(resa.date_debut)}</strong></div>
-            <div><span>Départ</span><strong>{formatJourHeure(resa.date_fin)}</strong></div>
-            <div><span>Personnes</span><strong>{resa.nb_personnes}</strong></div>
+            <div><span>Studio</span><strong><Link to={`/studios/${s.studio_id}`}>{s.studio}</Link></strong></div>
+            <div><span>Formule</span><strong>{FORMULES[s.formule]} · {formatDuree(s.date_debut, s.date_fin)}</strong></div>
+            <div><span>Arrivée</span><strong>{formatJourHeure(s.date_debut)}</strong></div>
+            <div><span>Départ</span><strong>{formatJourHeure(s.date_fin)}</strong></div>
+            {detail && <div><span>Personnes</span><strong>{detail.nb_personnes}</strong></div>}
           </div>
 
-          <div className="suivi__argent">
-            <div><span>Montant</span><strong>{formatFCFA(net)}</strong></div>
-            <div><span>Déjà payé</span><strong>{formatFCFA(resa.total_paye)}</strong></div>
-            {!annulee && <div className={reste > 0 ? 'suivi__reste' : 'suivi__solde'}><span>{reste > 0 ? 'Reste à payer' : 'Soldé'}</span><strong>{formatFCFA(reste)}</strong></div>}
-          </div>
+          {detail ? (
+            <div className="suivi__argent">
+              <div><span>Montant</span><strong>{formatFCFA(net)}</strong></div>
+              <div><span>Déjà payé</span><strong>{formatFCFA(detail.total_paye)}</strong></div>
+              {!annulee && <div className={reste > 0 ? 'suivi__reste' : 'suivi__solde'}><span>{reste > 0 ? 'Reste à payer' : 'Soldé'}</span><strong>{formatFCFA(reste)}</strong></div>}
+            </div>
+          ) : (
+            <form className="suivi__deverrouiller" onSubmit={afficherDetail} noValidate>
+              <p>🔒 Pour voir le <strong>montant et vos paiements</strong>, confirmez votre téléphone :</p>
+              <div>
+                <input type="tel" inputMode="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} placeholder="77 123 45 67" aria-label="Téléphone utilisé pour réserver" />
+                <button type="submit" className="btn btn-primaire">Afficher</button>
+              </div>
+              {erreurTel && <small className="champ__erreur">{erreurTel}</small>}
+            </form>
+          )}
 
           {whatsapp && <a className="btn btn-contour suivi__contact" href={whatsapp} target="_blank" rel="noreferrer">Une question ? Écrire sur WhatsApp</a>}
           {majLe && (

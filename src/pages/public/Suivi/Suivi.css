@@ -2,13 +2,27 @@
 .suivi__entete h1 { margin: 0 0 6px; font-family: var(--police-titre); color: var(--bleu); font-size: clamp(1.8rem, 4vw, 2.4rem); }
 .suivi__entete p { margin: 0; color: var(--texte-doux); }
 
-.suivi__formulaire {
-  display: grid; grid-template-columns: 1.2fr 1fr auto; gap: 12px; align-items: end;
+.suivi__recherche {
+  display: flex; flex-direction: column; gap: 8px;
   padding: 18px; border-radius: var(--radius); background: var(--blanc); box-shadow: var(--ombre); border: 1px solid var(--bordure);
 }
-.suivi__formulaire input { font-family: monospace; }
-.suivi__formulaire .btn { height: 48px; }
-.suivi__erreur { grid-column: 1 / -1; margin: 0; color: var(--rouge); font-weight: 600; font-size: .88rem; }
+.suivi__recherche label { font-weight: 700; color: var(--bleu); font-size: .9rem; }
+.suivi__recherche input {
+  padding: 16px 18px; border: 2px solid var(--bordure); border-radius: var(--radius-sm); outline: none;
+  font-family: monospace; font-size: 1.4rem; letter-spacing: 1px; text-transform: uppercase; color: var(--bleu);
+}
+.suivi__recherche input:focus { border-color: var(--bleu); }
+.suivi__indice { font-size: .84rem; color: var(--texte-doux); }
+.suivi__indice--trouve { color: var(--succes); font-weight: 700; }
+.suivi__indice--introuvable, .suivi__indice--erreur { color: var(--rouge); font-weight: 600; }
+.suivi__aide { align-self: flex-start; text-decoration: none; }
+
+/* Détail du paiement protégé par le téléphone */
+.suivi__deverrouiller { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: var(--radius-sm); background: var(--fond); border: 1px dashed var(--bordure); }
+.suivi__deverrouiller p { margin: 0; font-size: .9rem; }
+.suivi__deverrouiller div { display: flex; gap: 8px; }
+.suivi__deverrouiller input { flex: 1; min-width: 0; padding: 11px 12px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); }
+.suivi__deverrouiller .btn { padding: 11px 18px; }
 
 .suivi__message {
   padding: 18px; border-radius: var(--radius); background: var(--alerte-clair);
@@ -67,7 +81,7 @@
 @keyframes suivi-pulse { 50% { opacity: .3; } }
 
 @media (max-width: 700px) {
-  .suivi__formulaire { grid-template-columns: 1fr; }
+  .suivi__recherche input { font-size: 1.15rem; padding: 14px; }
   .suivi__frise li { font-size: .7rem; }
   .suivi__contact { align-self: stretch; }
 }

@@ -80,3 +80,13 @@ export async function suivreReservation(reference, phone) {
   if (error) throw error;
   return data[0] ?? null;
 }
+
+// Statut avec la référence seule (sans données personnelles) ; null si introuvable
+export async function statutParReference(reference) {
+  const { data, error } = await supabase.rpc('statut_reservation_public', { p_reference: reference });
+  if (error) throw error;
+  return data[0] ?? null;
+}
+
+// Format d'une référence : ZQ-AAMMJJ-NNNN
+export const REFERENCE_VALIDE = /^ZQ-\d{6}-\d{4,}$/;

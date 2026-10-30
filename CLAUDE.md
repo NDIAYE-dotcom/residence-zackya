@@ -1862,7 +1862,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 12 Paramètres
 - [x] 13 Pages studios
 - [x] 14 Tunnel de réservation
-- [ ] 15 Notifications
+- [x] 15 Notifications (alertes admin ✓ — email client reporté à l'étape 18)
 - [ ] 16 PayDunya
 - [ ] 17 Qualité
 - [ ] 18 Déploiement
@@ -1966,3 +1966,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-10-31 · Étape 15 Notifications (en cours)** : alertes admin en temps réel (`hooks/useAlertesReservations.js` + `components/AlertesReservations` + cloche/pastille dans AdminLayout, carillon `lib/son.js`, notification navigateur si onglet caché).
   Edge Function `supabase/functions/notifier/index.js` écrite (email de confirmation via Resend + emplacement WhatsApp Business API), appelée par « Confirmer » dans la fiche (échec silencieux si non déployée).
   ⏳ **Décision d'Ousmane : Resend attendra l'achat du nom de domaine.** `notifier` N'EST PAS déployée. **À faire à l'étape 18** : compte Resend + vérification du domaine (DNS) → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer `notifier` (Verify JWT OFF).
+- **2026-10-31 · Étape 15 validée** (alertes temps réel, son, pastille, notification navigateur testés par Ousmane). Email client : voir note ci-dessus (étape 18).
+- **2026-10-31 · Suivi par référence seule** (demande d'Ousmane) : migration `017_statut_par_reference.sql` → RPC `statut_reservation_public(reference)` (anon) qui ne renvoie **aucune donnée personnelle** (statut, studio, formule, dates).
+  Les montants restent derrière `suivre_reservation` (référence + téléphone, téléphone mémorisé en sessionStorage sur l'appareil qui a réservé).
+  `/suivi` : un seul champ, recherche automatique dès qu'une référence complète est saisie (`lib/reference.js` `normaliserReference`), actualisation auto 15 s ; encadré « Déjà réservé ? » sur l'accueil.
