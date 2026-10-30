@@ -1855,7 +1855,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 5 Fiche réservation
 - [x] 6 Planning
 - [x] 7 Caisse
-- [ ] 8 Dépenses
+- [x] 8 Dépenses
 - [ ] 9 Rapports
 - [ ] 10 Ménage
 - [ ] 11 Maintenance & inventaire
@@ -1931,3 +1931,6 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Reçu PDF au format du carnet papier d'Ousmane (A5 paysage) : `lib/recuDessin.js` (dessin pur, testable hors navigateur) + `lib/recu.js` (`imprimerRecu(paiementId)`, jsPDF chargé à la demande) + `lib/nombres.js` (montant en lettres).
   Ajout demandé : avertissement « arrivée dans le passé » (`jourPasse()` dans dates.js) à l'étape 1 et dans le récapitulatif de Nouvelle réservation.
   ⚠️ Build : avertissement « chunk > 500 kB » (pas une erreur) → **étape 17 : découper les routes avec React.lazy**.
+- **2026-10-30 · Étape 8 Dépenses** : testée et validée. Migration `009_depenses.sql` exécutée (table `categories_depenses` nom/ordre/actif + 12 catégories, ajout possible depuis le formulaire ; update admin → **gestion complète à l'étape 12**).
+  Page par mois (`?mois=AAAA-MM`), évolution vs mois précédent, répartition par catégorie, filtres, export CSV (`lib/csv.js` : `telechargerCSV(nom, colonnes, lignes)` → **réutiliser à l'étape 9**).
+  `depenses.studio_id` facultatif → coût par studio disponible pour les Rapports.

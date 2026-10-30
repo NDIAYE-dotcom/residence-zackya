@@ -1,0 +1,12 @@
+.depense-modal { display: flex; flex-direction: column; gap: 14px; }
+.depense-modal__ligne { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.depense-modal__actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding-top: 14px; border-top: 1px solid var(--bordure);
+}
+
+@media (max-width: 600px) {
+  .depense-modal__ligne { grid-template-columns: 1fr; }
+  .depense-modal__actions .btn { flex: 1; }
+}

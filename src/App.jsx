@@ -13,12 +13,14 @@ import NouvelleReservation from './pages/admin/Reservations/NouvelleReservation.
 import ReservationFiche from './pages/admin/Reservations/ReservationFiche.jsx';
 import Planning from './pages/admin/Planning/Planning.jsx';
 import Caisse from './pages/admin/Caisse/Caisse.jsx';
+import Depenses from './pages/admin/Depenses/Depenses.jsx';
 import Home from './pages/public/Home/Home.jsx';
 import EnConstruction from './components/EnConstruction.jsx';
 
 // Rôles autorisés par module
 const ROLES_CLIENTS = ['admin', 'gerant', 'receptionniste'];
 const ROLES_RESERVATIONS = ['admin', 'gerant', 'receptionniste', 'comptable']; // comptable : lecture seule
+const ROLES_ARGENT = ['admin', 'gerant', 'comptable'];
 
 export default function App() {
   return (
@@ -48,7 +50,7 @@ export default function App() {
         <Route path="/admin/clients" element={<ProtectedRoute roles={ROLES_CLIENTS}><Clients /></ProtectedRoute>} />
         <Route path="/admin/clients/:id" element={<ProtectedRoute roles={ROLES_CLIENTS}><ClientFiche /></ProtectedRoute>} />
         <Route path="/admin/caisse" element={<ProtectedRoute roles={ROLES_RESERVATIONS}><Caisse /></ProtectedRoute>} />
-        <Route path="/admin/depenses" element={<EnConstruction titre="Dépenses" />} />
+        <Route path="/admin/depenses" element={<ProtectedRoute roles={ROLES_ARGENT}><Depenses /></ProtectedRoute>} />
         <Route path="/admin/menage" element={<EnConstruction titre="Ménage" />} />
         <Route path="/admin/maintenance" element={<EnConstruction titre="Maintenance" />} />
         <Route path="/admin/rapports" element={<EnConstruction titre="Rapports" />} />
