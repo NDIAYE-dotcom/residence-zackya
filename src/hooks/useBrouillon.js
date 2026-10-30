@@ -4,7 +4,7 @@ import { PREFIXE_BROUILLON, lireBrouillon, ecrireBrouillon, supprimerBrouillon }
 
 /**
  * Comme useState, mais la valeur survit à un changement de page ou à une actualisation.
- * - propre à chaque employé, oubliée après 24 h ou à la déconnexion
+ * - propre à chaque employé (ou « public » pour un visiteur du site), oubliée après 24 h ou à la déconnexion
  * - rien n'est gardé tant que la valeur est identique à la valeur de départ
  * Renvoie [valeur, setValeur, { restaure, marquerEnregistre, abandonner }] :
  *   marquerEnregistre(v?) → après un envoi réussi (v devient la nouvelle référence)
@@ -12,7 +12,7 @@ import { PREFIXE_BROUILLON, lireBrouillon, ecrireBrouillon, supprimerBrouillon }
  */
 export function useBrouillon(nom, initial) {
   const { session } = useAuth();
-  const cle = nom && session ? `${PREFIXE_BROUILLON}${session.user.id}:${nom}` : null;
+  const cle = nom ? `${PREFIXE_BROUILLON}${session?.user.id ?? 'public'}:${nom}` : null;
 
   const initialRef = useRef(undefined);
   if (initialRef.current === undefined) initialRef.current = typeof initial === 'function' ? initial() : initial;

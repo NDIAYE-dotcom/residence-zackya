@@ -22,6 +22,9 @@ import PublicLayout from './layouts/PublicLayout/PublicLayout.jsx';
 import Home from './pages/public/Home/Home.jsx';
 import StudiosPublic from './pages/public/Studios/Studios.jsx';
 import StudioDetail from './pages/public/StudioDetail/StudioDetail.jsx';
+import Reserver from './pages/public/Reserver/Reserver.jsx';
+import Confirmation from './pages/public/Confirmation/Confirmation.jsx';
+import Suivi from './pages/public/Suivi/Suivi.jsx';
 
 // Rôles autorisés par module
 const ROLES_CLIENTS = ['admin', 'gerant', 'receptionniste'];
@@ -36,8 +39,10 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/studios" element={<StudiosPublic />} />
         <Route path="/studios/:id" element={<StudioDetail />} />
+        <Route path="/reserver" element={<Reserver />} />
+        <Route path="/confirmation/:ref" element={<Confirmation />} />
+        <Route path="/suivi" element={<Suivi />} />
       </Route>
-      {/* À venir : /studios, /studios/:id, /reserver, /confirmation/:ref, /suivi */}
 
       {/* ===== APPLICATION D'ADMINISTRATION ===== */}
       <Route path="/admin" element={<SplashScreen />} />

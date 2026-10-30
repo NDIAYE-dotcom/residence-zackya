@@ -1,7 +1,7 @@
 .site { min-height: 100vh; display: flex; flex-direction: column; background: var(--blanc); }
 
 /* ---- Entête : barre flottante en verre dépoli ---- */
-.site { --hauteur-entete: 116px; } /* l'accueil remonte ses photos sous la barre */
+.site { --hauteur-entete: 118px; } /* l'accueil remonte ses photos sous la barre */
 .site__entete {
   position: sticky; top: 0; z-index: 30;
   padding: 12px 4vw; pointer-events: none; /* seule la barre est cliquable */
@@ -14,7 +14,7 @@
   -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
   box-shadow: var(--ombre);
 }
-.site__logo img { height: 104px; display: block; margin: -14px 0; } /* logo carré avec marges intégrées */
+.site__logo img { height: 94px; display: block; margin: -7px 0; } /* logo carré : marges intégrées rognées, sans dépasser la barre */ /* logo carré avec marges intégrées */
 .site__menu { display: flex; align-items: center; gap: 6px; }
 .site__menu a {
   padding: 10px 14px; border-radius: 12px; text-decoration: none;
@@ -44,7 +44,7 @@
   .site { --hauteur-entete: 92px; }
   .site__entete { padding: 8px 3vw; }
   .site__barre { padding: 4px 6px 4px 10px; border-radius: 16px; }
-  .site__logo img { height: 82px; margin: -12px 0 -12px -4px; }
+  .site__logo img { height: 74px; margin: -5px 0 -5px -4px; }
   .site__burger { display: block; }
   .site__menu { display: none; }
   /* Menu déroulé : panneau de verre sous la barre */

@@ -44,3 +44,39 @@ export async function rechercherDisponibles(formule, debut, fin) {
 
 // Coordonnées publiques (paramètres)
 export { lireParametres } from './parametres.js';
+
+// Prix + disponibilité d'un studio sur une période (avant de réserver)
+// Renvoie { disponible, prix } — prix null si le studio ne propose pas cette formule
+export async function verifierSejour(studioId, formule, debut, fin) {
+  const p = { p_debut: new Date(debut).toISOString(), p_fin: new Date(fin).toISOString() };
+  const [dispo, prix] = await Promise.all([
+    supabase.rpc('studio_disponible', { p_studio: studioId, ...p }),
+    supabase.rpc('calculer_prix', { p_studio: studioId, p_formule: formule, ...p }),
+  ]);
+  if (dispo.error) throw dispo.error;
+  return { disponible: !!dispo.data, prix: prix.error ? null : prix.data };
+}
+
+// Réservation en ligne → « en attente » ; renvoie { reference, montant }
+export async function creerReservationPublique(r) {
+  const { data, error } = await supabase.rpc('creer_reservation_publique', {
+    p_studio: r.studioId,
+    p_formule: r.formule,
+    p_debut: new Date(r.debut).toISOString(),
+    p_fin: new Date(r.fin).toISOString(),
+    p_nom: r.nom,
+    p_phone: r.phone,
+    p_email: r.email || null,
+    p_nb_personnes: r.nbPersonnes,
+    p_notes: r.notes || null,
+  });
+  if (error) throw error;
+  return data[0];
+}
+
+// Suivi : référence + téléphone (au format +221…) ; null si introuvable
+export async function suivreReservation(reference, phone) {
+  const { data, error } = await supabase.rpc('suivre_reservation', { p_reference: reference, p_phone: phone });
+  if (error) throw error;
+  return data[0] ?? null;
+}
