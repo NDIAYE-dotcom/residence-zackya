@@ -1,0 +1,67 @@
+.pannes__barre {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 12px 16px;
+}
+.pannes__kpis { display: flex; gap: 18px; flex-wrap: wrap; font-size: .88rem; color: var(--texte-doux); }
+.pannes__kpis strong { color: var(--texte); font-size: 1.05rem; }
+.pannes__kpi--urgent strong, .pannes__kpi--urgent { color: var(--rouge); }
+
+.pannes__filtres { display: flex; gap: 10px; flex-wrap: wrap; }
+.pannes__filtres select {
+  flex: 0 1 260px; padding: 10px 12px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); background: var(--blanc);
+}
+
+.pannes__etat {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 32px 22px; text-align: center; color: var(--texte-doux);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.pannes__etat p { margin: 0; }
+.pannes__etat--erreur { color: var(--rouge); }
+.pannes__etat--ok strong { color: var(--succes); font-size: 1.1rem; }
+
+.pannes__liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+
+/* Carte d'une panne : la bordure gauche indique la priorité */
+.panne {
+  background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre);
+  padding: 16px; display: flex; flex-direction: column; gap: 10px; border-left: 6px solid var(--bordure);
+}
+.panne--urgente { border-left-color: var(--rouge); }
+.panne--haute { border-left-color: var(--alerte); }
+.panne--normale { border-left-color: var(--graphe-1); }
+.panne--resolue { border-left-color: var(--succes); opacity: .85; }
+
+.panne__entete { display: flex; gap: 12px; align-items: flex-start; }
+.panne__studio { flex-shrink: 0; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--bleu); color: var(--blanc); font-weight: 700; }
+.panne__entete > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.panne__entete strong { font-size: 1rem; }
+.panne__etiquettes { display: flex; gap: 6px; flex-wrap: wrap; }
+.panne__etiquettes > span { padding: 3px 9px; border-radius: 999px; font-size: .72rem; font-weight: 700; }
+.panne__priorite--urgente { background: var(--rouge); color: var(--blanc); }
+.panne__priorite--haute { background: var(--alerte-clair); color: var(--alerte); }
+.panne__priorite--normale { background: var(--bleu-clair); color: var(--bleu); }
+.panne__priorite--basse { background: var(--neutre-clair); color: var(--texte-doux); }
+.panne__statut--a_faire { background: var(--neutre-clair); color: var(--texte); }
+.panne__statut--en_cours { background: var(--alerte-clair); color: var(--texte); }
+.panne__statut--terminee { background: var(--succes-clair); color: var(--succes); }
+.panne__bloque { background: var(--rouge-clair); color: var(--rouge); }
+
+.panne__description { margin: 0; font-size: .9rem; line-height: 1.5; white-space: pre-wrap; }
+.panne__photos { display: flex; gap: 8px; flex-wrap: wrap; }
+.panne__photos button { width: 72px; height: 72px; padding: 0; border: none; border-radius: var(--radius-sm); overflow: hidden; cursor: zoom-in; }
+.panne__photos img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.panne__meta { margin: 0; color: var(--texte-doux); font-size: .78rem; line-height: 1.5; }
+
+.panne__actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--bordure); }
+.panne__actions .btn { padding: 10px 14px; font-size: .86rem; }
+.panne__actions select { padding: 9px 10px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); background: var(--blanc); font-size: .84rem; }
+.panne__supprimer { margin-left: auto; background: none; border: none; color: var(--rouge); font-weight: 600; font-size: .84rem; }
+.panne__supprimer:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .pannes__liste { grid-template-columns: 1fr; }
+  .pannes__barre .btn { width: 100%; }
+  .pannes__filtres select { flex: 1 1 100%; }
+  .panne__actions .btn { flex: 1; }
+}

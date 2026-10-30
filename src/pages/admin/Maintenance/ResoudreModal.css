@@ -1,0 +1,18 @@
+.resoudre { display: flex; flex-direction: column; gap: 14px; }
+.resoudre textarea { resize: vertical; }
+.resoudre__titre { margin: 0; font-weight: 700; }
+
+.resoudre__depense {
+  display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+  padding: 12px 14px; border-radius: var(--radius-sm); background: var(--bleu-clair);
+}
+.resoudre__depense input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--bleu); flex-shrink: 0; }
+.resoudre__depense span { display: flex; flex-direction: column; gap: 2px; font-size: .9rem; }
+.resoudre__depense small { color: var(--texte-doux); font-size: .78rem; }
+.resoudre__info { margin: 0; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--succes-clair); font-size: .86rem; }
+
+.resoudre__actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 14px; border-top: 1px solid var(--bordure); }
+
+@media (max-width: 600px) {
+  .resoudre__actions .btn { flex: 1; }
+}

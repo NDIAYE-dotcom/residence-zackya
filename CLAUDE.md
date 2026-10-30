@@ -1858,7 +1858,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 8 Dépenses
 - [x] 9 Rapports
 - [x] 10 Ménage
-- [ ] 11 Maintenance & inventaire
+- [x] 11 Maintenance & inventaire
 - [ ] 12 Paramètres
 - [ ] 13 Pages studios
 - [ ] 14 Tunnel de réservation
@@ -1944,3 +1944,8 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Migration `012_menage.sql` exécutée : `taches_menage.commencee_le / terminee_par`, trigger `menage_termine` (disponible seulement si plus aucune tâche ouverte sur le studio),
   vue `v_taches_menage` (avec `prochaine_arrivee`), RPC `personnel_menage()` (les non-admins ne lisent pas `profiles`), publication realtime `taches_menage`.
   Le rôle `menage` est redirigé vers `/admin/menage` au login et après l'écran de chargement.
+- **2026-10-31 · Étape 11 Maintenance & inventaire** : testée et validée. Migration `013_maintenance_inventaire.sql` exécutée :
+  `maintenances.photos / resolu_par / notes_resolution / depense_id` ; trigger `maintenance_statut_studio` (urgente ouverte → studio `maintenance` si libre/nettoyage ; résolue → disponible s'il n'en reste pas) ;
+  `menage_termine` → `maintenance` au lieu de `disponible` si panne urgente ouverte ; RPC `resoudre_maintenance(id, cout, notes, creer_depense)` (security definer, crée la dépense « Réparations / maintenance » rattachée au studio) ;
+  vue `v_maintenances` (définisseur, filtrée `est_staff()`) ; bucket public `maintenance` ; table `inventaire` (unique studio+article, état bon/use/a_remplacer).
+  ⚠️ `studio_disponible` / `studios_disponibles` (site public) excluent désormais aussi `maintenance` ; côté réception (`studios_libres_staff`) le studio reste proposé avec le badge « Actuellement : Maintenance ».

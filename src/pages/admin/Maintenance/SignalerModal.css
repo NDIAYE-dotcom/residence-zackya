@@ -1,0 +1,39 @@
+.signaler { display: flex; flex-direction: column; gap: 14px; }
+.signaler textarea { resize: vertical; }
+
+.signaler__priorites { border: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.signaler__priorites legend { padding: 0; margin-bottom: 8px; font-size: .85rem; font-weight: 600; color: var(--texte-doux); }
+.signaler__priorite {
+  position: relative; display: flex; flex-direction: column; gap: 2px; cursor: pointer;
+  padding: 10px 12px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm);
+  border-left-width: 5px;
+}
+.signaler__priorite input { position: absolute; opacity: 0; pointer-events: none; }
+.signaler__priorite strong { font-size: .9rem; }
+.signaler__priorite small { font-size: .74rem; color: var(--texte-doux); }
+.signaler__priorite--urgente { border-left-color: var(--rouge); }
+.signaler__priorite--haute { border-left-color: var(--alerte); }
+.signaler__priorite--normale { border-left-color: var(--graphe-1); }
+.signaler__priorite--basse { border-left-color: var(--texte-doux); }
+.signaler__priorite--choisie { background: var(--bleu-clair); border-color: var(--bleu); }
+.signaler__priorite:focus-within { outline: 2px solid var(--bleu); outline-offset: 2px; }
+
+.signaler__photos { display: flex; gap: 8px; flex-wrap: wrap; }
+.signaler__vignette { position: relative; width: 76px; height: 76px; border-radius: var(--radius-sm); overflow: hidden; }
+.signaler__vignette img { width: 100%; height: 100%; object-fit: cover; }
+.signaler__vignette button {
+  position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 50%; border: none;
+  background: var(--voile); color: var(--blanc); font-size: 1rem; line-height: 1; padding: 0;
+}
+.signaler__ajout {
+  width: 76px; height: 76px; border-radius: var(--radius-sm); border: 2px dashed var(--bordure);
+  background: var(--fond); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-size: 1.4rem; color: var(--bleu);
+}
+.signaler__ajout span { font-size: .72rem; font-weight: 700; }
+
+.signaler__actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 14px; border-top: 1px solid var(--bordure); }
+
+@media (max-width: 600px) {
+  .signaler__actions .btn { flex: 1; }
+}

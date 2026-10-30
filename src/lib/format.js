@@ -142,3 +142,7 @@ export const ACTIONS_JOURNAL = {
   'caisse.cloturee': 'Caisse clôturée',
   'caisse.rouverte': 'Caisse rouverte',
 };
+
+export const PRIORITES = { urgente: 'Urgente', haute: 'Haute', normale: 'Normale', basse: 'Basse' };
+export const STATUTS_TACHE = { a_faire: 'À faire', en_cours: 'En cours', terminee: 'Résolue' };
+export const ETATS_INVENTAIRE = { bon: 'Bon état', use: 'Usé', a_remplacer: 'À remplacer' };

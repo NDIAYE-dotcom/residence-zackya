@@ -1,0 +1,12 @@
+.maint { display: flex; flex-direction: column; gap: 16px; }
+.maint__entete { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.maint__entete h1 { margin: 0; color: var(--bleu); font-size: 1.6rem; }
+
+.maint__onglets { display: inline-flex; padding: 4px; gap: 4px; border-radius: var(--radius-sm); background: var(--blanc); box-shadow: var(--ombre); }
+.maint__onglets button { padding: 9px 18px; border: none; border-radius: 6px; background: none; font-weight: 700; font-size: .9rem; color: var(--texte-doux); }
+.maint__onglets .maint__onglet--actif { background: var(--bleu); color: var(--blanc); }
+
+@media (max-width: 600px) {
+  .maint__onglets { width: 100%; }
+  .maint__onglets button { flex: 1; }
+}
