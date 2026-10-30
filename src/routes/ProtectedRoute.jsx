@@ -6,8 +6,9 @@ export default function ProtectedRoute({ children, roles }) {
   const { session, profile, loading } = useAuth();
 
   if (loading) return null;
-  if (!session || (profile && !profile.actif)) return <Navigate to="/admin/login" replace />;
-  if (roles && profile && !roles.includes(profile.role)) return <Navigate to="/admin/dashboard" replace />;
+  // Profil actif obligatoire (profil absent = compte supprimé ou non lisible)
+  if (!session || !profile?.actif) return <Navigate to="/admin/login" replace />;
+  if (roles && !roles.includes(profile.role)) return <Navigate to="/admin/dashboard" replace />;
 
   return children;
 }

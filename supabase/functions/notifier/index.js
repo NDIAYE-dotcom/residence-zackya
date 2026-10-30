@@ -32,7 +32,7 @@ const json = (corps, statut = 200) =>
 
 const FORMULES = { heure: 'À l’heure', demi_journee: 'Demi-journée', journee: 'Journée', nuitee: 'Nuitée', semaine: 'Semaine', mois: 'Mois' };
 const echapper = (t = '') => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const fcfa = (n) => `${new Intl.NumberFormat('fr-FR').format(n).replace(/ | /g, ' ')} FCFA`;
+const fcfa = (n) => `${new Intl.NumberFormat('fr-FR').format(n).replace(/\u202f|\u00a0/g, ' ')} FCFA`;
 const date = (d) => new Date(d).toLocaleString('fr-FR', {
   timeZone: 'Africa/Dakar', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
 });

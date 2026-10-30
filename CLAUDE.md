@@ -1992,3 +1992,11 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 3. **PayDunya** (étape 16) : après accord du propriétaire (compte marchand + RCCM).
 4. Facultatif : offre **Supabase Pro** pour des sauvegardes automatiques quotidiennes.
 5. Données réelles : saisir les vrais studios / prix / photos, créer les comptes du personnel, supprimer les données de test (réservations ZQ-2610xx, clients Fatou Sané / Jean Dupont / DEMBA, compte Awa Test).
+- **2026-10-31 · Audit général** (demande d'Ousmane) — corrigé :
+  1. « Mot de passe oublié » cassé (aucun écran pour choisir le nouveau mot de passe) → `AuthContext` gère `PASSWORD_RECOVERY` (`recuperation`, `definirMotDePasse`) + formulaire « Nouveau mot de passe » dans Login.
+  2. `ProtectedRoute` : profil actif obligatoire, rôles toujours vérifiés ; `chargerProfil` garde le profil connu en cas de coupure réseau (ne déconnecte plus).
+  3. Reçu PDF de 6,3 Mo → 44 Ko (logo réduit en JPEG 320 px + compression ; logo dessiné avant le cadre).
+  4. Caractères invisibles (BOM, espaces insécables) écrits en clair dans csv.js / recuDessin.js / notifier → remplacés par `\ufeff`, `\u202f`, `\u00a0`.
+  5. Réservation en ligne : nombre de personnes ramené à la capacité du studio. Tableau de bord : taux d'occupation hors studios « hors service ».
+  6. Migration **`019_correctif_checkin.sql`** : check-in refusé si le client précédent est encore `en_cours` dans le studio ; changer de studio vers un studio occupé refusé ; check-out → « nettoyage » seulement si plus personne dedans.
+  Vérifié : ESLint (no-undef, rules-of-hooks, jsx-key…) = 0 erreur (7 avertissements exhaustive-deps volontaires) ; npm audit prod = 2 alertes react-router (open redirect / SSR) non exploitables ici, correctif = v7 exclu par la stack.

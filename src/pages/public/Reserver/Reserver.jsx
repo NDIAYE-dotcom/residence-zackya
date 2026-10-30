@@ -96,7 +96,8 @@ export default function Reserver() {
     try {
       const res = await creerReservationPublique({
         studioId: studio.id, formule: sejour.formule, debut: sejour.debut, fin: sejour.fin,
-        nom: client.nom.trim(), phone, email: client.email.trim(), nbPersonnes: Number(client.nbPersonnes), notes: client.notes.trim(),
+        nom: client.nom.trim(), phone, email: client.email.trim(), notes: client.notes.trim(),
+        nbPersonnes: Math.min(Number(client.nbPersonnes) || 1, studio.capacite), // brouillon d'un autre studio : ramené à la capacité
       });
       try { sessionStorage.setItem(`zaquia:suivi:${res.reference}`, phone); } catch { /* navigation privée */ }
       brouillon.abandonner(); // coordonnées effacées de l'appareil une fois la demande envoyée

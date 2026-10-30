@@ -10,7 +10,7 @@ const couleur = (variable) => {
 };
 
 // Les polices standard du PDF ne connaissent pas certains caractères (espaces fines, apostrophe typographique)
-const propre = (t = '') => String(t).replace(/[  ]/g, ' ').replace(/[’‘]/g, "'");
+const propre = (t = '') => String(t).replace(/[\u202f\u00a0]/g, ' ').replace(/[’‘]/g, "'");
 const montant = (n) => propre(`${new Intl.NumberFormat('fr-FR').format(n)} FCFA`);
 const jourMois = (d) => new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const majuscule = (t) => t.charAt(0).toUpperCase() + t.slice(1);
@@ -52,12 +52,14 @@ export function dessinerRecu(jsPDF, { paiement, paiements }, params, logo) {
   doc.setFillColor(...ROUGE); vague(3.5);
   doc.setFillColor(...BLEU); vague(0);
 
+  // ---- Logo (avant le cadre : son fond blanc ne doit pas masquer la bordure) ----
+  doc.addImage(logo, logo.startsWith('data:image/jpeg') ? 'JPEG' : 'PNG', 8, 3, 40, 40, 'logo', 'FAST'); // compressé
+
   // ---- Cadre ----
   doc.setDrawColor(...BLEU); doc.setLineWidth(0.9);
   doc.roundedRect(4, 4, 202, 140, 3, 3, 'S');
 
-  // ---- En-tête : logo | adresse | n° de reçu ----
-  doc.addImage(logo, 'PNG', 8, 3, 40, 40);
+  // ---- En-tête : adresse | n° de reçu ----
   doc.setDrawColor(...ROUGE); doc.setLineWidth(0.8);
   doc.line(52, 10, 52, 36);
   etiquette(params.adresse ?? 'Ziguinchor', 58, 20, 13);

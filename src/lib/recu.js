@@ -4,13 +4,22 @@ import { lirePaiementPourRecu } from '../services/paiements.js';
 import { lireParametres } from '../services/parametres.js';
 import { dessinerRecu } from './recuDessin.js';
 
-async function imageEnDataUrl(url) {
-  const blob = await (await fetch(url)).blob();
+// Logo réduit à la taille utile (40 mm ≈ 320 px) sur fond blanc, en JPEG : reçu léger (≈ 50 Ko au lieu de 6 Mo)
+function logoAllege(url, taille = 320) {
   return new Promise((resolve, reject) => {
-    const lecteur = new FileReader();
-    lecteur.onload = () => resolve(lecteur.result);
-    lecteur.onerror = reject;
-    lecteur.readAsDataURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = taille;
+      canvas.height = taille;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff'; // le reçu est blanc derrière le logo
+      ctx.fillRect(0, 0, taille, taille);
+      ctx.drawImage(img, 0, 0, taille, taille);
+      resolve(canvas.toDataURL('image/jpeg', 0.9));
+    };
+    img.onerror = reject;
+    img.src = url;
   });
 }
 
@@ -25,7 +34,7 @@ export async function imprimerRecu(paiementId) {
       import('jspdf'),
       lirePaiementPourRecu(paiementId),
       lireParametres(),
-      imageEnDataUrl('/logo-zaquia.png'),
+      logoAllege('/logo-zaquia.png'),
     ]);
     const doc = dessinerRecu(jsPDF, donnees, params, logo);
     if (onglet) onglet.location.href = doc.output('bloburl');

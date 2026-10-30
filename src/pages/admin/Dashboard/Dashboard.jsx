@@ -54,8 +54,10 @@ export default function Dashboard() {
     );
   }
 
-  const occupes = studios.filter((s) => s.statut === 'occupe').length;
-  const taux = studios.length ? Math.round((occupes / studios.length) * 100) : 0;
+  // Les studios hors service ne comptent pas dans le taux d'occupation
+  const enService = studios.filter((s) => s.statut !== 'hors_service');
+  const occupes = enService.filter((s) => s.statut === 'occupe').length;
+  const taux = enService.length ? Math.round((occupes / enService.length) * 100) : 0;
 
   return (
     <div className="dash">
@@ -69,7 +71,7 @@ export default function Dashboard() {
       )}
 
       <section className="dash__kpis">
-        <div className="kpi"><span>Taux d’occupation</span><strong>{taux} %</strong><small>{occupes} / {studios.length} studios</small></div>
+        <div className="kpi"><span>Taux d’occupation</span><strong>{taux} %</strong><small>{occupes} / {enService.length} studios en service</small></div>
         <div className="kpi kpi--rouge"><span>À confirmer</span><strong>{enAttente}</strong><small>réservations en attente</small></div>
         <div className="kpi"><span>Arrivées du jour</span><strong>{arrivees.length}</strong><small>check-in prévus</small></div>
         <div className="kpi"><span>Encaissé aujourd’hui</span><strong>{formatFCFA(encaisseJour)}</strong><small>hors cautions</small></div>

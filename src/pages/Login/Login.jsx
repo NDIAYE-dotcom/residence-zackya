@@ -8,11 +8,13 @@ const traduireErreur = (msg = '') => {
   if (msg.includes('Invalid login credentials')) return 'Email ou mot de passe incorrect.';
   if (msg.includes('Email not confirmed')) return 'Veuillez confirmer votre email avant de vous connecter.';
   if (msg.includes('Failed to fetch')) return 'Connexion impossible. Vérifiez votre internet.';
+  if (msg.includes('should be different')) return 'Le nouveau mot de passe doit être différent de l’ancien.';
+  if (msg.includes('expired') || msg.includes('invalid')) return 'Le lien a expiré : redemandez « Mot de passe oublié ».';
   return msg || 'Une erreur est survenue.';
 };
 
 export default function Login() {
-  const { signIn, resetPassword } = useAuth();
+  const { signIn, signOut, resetPassword, recuperation, definirMotDePasse } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -21,6 +23,8 @@ export default function Login() {
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState('');
   const [info, setInfo] = useState('');
+  const [nouveau, setNouveau] = useState('');
+  const [confirmation, setConfirmation] = useState('');
 
   useEffect(() => { document.title = 'Connexion · Zaquia Admin'; }, []);
 
@@ -30,6 +34,28 @@ export default function Login() {
     setChargement(true);
     try {
       const p = await signIn(email.trim(), password);
+      navigate(p.role === 'menage' ? '/admin/menage' : '/admin/dashboard', { replace: true });
+    } catch (err) {
+      setErreur(traduireErreur(err.message));
+    } finally {
+      setChargement(false);
+    }
+  };
+
+  // Lien « Mot de passe oublié » : choix du nouveau mot de passe
+  const handleNouveauMotDePasse = async (e) => {
+    e.preventDefault();
+    setErreur('');
+    if (nouveau.length < 8) return setErreur('Au moins 8 caractères.');
+    if (nouveau !== confirmation) return setErreur('Les deux mots de passe ne correspondent pas.');
+    setChargement(true);
+    try {
+      const p = await definirMotDePasse(nouveau);
+      if (!p?.actif) {
+        await signOut();
+        setErreur('Mot de passe changé, mais votre compte n’est pas activé par l’administrateur.');
+        return;
+      }
       navigate(p.role === 'menage' ? '/admin/menage' : '/admin/dashboard', { replace: true });
     } catch (err) {
       setErreur(traduireErreur(err.message));
@@ -59,6 +85,32 @@ export default function Login() {
 
       {/* Panneau droit : formulaire */}
       <main className="login__panneau">
+        {recuperation ? (
+          <form className="login__form" onSubmit={handleNouveauMotDePasse} noValidate>
+            <img src="/logo-zaquia.png" alt="Zaquia Résidence" className="login__logo" />
+            <h1>Nouveau mot de passe</h1>
+            <p className="login__sous-titre">Choisissez votre nouveau mot de passe</p>
+
+            {erreur && <div className="login__alerte login__alerte--erreur">{erreur}</div>}
+
+            <div className="champ">
+              <label htmlFor="nouveau">Nouveau mot de passe</label>
+              <input id="nouveau" type={voirMdp ? 'text' : 'password'} autoComplete="new-password" placeholder="8 caractères minimum"
+                value={nouveau} onChange={(e) => setNouveau(e.target.value)} />
+            </div>
+            <div className="champ">
+              <label htmlFor="confirmation">Confirmer le mot de passe</label>
+              <input id="confirmation" type={voirMdp ? 'text' : 'password'} autoComplete="new-password"
+                value={confirmation} onChange={(e) => setConfirmation(e.target.value)} />
+            </div>
+            <button type="button" className="login__oublie" onClick={() => setVoirMdp(!voirMdp)}>
+              {voirMdp ? 'Masquer les mots de passe' : 'Afficher les mots de passe'}
+            </button>
+            <button type="submit" className="btn btn-rouge login__submit" disabled={chargement || !nouveau || !confirmation}>
+              {chargement ? 'Enregistrement…' : 'Enregistrer et me connecter'}
+            </button>
+          </form>
+        ) : (
         <form className="login__form" onSubmit={handleSubmit} noValidate>
           <img src="/logo-zaquia.png" alt="Zaquia Résidence" className="login__logo" />
           <h1>Connexion</h1>
@@ -94,6 +146,7 @@ export default function Login() {
 
           <p className="login__pied">© {new Date().getFullYear()} Zaquia Résidence</p>
         </form>
+        )}
       </main>
     </div>
   );
