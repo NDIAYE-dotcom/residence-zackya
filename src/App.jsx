@@ -17,8 +17,8 @@ import Depenses from './pages/admin/Depenses/Depenses.jsx';
 import Rapports from './pages/admin/Rapports/Rapports.jsx';
 import Menage from './pages/admin/Menage/Menage.jsx';
 import Maintenance from './pages/admin/Maintenance/Maintenance.jsx';
+import Parametres from './pages/admin/Parametres/Parametres.jsx';
 import Home from './pages/public/Home/Home.jsx';
-import EnConstruction from './components/EnConstruction.jsx';
 
 // Rôles autorisés par module
 const ROLES_CLIENTS = ['admin', 'gerant', 'receptionniste'];
@@ -58,7 +58,7 @@ export default function App() {
         <Route path="/admin/maintenance" element={<Maintenance />} />
         <Route path="/admin/rapports" element={<ProtectedRoute roles={ROLES_ARGENT}><Rapports /></ProtectedRoute>} />
         <Route path="/admin/personnel" element={<ProtectedRoute roles={['admin']}><Personnel /></ProtectedRoute>} />
-        <Route path="/admin/parametres" element={<EnConstruction titre="Paramètres" />} />
+        <Route path="/admin/parametres" element={<ProtectedRoute roles={['admin']}><Parametres /></ProtectedRoute>} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,0 +1,50 @@
+.pcat { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.pcat__etat { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 32px; text-align: center; color: var(--texte-doux); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.pcat__etat p { margin: 0; }
+.pcat__etat--erreur { color: var(--rouge); }
+
+.pcat__carte { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.pcat__titre { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.pcat__titre h2 { margin: 0; font-size: 1.05rem; }
+.pcat__titre p { margin: 4px 0 0; color: var(--texte-doux); font-size: .8rem; }
+.pcat__titre .btn { padding: 8px 14px; font-size: .84rem; white-space: nowrap; }
+
+.pcat__formulaire { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; padding: 12px; border-radius: var(--radius-sm); background: var(--fond); }
+.pcat__large { grid-column: 1 / -1; }
+.pcat__boutons { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; }
+.pcat__boutons .btn { padding: 8px 14px; font-size: .86rem; }
+
+.pcat__liste { list-style: none; margin: 0; padding: 0; }
+.pcat__liste li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--bordure); }
+.pcat__liste li:last-child { border-bottom: none; }
+.pcat__liste li > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.pcat__liste strong { font-size: .9rem; }
+.pcat__liste small { color: var(--texte-doux); font-size: .76rem; }
+.pcat__masquee { opacity: .55; }
+.pcat__vide { color: var(--texte-doux); font-size: .88rem; }
+
+.pcat__actions { display: flex; gap: 10px; flex-shrink: 0; }
+.pcat__actions button { background: none; border: none; padding: 0; color: var(--bleu); font-weight: 600; font-size: .8rem; }
+.pcat__actions button:hover:not(:disabled) { text-decoration: underline; }
+.pcat__actions .pcat__rouge { color: var(--rouge); }
+
+.pcat__ordre { display: flex; flex-direction: column; gap: 2px; }
+.pcat__ordre button { width: 24px; height: 18px; padding: 0; border: 1px solid var(--bordure); border-radius: 4px; background: var(--blanc); color: var(--bleu); font-size: .6rem; line-height: 1; }
+.pcat__ordre button:disabled { opacity: .3; cursor: not-allowed; }
+
+.pcat__renommer { flex: 1; display: flex; gap: 6px; }
+.pcat__renommer input { flex: 1; min-width: 0; padding: 7px 9px; border: 1.5px solid var(--bleu); border-radius: var(--radius-sm); }
+.pcat__renommer .btn { padding: 7px 10px; font-size: .8rem; }
+
+.pcat__ajout { display: flex; gap: 8px; }
+.pcat__ajout input { flex: 1; min-width: 0; padding: 10px 12px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); outline: none; }
+.pcat__ajout input:focus { border-color: var(--bleu); }
+
+@media (max-width: 1000px) {
+  .pcat { grid-template-columns: 1fr; }
+}
+@media (max-width: 500px) {
+  .pcat__liste li { flex-wrap: wrap; }
+  .pcat__actions { width: 100%; justify-content: flex-end; }
+  .pcat__formulaire { grid-template-columns: 1fr; }
+}

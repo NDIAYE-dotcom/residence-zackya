@@ -1859,7 +1859,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 9 Rapports
 - [x] 10 Ménage
 - [x] 11 Maintenance & inventaire
-- [ ] 12 Paramètres
+- [x] 12 Paramètres
 - [ ] 13 Pages studios
 - [ ] 14 Tunnel de réservation
 - [ ] 15 Notifications
@@ -1949,3 +1949,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   `menage_termine` → `maintenance` au lieu de `disponible` si panne urgente ouverte ; RPC `resoudre_maintenance(id, cout, notes, creer_depense)` (security definer, crée la dépense « Réparations / maintenance » rattachée au studio) ;
   vue `v_maintenances` (définisseur, filtrée `est_staff()`) ; bucket public `maintenance` ; table `inventaire` (unique studio+article, état bon/use/a_remplacer).
   ⚠️ `studio_disponible` / `studios_disponibles` (site public) excluent désormais aussi `maintenance` ; côté réception (`studios_libres_staff`) le studio reste proposé avec le badge « Actuellement : Maintenance ».
+- **2026-10-31 · Étape 12 Paramètres** : testée et validée. Migration `014_parametres.sql` exécutée (suppression catégorie de dépense si inutilisée, RPC `renommer_categorie_depense` qui met à jour les dépenses, index journal).
+  Onglets Résidence (paramètres → `viderCacheParametres()` après enregistrement ; `whatsapp` stocké au format wa.me `221XXXXXXXXX`), Catégories (studios + dépenses : renommer/masquer/ordre/supprimer), Journal (filtres module/employé/dates, liens vers fiches).
+  ⚠️ `resoudre_maintenance` écrit la catégorie en dur « Réparations / maintenance » : si elle est renommée, les nouvelles dépenses de maintenance reprendront l'ancien nom (affiché quand même dans Dépenses).
+  `EnConstruction.jsx` supprimé : **les 12 modules de l'administration sont faits**. Phase 4 terminée → **prochaine : Phase 5, site public (étape 13)**.

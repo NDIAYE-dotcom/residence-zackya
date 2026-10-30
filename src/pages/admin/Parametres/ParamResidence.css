@@ -1,0 +1,21 @@
+.presid { display: flex; flex-direction: column; gap: 16px; }
+.presid__etat { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 32px; text-align: center; color: var(--texte-doux); }
+.presid__etat--erreur { color: var(--rouge); }
+
+.presid__carte { background: var(--blanc); border-radius: var(--radius); box-shadow: var(--ombre); padding: 18px 20px; }
+.presid__carte h2 { margin: 0; font-size: 1.05rem; }
+.presid__aide { margin: 4px 0 14px; color: var(--texte-doux); font-size: .84rem; }
+
+.presid__grille { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.presid__grille--5 { grid-template-columns: repeat(5, 1fr); }
+.presid__lien { margin-left: 6px; background: none; border: none; padding: 0; color: var(--bleu); font-size: .78rem; font-weight: 600; text-decoration: underline; }
+
+.presid__actions { display: flex; justify-content: flex-end; }
+
+@media (max-width: 900px) {
+  .presid__grille--5 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .presid__grille, .presid__grille--5 { grid-template-columns: 1fr; }
+  .presid__actions .btn { width: 100%; }
+}
