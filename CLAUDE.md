@@ -1864,7 +1864,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 14 Tunnel de réservation
 - [x] 15 Notifications (alertes admin ✓ — email client reporté à l'étape 18)
 - [ ] 16 PayDunya — ⏸ en attente de l'accord du propriétaire (compte marchand à son nom, RCCM)
-- [ ] 17 Qualité
+- [x] 17 Qualité
 - [ ] 18 Déploiement
 
 ### Notes de progression
@@ -1974,3 +1974,9 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-10-31 · Étape 16 PayDunya REPORTÉE** : Ousmane doit d'abord obtenir l'accord du propriétaire (compte marchand PayDunya au nom de la résidence + RCCM).
   Déjà prêt : mode `paydunya` dans `mode_paiement`, trigger caisse qui laisse passer `paydunya` un jour clôturé. Prévoir : Edge Functions `paydunya-checkout` + `paydunya-webhook` (IPN), secrets PayDunya, bouton « Payer l'acompte » sur /confirmation et /suivi.
   → On passe à l'étape 17 (Qualité) sur « continue ».
+- **2026-10-31 · Étape 17 Qualité** : validée (parcours quotidien testé par Ousmane après la migration 018). Migration `018_securite_expiration.sql` exécutée (inclut 017, qui n'avait pas été appliquée).
+  Audit anonyme (curl, clé anon) : 15 tables/vues privées → 0 ligne ; écritures refusées ; 12 RPC du personnel → 42501 ; listing Storage vide.
+  Renforcement : `creer_reservation_staff`, `changer_statut_reservation`, `prolonger_reservation` passées en **security definer** ; insert/update directs sur `reservations` = **admin seul** ;
+  policy « ménage: statut studio » supprimée ; delete ménage/maintenance = admin+gérant ; journal `user_id = auth.uid()` ; paiements `recu_par = auth.uid()`.
+  `expirer_reservations_en_attente()` (site, en_attente, sans paiement, après `parametres.expiration_attente_heures` = 24) planifiée par **pg_cron** toutes les 15 min (job `zaquia-expiration-attente`).
+  Front : `React.lazy` sur toutes les pages sauf Home (bundle initial 425 Ko), `components/Chargement`, page `Introuvable` (404 public), `/admin/*` inconnu → dashboard, titres d'onglet admin, lien d'évitement + `:focus-visible`, `services/dashboard.js` (plus aucun `supabase.from` dans les pages).
