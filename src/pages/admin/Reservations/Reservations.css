@@ -54,7 +54,9 @@
 
 .resas__ligne > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .resas__ligne small { color: var(--texte-doux); font-size: .76rem; }
-.resas__ref strong { font-family: monospace; font-size: .86rem; color: var(--bleu); }
+.resas__ref a { font-family: monospace; font-size: .86rem; font-weight: 700; color: var(--bleu); text-decoration: none; }
+.resas__ligne--cliquable { cursor: pointer; transition: background .15s; }
+.resas__ligne--cliquable:hover { background: var(--fond); }
 .resas__client a { font-weight: 600; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .resas__client a:hover { text-decoration: underline; }
 .resas__dates span { white-space: nowrap; }

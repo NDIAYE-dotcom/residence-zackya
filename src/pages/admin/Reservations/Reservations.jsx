@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext.jsx';
 import { rechercherReservations, TAILLE_PAGE } from '../../../services/reservations.js';
 import { listerStudiosResume } from '../../../services/studios.js';
@@ -24,6 +24,7 @@ const PERIODES = [
 export default function Reservations() {
   const { profile } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const peutCreer = ['admin', 'gerant', 'receptionniste'].includes(profile?.role);
   const peutVoirClients = peutCreer; // le comptable n'a pas accès aux fiches clients
   const nouvelle = location.state?.nouvelle; // référence créée à mettre en évidence
@@ -154,9 +155,10 @@ export default function Reservations() {
               const close = ['annulee', 'no_show'].includes(r.statut);
               return (
                 <div key={r.id} role="row"
-                  className={`resas__ligne ${r.reference === nouvelle ? 'resas__ligne--nouvelle' : ''} ${close ? 'resas__ligne--close' : ''}`}>
+                  onClick={(e) => { if (!e.target.closest('a')) navigate(`/admin/reservations/${r.id}`); }}
+                  className={`resas__ligne resas__ligne--cliquable ${r.reference === nouvelle ? 'resas__ligne--nouvelle' : ''} ${close ? 'resas__ligne--close' : ''}`}>
                   <span role="cell" className="resas__ref">
-                    <strong>{r.reference}</strong>
+                    <Link to={`/admin/reservations/${r.id}`}>{r.reference}</Link>
                     <small>{SOURCES_RESERVATION[r.source]}</small>
                   </span>
                   <span role="cell" className="resas__client">

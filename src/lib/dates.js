@@ -73,3 +73,16 @@ export function formatDuree(debut, fin) {
   if (j) return `${j} j${h ? ` ${h} h` : ''}`;
   return `${h} h${m ? ` ${pad(m)}` : ''}`;
 }
+
+// Ajoute n unités de la formule à une date (prolongation : « +1 nuit », « +2 heures »…)
+export function ajouterUnites(formule, date, n = 1) {
+  switch (formule) {
+    case 'heure': return ajouterHeures(date, n);
+    case 'demi_journee': return ajouterHeures(date, 6 * n);
+    case 'journee': return ajouterHeures(date, 12 * n);
+    case 'nuitee': return ajouterJours(date, n);
+    case 'semaine': return ajouterJours(date, 7 * n);
+    case 'mois': return ajouterJours(date, 30 * n);
+    default: return ajouterHeures(date, n);
+  }
+}

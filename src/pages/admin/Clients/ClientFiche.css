@@ -67,6 +67,8 @@
 .fiche__historique li > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .fiche__historique span, .fiche__historique small { font-size: .82rem; color: var(--texte-doux); }
 .fiche__historique-droite { align-items: flex-end; text-align: right; flex-shrink: 0; }
+.fiche__ref { font-family: monospace; font-weight: 700; text-decoration: none; }
+.fiche__ref:hover { text-decoration: underline; }
 .fiche__historique-droite strong { color: var(--bleu); font-size: .92rem; }
 .fiche__historique-droite small { color: var(--rouge); font-weight: 600; }
 

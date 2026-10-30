@@ -1852,7 +1852,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 2 Personnel & rôles
 - [x] 3 Clients
 - [x] 4 Réservations
-- [ ] 5 Fiche réservation
+- [x] 5 Fiche réservation
 - [ ] 6 Planning
 - [ ] 7 Caisse
 - [ ] 8 Dépenses
@@ -1912,3 +1912,9 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   → `[valeur, setValeur, { restaure, marquerEnregistre, abandonner }]` + bandeau `components/BrouillonRestaure`. Effacés à la déconnexion (`effacerTousLesBrouillons` dans signOut).
   Appliqué à : Nouvelle réservation (étape incluse), ClientModal, StudioModal (infos), StudioTarifs, EmployeModal (**jamais le mot de passe**).
   Règle : « Annuler » = abandonne le brouillon ; ×, Échap, changement de page, actualisation = brouillon conservé. **À utiliser pour tous les futurs formulaires.**
+- **2026-10-30 · Étape 5 Fiche réservation** : testée et validée (prolonger, check-in, encaisser, check-out avec alerte, annulation). Migration `006_cycle_reservation.sql` exécutée.
+  RPC : `changer_statut_reservation(id, statut, motif)` (transitions + pièce obligatoire au check-in + motif obligatoire, journal), `prolonger_reservation(id, fin)`,
+  `changer_studio_reservation(id, studio)` (security definer, ancien studio → nettoyage + tâche si en_cours), `journal_reservation(id)` (historique lisible par admin/gérant/réception/comptable).
+  Colonnes ajoutées : `reservations.motif_annulation / annulee_le / annulee_par` ; **`v_reservations` recréée** (r.* figé à la création → la recréer si on ajoute encore des colonnes à reservations).
+  Bouton « Encaisser » sur la fiche (`PaiementModal` + `services/paiements.js`) en avance sur l'étape 7 → la Caisse réutilisera `enregistrerPaiement`. Journal des paiements rattaché à la réservation (`paiement.ajoute`).
+  Restitution de caution non gérée (type `remboursement` réduirait total_paye) → **à traiter à l'étape 7**.

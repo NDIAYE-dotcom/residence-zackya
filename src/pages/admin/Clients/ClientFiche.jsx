@@ -147,7 +147,7 @@ export default function ClientFiche() {
               {reservations.map((r) => (
                 <li key={r.id}>
                   <div>
-                    <strong>{r.reference}</strong>
+                    <Link to={`/admin/reservations/${r.id}`} className="fiche__ref">{r.reference}</Link>
                     <span>{r.studio_code} – {r.studio_nom} · {FORMULES[r.formule]}</span>
                     <small>{formatDateHeure(r.date_debut)} → {formatDateHeure(r.date_fin)}</small>
                   </div>

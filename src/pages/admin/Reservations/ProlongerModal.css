@@ -1,0 +1,26 @@
+.prolonger { display: flex; flex-direction: column; gap: 14px; }
+.prolonger__actuel { margin: 0; }
+
+.prolonger__raccourcis { display: flex; gap: 8px; flex-wrap: wrap; }
+.prolonger__raccourcis button {
+  padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--bleu);
+  background: var(--blanc); color: var(--bleu); font-weight: 600; font-size: .86rem;
+}
+.prolonger__raccourcis button:hover { background: var(--bleu-clair); }
+
+.prolonger__resultat {
+  margin: 0; padding: 12px 14px; border-radius: var(--radius-sm);
+  background: var(--fond); color: var(--texte-doux); font-size: .9rem;
+}
+.prolonger__resultat--non { background: var(--rouge-clair); color: var(--rouge); font-weight: 600; }
+.prolonger__resultat--oui { display: flex; flex-direction: column; gap: 4px; background: var(--succes-clair); color: var(--texte); }
+.prolonger__resultat--oui strong { color: var(--bleu); }
+
+.prolonger__actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding-top: 14px; border-top: 1px solid var(--bordure);
+}
+
+@media (max-width: 600px) {
+  .prolonger__actions .btn { flex: 1; }
+}

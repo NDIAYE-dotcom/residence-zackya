@@ -81,3 +81,38 @@ export async function creerReservation(r) {
   const [ligne] = data;
   return { id: ligne.res_id, reference: ligne.res_reference, montant: ligne.res_montant };
 }
+
+// ---------- Fiche réservation ----------
+
+export async function lireReservation(id) {
+  const { data, error } = await supabase.from('v_reservations').select('*').eq('id', id).maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+// Historique (journal) lisible par tout le personnel concerné
+export async function historiqueReservation(id) {
+  const { data, error } = await supabase.rpc('journal_reservation', { p_id: id });
+  if (error) throw error;
+  return data;
+}
+
+// Confirmer, check-in (en_cours), check-out (terminee), annuler / no-show (motif obligatoire)
+export async function changerStatut(id, statut, motif = null) {
+  const { error } = await supabase.rpc('changer_statut_reservation', { p_id: id, p_statut: statut, p_motif: motif });
+  if (error) throw error;
+}
+
+// Nouveau départ → renvoie le nouveau montant (erreur 23P01 si le studio est pris)
+export async function prolonger(id, fin) {
+  const { data, error } = await supabase.rpc('prolonger_reservation', { p_id: id, p_fin: new Date(fin).toISOString() });
+  if (error) throw error;
+  return data;
+}
+
+// Nouveau studio → renvoie le nouveau montant
+export async function changerStudio(id, studioId) {
+  const { data, error } = await supabase.rpc('changer_studio_reservation', { p_id: id, p_studio: studioId });
+  if (error) throw error;
+  return data;
+}

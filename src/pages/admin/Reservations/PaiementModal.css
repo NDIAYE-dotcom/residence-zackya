@@ -1,0 +1,24 @@
+.paiement { display: flex; flex-direction: column; gap: 14px; }
+
+.paiement__resume {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  padding: 12px; border-radius: var(--radius-sm); background: var(--fond);
+}
+.paiement__resume div { display: flex; flex-direction: column; gap: 2px; }
+.paiement__resume span { font-size: .76rem; color: var(--texte-doux); font-weight: 600; }
+.paiement__resume strong { font-size: .95rem; }
+.paiement__reste strong { color: var(--rouge); }
+
+.paiement__grille { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.paiement__aide { margin: 0; color: var(--texte-doux); font-size: .84rem; }
+.paiement__erreur { margin: 0; color: var(--rouge); font-weight: 600; font-size: .86rem; }
+
+.paiement__actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding-top: 14px; border-top: 1px solid var(--bordure);
+}
+
+@media (max-width: 600px) {
+  .paiement__grille { grid-template-columns: 1fr; }
+  .paiement__actions .btn { flex: 1; }
+}

@@ -109,3 +109,24 @@ export const SOURCES_RESERVATION = {
   site: 'Site web',
   partenaire: 'Partenaire',
 };
+
+export const TYPES_PAIEMENT = {
+  acompte: 'Acompte',
+  solde: 'Solde',
+  extra: 'Extra (service en plus)',
+  caution: 'Caution',
+  remboursement: 'Remboursement',
+};
+
+// Libellés de l'historique (journal_activite.action)
+export const ACTIONS_JOURNAL = {
+  'reservation.creee': 'Réservation créée',
+  'reservation.confirmee': 'Réservation confirmée',
+  'reservation.en_cours': 'Check-in',
+  'reservation.terminee': 'Check-out',
+  'reservation.annulee': 'Réservation annulée',
+  'reservation.no_show': 'Client non présenté',
+  'reservation.prolongee': 'Départ modifié',
+  'reservation.studio_change': 'Changement de studio',
+  'paiement.ajoute': 'Paiement enregistré',
+};

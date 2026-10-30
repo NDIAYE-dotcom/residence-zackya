@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../../lib/supabase.js';
 import { formatFCFA, formatDateHeure, FORMULES, STATUTS_RESERVATION, STATUTS_STUDIO } from '../../../lib/format.js';
 import './Dashboard.css';
@@ -87,7 +88,7 @@ function ListeResa({ items, champDate, vide }) {
       {items.map((r) => (
         <li key={r.id}>
           <div>
-            <strong>{r.client_nom}</strong>
+            <Link to={`/admin/reservations/${r.id}`} className="dash__lien">{r.client_nom}</Link>
             <span>{r.studio_code} · {FORMULES[r.formule]} · {formatDateHeure(r[champDate])}</span>
           </div>
           <div className="dash__liste-droite">
