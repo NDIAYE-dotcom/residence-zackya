@@ -28,7 +28,7 @@ Moi, je fais uniquement ce que tu ne peux pas faire (Supabase dans le navigateur
 ## 1. Le projet
 
 Zaquia Résidence (Ziguinchor, Sénégal) loue des **studios meublés** selon plusieurs formules :
-**à l'heure, demi-journée, journée, nuitée, semaine, mois**.
+**nuitée, semaine, mensualité** (depuis le 2026-11-02 ; l'heure, la demi-journée et la journée ne sont plus proposées — voir migration 020).
 
 Une seule application React avec **deux espaces** :
 
@@ -2006,3 +2006,8 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Supabase Auth : Site URL = https://www.residencezaquia.com ; Redirect URLs = localhost:5173, residence-zackya.vercel.app, residencezaquia.com et www.residencezaquia.com (chacune `/admin/login`).
   Prochaine étape possible : **Resend** → enregistrements DNS à ajouter dans Vercel > Domains > residencezaquia.com > DNS Records ; `SITE_URL` = https://www.residencezaquia.com.
   ⚠️ Offre Vercel « Hobby » = usage non commercial selon les conditions de Vercel → passage à **Pro** à décider avec le propriétaire.
+- **2026-11-02 · Formules : Nuitée, Semaine, Mensualité** (décision du propriétaire) — migration **`020_formules_proposees.sql`** :
+  paramètre `formules_proposees` (« nuitee,semaine,mois », cases à cocher dans **Paramètres > Résidence**), tarifs heure / demi-journée / journée désactivés (conservés),
+  trigger `trg_formule_proposee` : refuse toute NOUVELLE réservation sur une formule retirée (les anciennes gardent la leur). L'enum `formule_location` n'est pas modifié.
+  Front : `formulesProposees(params)` dans format.js → recherche de l'accueil, `/studios`, fiche, `/reserver` (via `services/public.js`), Nouvelle réservation, grille de tarifs (formules retirées masquées) ; planning → nuitée.
+  Libellé `mois` = « Mensualité » (unité affichée « / mois », 30 jours). Textes du site : « à la nuitée, à la semaine ou au mois ».

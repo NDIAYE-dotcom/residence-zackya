@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FORMULES, UNITES_FORMULE, UNITES_FORMULE_PLURIEL } from '../../../lib/format.js';
+import { FORMULES, UNITES_FORMULE, UNITES_FORMULE_PLURIEL, formulesProposees } from '../../../lib/format.js';
 import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, jourPasse, versChampDate } from '../../../lib/dates.js';
 import './EtapeDates.css';
 
@@ -32,11 +32,11 @@ export default function EtapeDates({ sejour, params, onChange, onSuivant }) {
     <div className="edates">
       <h2>Quelle formule ?</h2>
       <div className="edates__formules" role="radiogroup" aria-label="Formule">
-        {Object.entries(FORMULES).map(([k, v]) => (
+        {formulesProposees(params).map((k) => (
           <button key={k} type="button" role="radio" aria-checked={formule === k}
             className={`edates__formule ${formule === k ? 'edates__formule--choisie' : ''}`}
             onClick={() => choisirFormule(k)}>
-            {v}
+            {FORMULES[k]}
           </button>
         ))}
       </div>

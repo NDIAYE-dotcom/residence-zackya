@@ -1,10 +1,18 @@
 import { supabase } from '../lib/supabase.js';
+import { formulesProposees } from '../lib/format.js';
+import { lireParametres } from './parametres.js';
 
 // Requêtes du site public (visiteur non connecté).
 // Règle : jamais d'accès direct aux réservations ni aux clients — seulement le catalogue et des RPC.
 
 const COLONNES_STUDIO = 'id, code, nom, description, capacite, etage, surface_m2, equipements, photos, statut, ' +
   'categorie:categories(id, nom, description), tarifs(formule, prix, actif)';
+
+// Ne garde que les tarifs des formules proposées par la résidence
+async function garderFormulesProposees(studios) {
+  const proposees = formulesProposees(await lireParametres().catch(() => ({})));
+  return studios.map((s) => ({ ...s, tarifs: (s.tarifs ?? []).filter((t) => proposees.includes(t.formule)) }));
+}
 
 // Studios publiés (hors service exclus), avec leurs tarifs actifs
 export async function catalogueStudios() {
@@ -13,7 +21,7 @@ export async function catalogueStudios() {
     .eq('tarifs.actif', true) // un membre du personnel connecté ne doit pas voir les tarifs désactivés
     .order('code');
   if (error) throw error;
-  return data;
+  return garderFormulesProposees(data);
 }
 
 export async function studioPublic(id) {
@@ -21,7 +29,7 @@ export async function studioPublic(id) {
     .from('studios').select(COLONNES_STUDIO).eq('id', id).eq('publie', true).neq('statut', 'hors_service')
     .eq('tarifs.actif', true).maybeSingle();
   if (error) throw error;
-  return data;
+  return data ? (await garderFormulesProposees([data]))[0] : null;
 }
 
 // [{ jour: 'AAAA-MM-JJ', occupation: 'libre' | 'partiel' | 'complet' }] (62 jours maximum)
@@ -43,7 +51,7 @@ export async function rechercherDisponibles(formule, debut, fin) {
 }
 
 // Coordonnées publiques (paramètres)
-export { lireParametres } from './parametres.js';
+export { lireParametres };
 
 // Prix + disponibilité d'un studio sur une période (avant de réserver)
 // Renvoie { disponible, prix } — prix null si le studio ne propose pas cette formule

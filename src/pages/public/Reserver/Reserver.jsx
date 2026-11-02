@@ -161,7 +161,7 @@ export default function Reserver() {
               <div className="champ">
                 <label htmlFor="rv-qte">Durée</label>
                 <select id="rv-qte" value={sejour.quantite} onChange={(e) => setSejour(recalculer({ ...sejour, quantite: Number(e.target.value) }))}>
-                  {Array.from({ length: sejour.formule === 'heure' ? 12 : sejour.formule === 'mois' ? 3 : 14 }, (_, i) => i + 1).map((q) => (
+                  {Array.from({ length: sejour.formule === 'mois' ? 12 : sejour.formule === 'semaine' ? 8 : 14 }, (_, i) => i + 1).map((q) => (
                     <option key={q} value={q}>{q} {unites(q)}</option>
                   ))}
                 </select>

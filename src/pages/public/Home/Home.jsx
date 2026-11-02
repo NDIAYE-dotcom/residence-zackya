@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { rechercherDisponibles, lireParametres } from '../../../services/public.js';
-import { FORMULES, formatFCFA } from '../../../lib/format.js';
+import { FORMULES, FORMULES_PAR_DEFAUT, formatFCFA, formulesProposees } from '../../../lib/format.js';
 import Carrousel from '../../../components/Carrousel/Carrousel.jsx';
 import Galerie from '../../../components/Galerie/Galerie.jsx';
 import HeroDefilant from './HeroDefilant.jsx';
@@ -19,6 +19,7 @@ export default function Home() {
   const [chargement, setChargement] = useState(false);
   const [galerie, setGalerie] = useState(null); // { photos, index, titre }
   const [whatsapp, setWhatsapp] = useState('');
+  const [proposees, setProposees] = useState(FORMULES_PAR_DEFAUT);
   const [refSuivi, setRefSuivi] = useState('');
   const navigate = useNavigate();
 
@@ -31,7 +32,12 @@ export default function Home() {
 
   useEffect(() => {
     document.title = 'Zaquia Résidence · Studios meublés à Ziguinchor';
-    lireParametres().then((p) => setWhatsapp(p.whatsapp ?? '')).catch(() => {});
+    lireParametres().then((p) => {
+      setWhatsapp(p.whatsapp ?? '');
+      const f = formulesProposees(p);
+      setProposees(f);
+      setFormule((actuelle) => (f.includes(actuelle) ? actuelle : f[0]));
+    }).catch(() => {});
   }, []);
 
   const rechercher = async (e) => {
@@ -66,7 +72,7 @@ export default function Home() {
           <div className="champ">
             <label htmlFor="h-formule">Formule</label>
             <select id="h-formule" value={formule} onChange={(e) => setFormule(e.target.value)}>
-              {Object.entries(FORMULES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              {proposees.map((k) => <option key={k} value={k}>{FORMULES[k]}</option>)}
             </select>
           </div>
           <div className="champ">
@@ -84,7 +90,7 @@ export default function Home() {
 
       <ul className="home__atouts">
         <li><span aria-hidden="true">🏠</span><strong>Studios meublés et équipés</strong><small>Prêts à vivre dès votre arrivée</small></li>
-        <li><span aria-hidden="true">⏱</span><strong>À l’heure, à la nuit ou au mois</strong><small>La formule qui vous convient</small></li>
+        <li><span aria-hidden="true">⏱</span><strong>À la nuitée, à la semaine ou au mois</strong><small>La formule qui vous convient</small></li>
         <li><span aria-hidden="true">💬</span><strong>Confirmation par WhatsApp</strong><small>{whatsapp ? <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer">Écrivez-nous</a> : 'Réponse rapide'}</small></li>
         <li><span aria-hidden="true">📱</span><strong>Wave, Orange Money, espèces</strong><small>Payez comme vous voulez</small></li>
       </ul>

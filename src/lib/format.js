@@ -18,7 +18,16 @@ export const FORMULES = {
   journee: 'Journée',
   nuitee: 'Nuitée',
   semaine: 'Semaine',
-  mois: 'Mois',
+  mois: 'Mensualité',
+};
+
+// Formules proposées aux clients (paramètre « formules_proposees », modifiable dans Paramètres).
+// Les autres restent dans FORMULES pour afficher les anciennes réservations.
+export const FORMULES_PAR_DEFAUT = ['nuitee', 'semaine', 'mois'];
+export const formulesProposees = (params = {}) => {
+  const liste = (params.formules_proposees ?? '').split(',').map((f) => f.trim());
+  const proposees = Object.keys(FORMULES).filter((f) => liste.includes(f));
+  return proposees.length ? proposees : FORMULES_PAR_DEFAUT;
 };
 
 export const STATUTS_RESERVATION = {

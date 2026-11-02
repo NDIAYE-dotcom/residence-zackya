@@ -34,7 +34,7 @@ export default function Studios() {
     <div className="pstudios">
       <header className="pstudios__entete">
         <h1>Nos studios</h1>
-        <p>Studios meublés et équipés, à louer à l’heure, à la journée, à la nuit, à la semaine ou au mois.</p>
+        <p>Studios meublés et équipés, à louer à la nuitée, à la semaine ou au mois.</p>
       </header>
 
       {studios.length > 0 && (

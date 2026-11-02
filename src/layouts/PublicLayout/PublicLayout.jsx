@@ -55,7 +55,7 @@ export default function PublicLayout() {
         <div className="site__pied-grille">
           <div>
             <img src="/logo-zaquia.png" alt="" className="site__pied-logo" />
-            <p>Studios meublés à l’heure, à la journée, à la nuit, à la semaine ou au mois.</p>
+            <p>Studios meublés à la nuitée, à la semaine ou au mois.</p>
           </div>
           <div>
             <h2>Nous trouver</h2>

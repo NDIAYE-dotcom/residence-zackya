@@ -126,9 +126,8 @@ export default function Planning() {
     if (!peutCreer || e.target !== e.currentTarget) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const t = new Date(periode.debut.getTime() + ((e.clientX - rect.left) / rect.width) * duree);
-    const formule = vue === 'jour' ? 'heure' : 'nuitee';
     if (vue === 'jour') t.setMinutes(0, 0, 0); else t.setHours(0, 0, 0, 0);
-    navigate(`/admin/reservations/nouvelle?studio=${studio.id}&formule=${formule}&debut=${encodeURIComponent(versChampDate(t))}`);
+    navigate(`/admin/reservations/nouvelle?studio=${studio.id}&formule=nuitee&debut=${encodeURIComponent(versChampDate(t))}`);
   };
 
   const aujourdhui = minuit(maintenant).getTime();

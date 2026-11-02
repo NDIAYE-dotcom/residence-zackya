@@ -10,6 +10,13 @@
 .presid__grille--5 { grid-template-columns: repeat(5, 1fr); }
 .presid__lien { margin-left: 6px; background: none; border: none; padding: 0; color: var(--bleu); font-size: .78rem; font-weight: 600; text-decoration: underline; }
 
+.presid__formules { display: flex; flex-wrap: wrap; gap: 8px; }
+.presid__formule {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 10px 14px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); font-weight: 600; font-size: .9rem;
+}
+.presid__formule--cochee { border-color: var(--bleu); background: var(--bleu-clair); color: var(--bleu); }
+
 .presid__actions { display: flex; justify-content: flex-end; }
 .presid__court { max-width: 280px; }
 

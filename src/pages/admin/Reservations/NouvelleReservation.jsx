@@ -7,7 +7,7 @@ import { lireParametres } from '../../../services/parametres.js';
 import { creerReservation } from '../../../services/reservations.js';
 import { creerClient, trouverParTelephone } from '../../../services/clients.js';
 import { messageErreur } from '../../../lib/erreurs.js';
-import { formatFCFA, FORMULES } from '../../../lib/format.js';
+import { formatFCFA, FORMULES, formulesProposees } from '../../../lib/format.js';
 import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, jourPasse, versChampDate } from '../../../lib/dates.js';
 import { normaliserTelephoneClient } from '../../../lib/telephone.js';
 import EtapeDates from './EtapeDates.jsx';
@@ -66,13 +66,14 @@ export default function NouvelleReservation() {
   useEffect(() => {
     const demarrer = (p) => {
       setParams(p);
-      const debut = debutParDefaut('nuitee', p);
-      setSejourParDefaut({ formule: 'nuitee', quantite: 1, debut: versChampDate(debut), fin: versChampDate(calculerFin('nuitee', debut, 1, p)) });
+      const f0 = formulesProposees(p)[0]; // Nuitée en premier
+      const debut = debutParDefaut(f0, p);
+      setSejourParDefaut({ formule: f0, quantite: 1, debut: versChampDate(debut), fin: versChampDate(calculerFin(f0, debut, 1, p)) });
 
       // Arrivée depuis un clic dans le planning : nouvelle saisie, directement à l'étape « Studio »
       const formuleUrl = recherche.get('formule');
       const debutUrl = recherche.get('debut');
-      if (debutUrl && FORMULES[formuleUrl]) {
+      if (debutUrl && formulesProposees(p).includes(formuleUrl)) {
         const d = debutParDefaut(formuleUrl, p, new Date(debutUrl));
         brouillon.abandonner();
         setSaisie({

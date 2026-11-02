@@ -3,8 +3,9 @@ import { useToast } from '../../../components/Toast/Toast.jsx';
 import BrouillonRestaure from '../../../components/BrouillonRestaure/BrouillonRestaure.jsx';
 import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { listerTarifs, enregistrerTarifs } from '../../../services/studios.js';
+import { lireParametres } from '../../../services/parametres.js';
 import { messageErreur } from '../../../lib/erreurs.js';
-import { FORMULES, DUREES_FORMULE, formatFCFA } from '../../../lib/format.js';
+import { FORMULES, FORMULES_PAR_DEFAUT, DUREES_FORMULE, formatFCFA, formulesProposees } from '../../../lib/format.js';
 import './StudioTarifs.css';
 
 // Ce que couvre 1 unité de chaque formule
@@ -31,12 +32,15 @@ export default function StudioTarifs({ studio, studios, setOccupe, onEnregistre 
   const [envoi, setEnvoi] = useState(false);
   const [info, setInfo] = useState('');
   const [essai, setEssai] = useState(0); // recharge les tarifs enregistrés
+  const [proposees, setProposees] = useState(FORMULES_PAR_DEFAUT); // formules retirées : masquées, prix conservés
 
   useEffect(() => {
     let annule = false;
-    listerTarifs(studio.id)
-      .then((t) => {
-        if (annule || brouillon.restaure) return; // un brouillon non enregistré garde la priorité
+    Promise.all([listerTarifs(studio.id), lireParametres().catch(() => ({}))])
+      .then(([t, p]) => {
+        if (annule) return;
+        setProposees(formulesProposees(p));
+        if (brouillon.restaure) return; // un brouillon non enregistré garde la priorité
         const grille = versGrille(t);
         brouillon.marquerEnregistre(grille);
         setLignes(grille);
@@ -68,7 +72,7 @@ export default function StudioTarifs({ studio, studios, setOccupe, onEnregistre 
 
   const enregistrer = async () => {
     const aEnvoyer = [];
-    for (const l of lignes) {
+    for (const l of visibles) {
       if (l.prix === '' && !l.existe) continue; // formule jamais tarifée et laissée vide
       const prix = Number(l.prix);
       if (l.prix === '' || !Number.isInteger(prix) || prix < 0) {
@@ -96,6 +100,8 @@ export default function StudioTarifs({ studio, studios, setOccupe, onEnregistre 
     }
   };
 
+  const visibles = lignes.filter((l) => proposees.includes(l.formule));
+
   if (chargement) return <p className="tarifs__etat">Chargement des tarifs…</p>;
   if (erreur) return <p className="tarifs__etat tarifs__etat--erreur">{erreur}</p>;
 
@@ -121,7 +127,7 @@ export default function StudioTarifs({ studio, studios, setOccupe, onEnregistre 
       {info && <div className="tarifs__info">{info}</div>}
 
       <div className="tarifs__liste">
-        {lignes.map((l) => (
+        {visibles.map((l) => (
           <div key={l.formule} className={`tarifs__ligne ${l.actif ? '' : 'tarifs__ligne--inactive'}`}>
             <div className="tarifs__formule">
               <strong>{FORMULES[l.formule]}</strong>

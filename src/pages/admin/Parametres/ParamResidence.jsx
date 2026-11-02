@@ -5,6 +5,7 @@ import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { lireParametres, enregistrerParametres, viderCacheParametres } from '../../../services/parametres.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { normaliserTelephone, formatTelephone } from '../../../lib/telephone.js';
+import { FORMULES, FORMULES_PAR_DEFAUT } from '../../../lib/format.js';
 import './ParamResidence.css';
 
 // WhatsApp : accepte « 77 656 28 04 », « +221… » ou « 221… »
@@ -13,7 +14,7 @@ const whatsappNormalise = (v) => normaliserTelephone(v) ?? normaliserTelephone(`
 const CHAMPS_VIDES = {
   nom_residence: '', adresse: '', telephone: '', telephone_fixe: '', whatsapp: '', email: '', rccm: '',
   heure_checkin: '14:00', heure_checkout: '12:00', nuitee_debut: '18:00', nuitee_fin: '12:00', acompte_pourcent: '30',
-  expiration_attente_heures: '24',
+  expiration_attente_heures: '24', formules_proposees: FORMULES_PAR_DEFAUT.join(','),
 };
 
 // Onglet « Résidence » : coordonnées, horaires, acompte
@@ -41,6 +42,14 @@ export default function ParamResidence() {
 
   const maj = (champ) => (e) => setForm((f) => ({ ...f, [champ]: e.target.value }));
 
+  // Formules proposées : liste « nuitee,semaine,mois » rangée dans l'ordre habituel
+  const formulesCochees = (form.formules_proposees ?? '').split(',').filter((f) => FORMULES[f]);
+  const basculerFormule = (f) => setForm((x) => {
+    const cochees = (x.formules_proposees ?? '').split(',');
+    const suivantes = Object.keys(FORMULES).filter((k) => (k === f ? !cochees.includes(k) : cochees.includes(k)));
+    return { ...x, formules_proposees: suivantes.join(',') };
+  });
+
   const valider = () => {
     const e = {};
     if (!form.nom_residence.trim()) e.nom_residence = 'Le nom est obligatoire.';
@@ -53,6 +62,7 @@ export default function ParamResidence() {
     if (!Number.isInteger(pct) || pct < 0 || pct > 100) e.acompte_pourcent = 'Entre 0 et 100.';
     const exp = Number(form.expiration_attente_heures);
     if (!Number.isInteger(exp) || exp < 0 || exp > 720) e.expiration_attente_heures = 'Entre 0 (jamais) et 720 heures.';
+    if (!formulesCochees.length) e.formules_proposees = 'Cochez au moins une formule.';
     setErreurs(e);
     return !Object.keys(e).length;
   };
@@ -155,6 +165,20 @@ export default function ParamResidence() {
             {erreur('acompte_pourcent')}
           </div>
         </div>
+      </section>
+
+      <section className="presid__carte">
+        <h2>Formules proposées</h2>
+        <p className="presid__aide">Seules les formules cochées apparaissent sur le site et dans « Nouvelle réservation ». Les anciennes réservations gardent leur formule. Pour remettre une formule, réactivez aussi son prix dans Studios &amp; tarifs.</p>
+        <div className="presid__formules" role="group" aria-label="Formules proposées">
+          {Object.entries(FORMULES).map(([k, v]) => (
+            <label key={k} className={`presid__formule ${formulesCochees.includes(k) ? 'presid__formule--cochee' : ''}`}>
+              <input type="checkbox" checked={formulesCochees.includes(k)} onChange={() => basculerFormule(k)} />
+              {v}
+            </label>
+          ))}
+        </div>
+        {erreur('formules_proposees')}
       </section>
 
       <section className="presid__carte">

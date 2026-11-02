@@ -144,7 +144,7 @@ export default function StudioDetail() {
           <ul className="pdetail__atouts">
             <li>✓ Confirmation rapide par WhatsApp</li>
             <li>✓ Paiement à l’arrivée ou acompte</li>
-            <li>✓ À l’heure, à la nuit ou au mois</li>
+            <li>✓ À la nuitée, à la semaine ou au mois</li>
           </ul>
         </aside>
       </div>

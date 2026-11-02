@@ -1,7 +1,7 @@
 # Zaquia Résidence
 
 Application de gestion et de réservation de studios meublés (Ziguinchor, Sénégal) :
-location à l'heure, demi-journée, journée, nuitée, semaine ou mois.
+location à la nuitée, à la semaine ou au mois (formules modifiables dans Paramètres).
 
 🌐 **En ligne : https://www.residencezaquia.com** — administration : `/admin`
 (ancienne adresse toujours active : https://residence-zackya.vercel.app)
@@ -29,7 +29,7 @@ npm run build          # doit passer sans erreur avant chaque mise en ligne
 ## Base de données
 
 Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaque fichier de
-`supabase/migrations/` (001 → 019). Chaque migration se termine par une requête de vérification.
+`supabase/migrations/` (001 → 020). Chaque migration se termine par une requête de vérification.
 
 | Migration | Contenu |
 |---|---|
@@ -51,6 +51,7 @@ Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaqu
 | 017 | Statut par référence (inclus aussi dans 018) |
 | 018 | Sécurité par rôle + annulation automatique (pg_cron) |
 | 019 | Correctif check-in (client précédent encore dans le studio) |
+| 020 | Formules proposées : Nuitée, Semaine, Mensualité |
 
 ## Edge Functions (Supabase > Edge Functions > Deploy > Via Editor, « Verify JWT » désactivé)
 
