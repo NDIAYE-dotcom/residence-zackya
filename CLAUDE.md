@@ -2006,7 +2006,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Supabase Auth : Site URL = https://www.residencezaquia.com ; Redirect URLs = localhost:5173, residence-zackya.vercel.app, residencezaquia.com et www.residencezaquia.com (chacune `/admin/login`).
   Prochaine étape possible : **Resend** → enregistrements DNS à ajouter dans Vercel > Domains > residencezaquia.com > DNS Records ; `SITE_URL` = https://www.residencezaquia.com.
   ⚠️ Offre Vercel « Hobby » = usage non commercial selon les conditions de Vercel → passage à **Pro** à décider avec le propriétaire.
-- **2026-11-02 · Formules : Nuitée, Semaine, Mensualité** (décision du propriétaire) — migration **`020_formules_proposees.sql`** :
+- **2026-11-02 · Formules : Nuitée, Semaine, Mensualité** (décision du propriétaire) — migration **`020_formules_proposees.sql`** (exécutée et vérifiée : 8 studios avec prix Nuitée / Semaine / Mensualité actifs, `formule_proposee('heure')` = false) :
   paramètre `formules_proposees` (« nuitee,semaine,mois », cases à cocher dans **Paramètres > Résidence**), tarifs heure / demi-journée / journée désactivés (conservés),
   trigger `trg_formule_proposee` : refuse toute NOUVELLE réservation sur une formule retirée (les anciennes gardent la leur). L'enum `formule_location` n'est pas modifié.
   Front : `formulesProposees(params)` dans format.js → recherche de l'accueil, `/studios`, fiche, `/reserver` (via `services/public.js`), Nouvelle réservation, grille de tarifs (formules retirées masquées) ; planning → nuitée.
