@@ -11,7 +11,7 @@
 //
 //  Secrets (Supabase > Edge Functions > Secrets) :
 //   RESEND_API_KEY      clé Resend (obligatoire pour l'email)
-//   EMAIL_EXPEDITEUR    ex. « Zaquia Résidence <reservations@votre-domaine.sn> »
+//   EMAIL_EXPEDITEUR    « Zaquia Résidence <reservations@residencezaquia.com> »
 //                       (par défaut : onboarding@resend.dev, tests uniquement)
 //   SITE_URL            https://www.residencezaquia.com (logo + lien de suivi dans l'email)
 //   WHATSAPP_TOKEN, WHATSAPP_PHONE_ID, WHATSAPP_TEMPLATE (facultatifs, plus tard)
@@ -30,7 +30,7 @@ const corsHeaders = {
 const json = (corps, statut = 200) =>
   new Response(JSON.stringify(corps), { status: statut, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
-const FORMULES = { heure: 'À l’heure', demi_journee: 'Demi-journée', journee: 'Journée', nuitee: 'Nuitée', semaine: 'Semaine', mois: 'Mois' };
+const FORMULES = { heure: 'À l’heure', demi_journee: 'Demi-journée', journee: 'Journée', nuitee: 'Nuitée', semaine: 'Semaine', mois: 'Mensualité' };
 const echapper = (t = '') => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fcfa = (n) => `${new Intl.NumberFormat('fr-FR').format(n).replace(/\u202f|\u00a0/g, ' ')} FCFA`;
 const date = (d) => new Date(d).toLocaleString('fr-FR', {
@@ -53,7 +53,7 @@ function emailConfirmation({ r, client, studio, params, site }) {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fb;padding:24px 12px"><tr><td align="center">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;border-top:5px solid #b4001a">
     <tr><td align="center" style="padding:24px 24px 8px">
-      ${site ? `<img src="${site}/logo-zaquia.png" width="110" alt="Zaquia Résidence" style="display:block">` : '<strong style="font-size:22px;color:#002668">ZAQUIA RÉSIDENCE</strong>'}
+      ${site ? `<img src="${site}/logo-email.png" width="120" height="96" alt="Zaquia Résidence" style="display:block">` : '<strong style="font-size:22px;color:#002668">ZAQUIA RÉSIDENCE</strong>'}
     </td></tr>
     <tr><td style="padding:8px 28px 0">
       <h1 style="margin:0 0 8px;font-size:22px;color:#002668">Votre réservation est confirmée ✓</h1>
