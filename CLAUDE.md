@@ -1862,7 +1862,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 12 Paramètres
 - [x] 13 Pages studios
 - [x] 14 Tunnel de réservation
-- [x] 15 Notifications (alertes admin ✓ — email client reporté à l'étape 18)
+- [x] 15 Notifications (alertes admin ✓ + email de confirmation client via Resend ✓ 2026-11-02)
 - [ ] 16 PayDunya — ⏸ en attente de l'accord du propriétaire (compte marchand à son nom, RCCM)
 - [x] 17 Qualité
 - [x] 18 Déploiement — en ligne sur https://www.residencezaquia.com (domaine acheté chez Vercel le 2026-11-02)
@@ -1988,7 +1988,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 
 ### ⏳ RESTE À FAIRE (plus tard)
 1. ~~Nom de domaine~~ ✅ fait le 2026-11-02 (voir note « Nom de domaine »).
-2. ~~Resend~~ ✅ emails clients faits le 2026-11-02 (reste : SMTP Supabase Auth, voir note) — ancien texte : compte + vérification DNS du domaine → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer l'Edge Function `notifier` (Verify JWT OFF). Utiliser aussi Resend comme **SMTP personnalisé** de Supabase Auth (emails « Mot de passe oublié » sans la limite de l'expéditeur par défaut).
+2. ~~Resend~~ ✅ terminé le 2026-11-02 (emails clients + SMTP Supabase Auth, voir notes) — ancien texte : compte + vérification DNS du domaine → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer l'Edge Function `notifier` (Verify JWT OFF). Utiliser aussi Resend comme **SMTP personnalisé** de Supabase Auth (emails « Mot de passe oublié » sans la limite de l'expéditeur par défaut).
 3. **PayDunya** (étape 16) : après accord du propriétaire (compte marchand + RCCM).
 4. Facultatif : offre **Supabase Pro** pour des sauvegardes automatiques quotidiennes.
 5. Données réelles : saisir les vrais studios / prix / photos, créer les comptes du personnel, supprimer les données de test (réservations ZQ-2610xx, clients Fatou Sané / Jean Dupont / DEMBA, compte Awa Test).
@@ -2015,3 +2015,6 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Secrets Supabase : `RESEND_API_KEY` (clé « zaquia-notifier », envoi seul), `EMAIL_EXPEDITEUR` = « Zaquia Résidence <reservations@residencezaquia.com> », `SITE_URL` = https://www.residencezaquia.com.
   Edge Function **`notifier` déployée** (Verify JWT OFF) ; email de confirmation testé et reçu (ZQ-261102-0013, à annuler). Réponses des clients → `parametres.email` (reply_to).
   Logo des emails : `public/logo-email.png` (240 px, 39 Ko). Modèle français « Mot de passe oublié » : `supabase/templates/mot-de-passe-oublie.html`.
+- **2026-11-02 · SMTP Supabase Auth via Resend** : testé et validé par Ousmane. Custom SMTP `smtp.resend.com:465`, utilisateur `resend`, mot de passe = clé Resend « supabase-auth »,
+  expéditeur « Zaquia Résidence <noreply@residencezaquia.com> ». Modèle « Reset password » en français (sujet « Zaquia Résidence · Choisir un nouveau mot de passe »,
+  corps = `supabase/templates/mot-de-passe-oublie.html`). « Mot de passe oublié » fonctionne pour tout employé ayant une vraie adresse email. **Resend terminé.**
