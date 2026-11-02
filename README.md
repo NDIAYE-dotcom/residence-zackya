@@ -3,7 +3,8 @@
 Application de gestion et de réservation de studios meublés (Ziguinchor, Sénégal) :
 location à l'heure, demi-journée, journée, nuitée, semaine ou mois.
 
-🌐 **En ligne : https://residence-zackya.vercel.app** — administration : `/admin`
+🌐 **En ligne : https://www.residencezaquia.com** — administration : `/admin`
+(ancienne adresse toujours active : https://residence-zackya.vercel.app)
 
 - **Site public** : accueil (diaporama, recherche), `/studios`, `/studios/:id` (calendrier), `/reserver`,
   `/confirmation/:ref`, `/suivi` (référence seule = statut ; + téléphone = paiements).
@@ -28,7 +29,7 @@ npm run build          # doit passer sans erreur avant chaque mise en ligne
 ## Base de données
 
 Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaque fichier de
-`supabase/migrations/` (001 → 018). Chaque migration se termine par une requête de vérification.
+`supabase/migrations/` (001 → 019). Chaque migration se termine par une requête de vérification.
 
 | Migration | Contenu |
 |---|---|
@@ -49,6 +50,7 @@ Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaqu
 | 016 | Réservation en ligne renforcée + suivi |
 | 017 | Statut par référence (inclus aussi dans 018) |
 | 018 | Sécurité par rôle + annulation automatique (pg_cron) |
+| 019 | Correctif check-in (client précédent encore dans le studio) |
 
 ## Edge Functions (Supabase > Edge Functions > Deploy > Via Editor, « Verify JWT » désactivé)
 
@@ -59,7 +61,8 @@ Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaqu
 
 Déploiement automatique à chaque `git push` sur `main`. `vercel.json` gère les routes de l'application, le cache et les
 en-têtes de sécurité. Variables d'environnement Vercel : `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
-Supabase > Authentication > URL Configuration : Site URL = adresse du site, Redirect URL = `<site>/admin/login`.
+Domaine `residencezaquia.com` acheté chez Vercel (DNS chez Vercel), redirigé vers `www.residencezaquia.com`.
+Supabase > Authentication > URL Configuration : Site URL = `https://www.residencezaquia.com`, Redirect URLs = `<chaque adresse>/admin/login`.
 
 ## Sauvegardes
 

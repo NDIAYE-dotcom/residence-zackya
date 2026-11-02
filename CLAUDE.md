@@ -1865,7 +1865,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - [x] 15 Notifications (alertes admin ✓ — email client reporté à l'étape 18)
 - [ ] 16 PayDunya — ⏸ en attente de l'accord du propriétaire (compte marchand à son nom, RCCM)
 - [x] 17 Qualité
-- [x] 18 Déploiement — en ligne sur https://residence-zackya.vercel.app (nom de domaine à venir)
+- [x] 18 Déploiement — en ligne sur https://www.residencezaquia.com (domaine acheté chez Vercel le 2026-11-02)
 
 ### Notes de progression
 *(Claude Code : note ici les décisions importantes, problèmes rencontrés, et où on s'est arrêté.)*
@@ -1987,7 +1987,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   Testé en ligne par Ousmane (4G : site, réservation, suivi, admin, cloche, sauvegarde).
 
 ### ⏳ RESTE À FAIRE (plus tard)
-1. **Nom de domaine** (ex. zaquia-residence.sn) : Vercel > Settings > Domains ; puis mettre à jour Site URL / Redirect URLs Supabase.
+1. ~~Nom de domaine~~ ✅ fait le 2026-11-02 (voir note « Nom de domaine »).
 2. **Resend** (après le domaine) : compte + vérification DNS du domaine → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer l'Edge Function `notifier` (Verify JWT OFF). Utiliser aussi Resend comme **SMTP personnalisé** de Supabase Auth (emails « Mot de passe oublié » sans la limite de l'expéditeur par défaut).
 3. **PayDunya** (étape 16) : après accord du propriétaire (compte marchand + RCCM).
 4. Facultatif : offre **Supabase Pro** pour des sauvegardes automatiques quotidiennes.
@@ -2000,3 +2000,9 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   5. Réservation en ligne : nombre de personnes ramené à la capacité du studio. Tableau de bord : taux d'occupation hors studios « hors service ».
   6. Migration **`019_correctif_checkin.sql`** : check-in refusé si le client précédent est encore `en_cours` dans le studio ; changer de studio vers un studio occupé refusé ; check-out → « nettoyage » seulement si plus personne dedans.
   Vérifié : ESLint (no-undef, rules-of-hooks, jsx-key…) = 0 erreur (7 avertissements exhaustive-deps volontaires) ; npm audit prod = 2 alertes react-router (open redirect / SSR) non exploitables ici, correctif = v7 exclu par la stack.
+- **2026-11-02 · Nom de domaine** : **residencezaquia.com** acheté chez Vercel (DNS gérés par Vercel, WHOIS privé, renouvellement auto à surveiller sur la carte).
+  Adresse principale **https://www.residencezaquia.com** (choix recommandé par Vercel : `residencezaquia.com` → 308 → `www`). Certificat HTTPS Let's Encrypt automatique (renouvelé par Vercel).
+  `residence-zackya.vercel.app` reste en ligne. Aucune URL en dur dans le code (`window.location.origin`).
+  Supabase Auth : Site URL = https://www.residencezaquia.com ; Redirect URLs = localhost:5173, residence-zackya.vercel.app, residencezaquia.com et www.residencezaquia.com (chacune `/admin/login`).
+  Prochaine étape possible : **Resend** → enregistrements DNS à ajouter dans Vercel > Domains > residencezaquia.com > DNS Records ; `SITE_URL` = https://www.residencezaquia.com.
+  ⚠️ Offre Vercel « Hobby » = usage non commercial selon les conditions de Vercel → passage à **Pro** à décider avec le propriétaire.

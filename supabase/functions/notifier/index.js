@@ -13,7 +13,7 @@
 //   RESEND_API_KEY      clé Resend (obligatoire pour l'email)
 //   EMAIL_EXPEDITEUR    ex. « Zaquia Résidence <reservations@votre-domaine.sn> »
 //                       (par défaut : onboarding@resend.dev, tests uniquement)
-//   SITE_URL            ex. https://zaquia-residence.sn (logo + lien de suivi dans l'email)
+//   SITE_URL            https://www.residencezaquia.com (logo + lien de suivi dans l'email)
 //   WHATSAPP_TOKEN, WHATSAPP_PHONE_ID, WHATSAPP_TEMPLATE (facultatifs, plus tard)
 //
 //  Déploiement : Edge Functions > Deploy a new function > Via Editor, nom « notifier »,
