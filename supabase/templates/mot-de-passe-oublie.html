@@ -1,0 +1,26 @@
+<!-- Modèle Supabase Auth « Reset password » (Authentication > Emails > Templates > Reset password)
+     Sujet : Zaquia Résidence · Choisir un nouveau mot de passe
+     Copier tout ce qui suit dans « Message body ». -->
+<!doctype html>
+<html lang="fr">
+<body style="margin:0;background:#f5f7fb;font-family:Arial,Helvetica,sans-serif;color:#1b1f2a">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fb;padding:24px 12px"><tr><td align="center">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;border-top:5px solid #b4001a">
+      <tr><td align="center" style="padding:24px 24px 8px">
+        <img src="https://www.residencezaquia.com/logo-email.png" width="120" height="96" alt="Zaquia Résidence" style="display:block">
+      </td></tr>
+      <tr><td style="padding:8px 28px 28px">
+        <h1 style="margin:0 0 8px;font-size:22px;color:#002668">Nouveau mot de passe</h1>
+        <p style="margin:0 0 18px;line-height:1.6">Bonjour,<br>une demande de nouveau mot de passe a été faite pour votre compte de l’espace d’administration de Zaquia Résidence.</p>
+        <p style="margin:0 0 22px" align="center">
+          <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#b4001a;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-weight:bold">Choisir mon nouveau mot de passe</a>
+        </p>
+        <p style="margin:0;line-height:1.6;font-size:13px;color:#5b6475">Ce lien ne fonctionne qu’une fois et expire au bout d’une heure.<br>Si vous n’êtes pas à l’origine de cette demande, ignorez cet email : votre mot de passe ne change pas.</p>
+      </td></tr>
+      <tr><td style="padding:16px 28px;color:#5b6475;font-size:12px;border-top:1px solid #dfe4ee">
+        <strong style="color:#002668">Zaquia Résidence</strong> · Ziguinchor, Goumel
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body>
+</html>

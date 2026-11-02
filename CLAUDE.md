@@ -1988,7 +1988,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 
 ### ⏳ RESTE À FAIRE (plus tard)
 1. ~~Nom de domaine~~ ✅ fait le 2026-11-02 (voir note « Nom de domaine »).
-2. **Resend** (après le domaine) : compte + vérification DNS du domaine → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer l'Edge Function `notifier` (Verify JWT OFF). Utiliser aussi Resend comme **SMTP personnalisé** de Supabase Auth (emails « Mot de passe oublié » sans la limite de l'expéditeur par défaut).
+2. ~~Resend~~ ✅ emails clients faits le 2026-11-02 (reste : SMTP Supabase Auth, voir note) — ancien texte : compte + vérification DNS du domaine → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer l'Edge Function `notifier` (Verify JWT OFF). Utiliser aussi Resend comme **SMTP personnalisé** de Supabase Auth (emails « Mot de passe oublié » sans la limite de l'expéditeur par défaut).
 3. **PayDunya** (étape 16) : après accord du propriétaire (compte marchand + RCCM).
 4. Facultatif : offre **Supabase Pro** pour des sauvegardes automatiques quotidiennes.
 5. Données réelles : saisir les vrais studios / prix / photos, créer les comptes du personnel, supprimer les données de test (réservations ZQ-2610xx, clients Fatou Sané / Jean Dupont / DEMBA, compte Awa Test).
@@ -2011,3 +2011,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   trigger `trg_formule_proposee` : refuse toute NOUVELLE réservation sur une formule retirée (les anciennes gardent la leur). L'enum `formule_location` n'est pas modifié.
   Front : `formulesProposees(params)` dans format.js → recherche de l'accueil, `/studios`, fiche, `/reserver` (via `services/public.js`), Nouvelle réservation, grille de tarifs (formules retirées masquées) ; planning → nuitée.
   Libellé `mois` = « Mensualité » (unité affichée « / mois », 30 jours). Textes du site : « à la nuitée, à la semaine ou au mois ».
+- **2026-11-02 · Resend** : domaine `residencezaquia.com` vérifié dans Resend (région Irlande eu-west-1, DNS ajoutés automatiquement dans Vercel : CNAME `send`, CNAME `rsend`, TXT `resend._domainkey`).
+  Secrets Supabase : `RESEND_API_KEY` (clé « zaquia-notifier », envoi seul), `EMAIL_EXPEDITEUR` = « Zaquia Résidence <reservations@residencezaquia.com> », `SITE_URL` = https://www.residencezaquia.com.
+  Edge Function **`notifier` déployée** (Verify JWT OFF) ; email de confirmation testé et reçu (ZQ-261102-0013, à annuler). Réponses des clients → `parametres.email` (reply_to).
+  Logo des emails : `public/logo-email.png` (240 px, 39 Ko). Modèle français « Mot de passe oublié » : `supabase/templates/mot-de-passe-oublie.html`.
