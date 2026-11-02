@@ -11,7 +11,7 @@ import './StudioTarifs.css';
 // Ce que couvre 1 unité de chaque formule
 const UNITE = {
   heure: 'par heure', demi_journee: 'par tranche de 6 h', journee: 'par tranche de 12 h',
-  nuitee: 'par nuit', semaine: 'par semaine (7 jours)', mois: 'par mois (30 jours)',
+  nuitee: 'par nuit', semaine: 'par semaine (7 jours)', mois: 'par mois (de date à date)',
 };
 
 const grilleVide = () => Object.keys(FORMULES).map((formule) => ({

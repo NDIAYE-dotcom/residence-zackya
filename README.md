@@ -29,7 +29,7 @@ npm run build          # doit passer sans erreur avant chaque mise en ligne
 ## Base de données
 
 Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaque fichier de
-`supabase/migrations/` (001 → 020). Chaque migration se termine par une requête de vérification.
+`supabase/migrations/` (001 → 021). Chaque migration se termine par une requête de vérification.
 
 | Migration | Contenu |
 |---|---|
@@ -52,6 +52,7 @@ Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaqu
 | 018 | Sécurité par rôle + annulation automatique (pg_cron) |
 | 019 | Correctif check-in (client précédent encore dans le studio) |
 | 020 | Formules proposées : Nuitée, Semaine, Mensualité |
+| 021 | Prix semaine / mensualité au calendrier |
 
 ## Edge Functions (Supabase > Edge Functions > Deploy > Via Editor, « Verify JWT » désactivé)
 

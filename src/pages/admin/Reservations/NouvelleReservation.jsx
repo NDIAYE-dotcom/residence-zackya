@@ -66,9 +66,12 @@ export default function NouvelleReservation() {
   useEffect(() => {
     const demarrer = (p) => {
       setParams(p);
-      const f0 = formulesProposees(p)[0]; // Nuitée en premier
+      const proposees = formulesProposees(p);
+      const f0 = proposees[0]; // Nuitée en premier
       const debut = debutParDefaut(f0, p);
       setSejourParDefaut({ formule: f0, quantite: 1, debut: versChampDate(debut), fin: versChampDate(calculerFin(f0, debut, 1, p)) });
+      // Brouillon commencé avec une formule qui n'est plus proposée : retour à l'étape 1
+      setSaisie((x) => (x.sejour && !proposees.includes(x.sejour.formule) ? { ...x, etape: 1, sejour: null, studio: null } : x));
 
       // Arrivée depuis un clic dans le planning : nouvelle saisie, directement à l'étape « Studio »
       const formuleUrl = recherche.get('formule');

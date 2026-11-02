@@ -19,6 +19,15 @@ const aHeure = (date, hhmm = '00:00') => {
 
 const ajouterJours = (date, jours) => { const d = new Date(date); d.setDate(d.getDate() + jours); return d; };
 const ajouterHeures = (date, heures) => new Date(new Date(date).getTime() + heures * 3600 * 1000);
+// Même jour n mois plus tard (31 janv. + 1 mois → 28 févr.), comme le calcul du prix en base
+const ajouterMois = (date, n) => {
+  const d = new Date(date);
+  const jour = d.getDate();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + n);
+  d.setDate(Math.min(jour, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
+  return d;
+};
 
 // Prochain quart d'heure (ex. 14:07 → 14:15)
 export const prochainQuartDHeure = () => {
@@ -45,7 +54,7 @@ export function debutParDefaut(formule, params = {}, base = new Date()) {
 /**
  * Départ calculé pour « quantite » unités de la formule :
  * nuitée → N nuits plus tard à l'heure de fin de nuitée (12:00),
- * semaine / mois → 7N / 30N jours plus tard à l'heure de check-out (12:00).
+ * semaine → 7N jours plus tard, mensualité → même jour N mois plus tard, à l'heure de check-out (12:00).
  */
 export function calculerFin(formule, debut, quantite = 1, params = {}) {
   const q = Math.max(1, Number(quantite) || 1);
@@ -55,7 +64,7 @@ export function calculerFin(formule, debut, quantite = 1, params = {}) {
     case 'journee': return ajouterHeures(debut, 12 * q);
     case 'nuitee': return aHeure(ajouterJours(debut, q), params.nuitee_fin ?? '12:00');
     case 'semaine': return aHeure(ajouterJours(debut, 7 * q), params.heure_checkout ?? '12:00');
-    case 'mois': return aHeure(ajouterJours(debut, 30 * q), params.heure_checkout ?? '12:00');
+    case 'mois': return aHeure(ajouterMois(debut, q), params.heure_checkout ?? '12:00');
     default: return ajouterHeures(debut, q);
   }
 }
@@ -82,7 +91,7 @@ export function ajouterUnites(formule, date, n = 1) {
     case 'journee': return ajouterHeures(date, 12 * n);
     case 'nuitee': return ajouterJours(date, n);
     case 'semaine': return ajouterJours(date, 7 * n);
-    case 'mois': return ajouterJours(date, 30 * n);
+    case 'mois': return ajouterMois(date, n);
     default: return ajouterHeures(date, n);
   }
 }

@@ -2018,3 +2018,10 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-11-02 · SMTP Supabase Auth via Resend** : testé et validé par Ousmane. Custom SMTP `smtp.resend.com:465`, utilisateur `resend`, mot de passe = clé Resend « supabase-auth »,
   expéditeur « Zaquia Résidence <noreply@residencezaquia.com> ». Modèle « Reset password » en français (sujet « Zaquia Résidence · Choisir un nouveau mot de passe »,
   corps = `supabase/templates/mot-de-passe-oublie.html`). « Mot de passe oublié » fonctionne pour tout employé ayant une vraie adresse email. **Resend terminé.**
+- **2026-11-02 · Audit général n°2** — vérifié : ESLint 0 erreur (7 avertissements exhaustive-deps volontaires ; `fetchpriority` en minuscules = correct en React 18), build OK,
+  sondes anonymes (15 tables/vues → 0 ligne, écritures refusées, 14 RPC du personnel → 42501, Storage vide, `notifier` → 401, réservation publique « heure » refusée), parcours public sans erreur console.
+  Corrigé :
+  1. 🐞 **Prix** : semaine/mois comptés en tranches de 168 h / 720 h → un mois de 31 jours facturé 2 mensualités (900 000 au lieu de 450 000), 7 nuits avec arrivée le matin = 2 semaines.
+     Migration **`021_prix_semaine_mois.sql`** : `calculer_prix` → semaine = nuits ÷ 7 (arrondi sup.), mensualité = mois du calendrier (`age()`, mois commencé = dû), dates en Africa/Dakar.
+     Front aligné : `ajouterMois()` dans dates.js (31 janv. + 1 mois → 28 févr.) pour `calculerFin` et `ajouterUnites` (Prolonger). Montants déjà enregistrés inchangés.
+  2. Brouillon « Nouvelle réservation » avec une formule retirée → ramené à l'étape 1 (nuitée proposée).
