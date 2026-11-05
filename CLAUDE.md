@@ -2022,6 +2022,6 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
   sondes anonymes (15 tables/vues → 0 ligne, écritures refusées, 14 RPC du personnel → 42501, Storage vide, `notifier` → 401, réservation publique « heure » refusée), parcours public sans erreur console.
   Corrigé :
   1. 🐞 **Prix** : semaine/mois comptés en tranches de 168 h / 720 h → un mois de 31 jours facturé 2 mensualités (900 000 au lieu de 450 000), 7 nuits avec arrivée le matin = 2 semaines.
-     Migration **`021_prix_semaine_mois.sql`** : `calculer_prix` → semaine = nuits ÷ 7 (arrondi sup.), mensualité = mois du calendrier (`age()`, mois commencé = dû), dates en Africa/Dakar.
+     Migration **`021_prix_semaine_mois.sql`** (exécutée, vérifiée le 2026-11-05 : 1er déc. → 1er janv. = 450 000) : `calculer_prix` → semaine = nuits ÷ 7 (arrondi sup.), mensualité = mois du calendrier (`age()`, mois commencé = dû), dates en Africa/Dakar.
      Front aligné : `ajouterMois()` dans dates.js (31 janv. + 1 mois → 28 févr.) pour `calculerFin` et `ajouterUnites` (Prolonger). Montants déjà enregistrés inchangés.
   2. Brouillon « Nouvelle réservation » avec une formule retirée → ramené à l'étape 1 (nuitée proposée).
