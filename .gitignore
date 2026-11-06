@@ -2,3 +2,6 @@ node_modules
 dist
 .env
 .DS_Store
+
+# Script de nettoyage ponctuel (contient des données personnelles)
+supabase/nettoyage/2_*.sql
