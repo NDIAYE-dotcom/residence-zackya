@@ -9,8 +9,8 @@ import { normaliserTelephone } from '../../../lib/telephone.js';
 import './Reserver.css';
 
 const ORDRE = Object.keys(FORMULES);
-// Durées proposées en ligne (au-delà de 3 mois, la base renvoie vers la réception)
-const DUREE_MAX = { nuitee: 14, semaine: 8, mois: 3 };
+// Durées proposées en ligne (au-delà de 6 mois, la base renvoie vers la réception)
+const DUREE_MAX = { nuitee: 14, semaine: 8, mois: 6 };
 const COORDONNEES_VIDES = { nom: '', telephone: '', email: '', nbPersonnes: 1, notes: '' };
 
 // Site public : formulaire de réservation (studio + séjour + coordonnées)
