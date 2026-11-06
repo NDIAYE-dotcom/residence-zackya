@@ -6,6 +6,7 @@ import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { lireParametres } from '../../../services/parametres.js';
 import { creerReservation } from '../../../services/reservations.js';
 import { creerClient, trouverParTelephone } from '../../../services/clients.js';
+import { notifierClient } from '../../../services/notifications.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { formatFCFA, FORMULES, formulesProposees } from '../../../lib/format.js';
 import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, jourPasse, versChampDate } from '../../../lib/dates.js';
@@ -144,6 +145,11 @@ export default function NouvelleReservation() {
       });
       brouillon.marquerEnregistre();
       toast.succes(`Réservation ${res.reference} créée.`);
+      if (details.confirmer) { // même email de confirmation que le bouton « Confirmer » de la fiche
+        notifierClient(res.id, 'confirmee')
+          .then((r) => { if (r.email === 'envoye') toast.succes('Email de confirmation envoyé au client.'); })
+          .catch(() => { /* la réservation reste valable */ });
+      }
       navigate('/admin/reservations', { state: { nouvelle: res.reference } });
     } catch (err) {
       toast.erreur(messageErreur(err));

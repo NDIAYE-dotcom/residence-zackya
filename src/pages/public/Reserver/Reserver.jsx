@@ -4,11 +4,13 @@ import { useBrouillon } from '../../../hooks/useBrouillon.js';
 import { studioPublic, lireParametres, verifierSejour, creerReservationPublique } from '../../../services/public.js';
 import { messageErreur } from '../../../lib/erreurs.js';
 import { formatFCFA, FORMULES, UNITES_FORMULE, UNITES_FORMULE_PLURIEL } from '../../../lib/format.js';
-import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, versChampDate } from '../../../lib/dates.js';
+import { calculerFin, debutParDefaut, formatDuree, formatJourHeure, maintenantDakar, quantiteSejour, versChampDate } from '../../../lib/dates.js';
 import { normaliserTelephone } from '../../../lib/telephone.js';
 import './Reserver.css';
 
 const ORDRE = Object.keys(FORMULES);
+// Durées proposées en ligne (au-delà de 3 mois, la base renvoie vers la réception)
+const DUREE_MAX = { nuitee: 14, semaine: 8, mois: 3 };
 const COORDONNEES_VIDES = { nom: '', telephone: '', email: '', nbPersonnes: 1, notes: '' };
 
 // Site public : formulaire de réservation (studio + séjour + coordonnées)
@@ -46,7 +48,9 @@ export default function Reserver() {
         const debutUrl = recherche.get('debut');
         const finUrl = recherche.get('fin');
         if (debutUrl && finUrl) {
-          setSejour({ formule, debut: debutUrl.slice(0, 16), fin: finUrl.slice(0, 16), quantite: 1 });
+          const debut = debutUrl.slice(0, 16);
+          const fin = finUrl.slice(0, 16);
+          setSejour({ formule, debut, fin, quantite: quantiteSejour(formule, debut, fin) });
         } else {
           const d = debutParDefaut(formule, p);
           setSejour({ formule, debut: versChampDate(d), fin: versChampDate(calculerFin(formule, d, 1, p)), quantite: 1 });
@@ -155,13 +159,13 @@ export default function Reserver() {
             <div className="reserver__dates">
               <div className="champ">
                 <label htmlFor="rv-debut">Arrivée</label>
-                <input id="rv-debut" type="datetime-local" step="900" value={sejour.debut} min={versChampDate(new Date())}
+                <input id="rv-debut" type="datetime-local" step="900" value={sejour.debut} min={versChampDate(maintenantDakar())}
                   onChange={(e) => setSejour(recalculer({ ...sejour, debut: e.target.value }))} />
               </div>
               <div className="champ">
                 <label htmlFor="rv-qte">Durée</label>
                 <select id="rv-qte" value={sejour.quantite} onChange={(e) => setSejour(recalculer({ ...sejour, quantite: Number(e.target.value) }))}>
-                  {Array.from({ length: sejour.formule === 'mois' ? 12 : sejour.formule === 'semaine' ? 8 : 14 }, (_, i) => i + 1).map((q) => (
+                  {Array.from({ length: Math.max(DUREE_MAX[sejour.formule] ?? 14, sejour.quantite) }, (_, i) => i + 1).map((q) => (
                     <option key={q} value={q}>{q} {unites(q)}</option>
                   ))}
                 </select>
@@ -169,7 +173,7 @@ export default function Reserver() {
               <div className="champ">
                 <label htmlFor="rv-fin">Départ</label>
                 <input id="rv-fin" type="datetime-local" step="900" value={sejour.fin} min={sejour.debut}
-                  onChange={(e) => setSejour({ ...sejour, fin: e.target.value })} />
+                  onChange={(e) => setSejour({ ...sejour, fin: e.target.value, quantite: quantiteSejour(sejour.formule, sejour.debut, e.target.value) })} />
               </div>
             </div>
             {sejour.formule === 'nuitee' && (

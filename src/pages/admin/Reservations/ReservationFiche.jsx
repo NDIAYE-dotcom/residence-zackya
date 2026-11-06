@@ -247,9 +247,9 @@ export default function ReservationFiche() {
             <div className="rfiche__net"><span>À payer</span><strong>{formatFCFA(net)}</strong></div>
             <div><span>Déjà payé</span><strong>{formatFCFA(resa.total_paye)}</strong></div>
             {!close && (
-              <div className={resa.reste_a_payer > 0 ? 'rfiche__reste' : 'rfiche__solde'}>
-                <span>{resa.reste_a_payer > 0 ? 'Reste à payer' : 'Soldé'}</span>
-                <strong>{formatFCFA(Math.max(0, resa.reste_a_payer))}</strong>
+              <div className={resa.reste_a_payer === 0 ? 'rfiche__solde' : 'rfiche__reste'}>
+                <span>{resa.reste_a_payer > 0 ? 'Reste à payer' : resa.reste_a_payer < 0 ? 'Trop-perçu à rembourser' : 'Soldé'}</span>
+                <strong>{formatFCFA(Math.abs(resa.reste_a_payer))}</strong>
               </div>
             )}
             {resa.caution > 0 && (

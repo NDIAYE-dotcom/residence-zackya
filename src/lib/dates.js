@@ -2,6 +2,16 @@
 
 const pad = (n) => String(n).padStart(2, '0');
 
+// Heure actuelle à Ziguinchor, dans les champs locaux d'un objet Date (visiteur à l'étranger inclus)
+export const maintenantDakar = () => {
+  const d = new Date();
+  return new Date(d.getTime() + d.getTimezoneOffset() * 60000);
+};
+
+// Une saisie « 2026-11-03T18:00 » est une heure de Ziguinchor (UTC+0), quel que soit le pays du visiteur
+const lireInstant = (d) => (typeof d === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(d) ? new Date(`${d}Z`) : new Date(d));
+export const versISO = (d) => lireInstant(d).toISOString();
+
 // Date → valeur d'un <input type="datetime-local"> (« 2026-11-03T18:00 »)
 export const versChampDate = (d) =>
   `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -31,7 +41,7 @@ const ajouterMois = (date, n) => {
 
 // Prochain quart d'heure (ex. 14:07 → 14:15)
 export const prochainQuartDHeure = () => {
-  const d = new Date();
+  const d = maintenantDakar();
   d.setSeconds(0, 0);
   d.setMinutes(Math.ceil((d.getMinutes() + 1) / 15) * 15);
   return d;
@@ -42,7 +52,7 @@ export const prochainQuartDHeure = () => {
  * nuitée → heure de début de nuitée (18:00), semaine / mois → heure de check-in (14:00),
  * heure / demi-journée / journée → maintenant. Jamais dans le passé.
  */
-export function debutParDefaut(formule, params = {}, base = new Date()) {
+export function debutParDefaut(formule, params = {}, base = maintenantDakar()) {
   const maintenant = prochainQuartDHeure();
   let d;
   if (formule === 'nuitee') d = aHeure(base, params.nuitee_debut ?? '18:00');
@@ -69,9 +79,21 @@ export function calculerFin(formule, debut, quantite = 1, params = {}) {
   }
 }
 
-// « lun. 3 nov., 18:00 »
+// Nombre d'unités d'un séjour, compté comme le prix en base (calculer_prix)
+export function quantiteSejour(formule, debut, fin) {
+  const a = new Date(debut);
+  const b = new Date(fin);
+  const jours = Math.round((aHeure(b) - aHeure(a)) / 86400000);
+  if (formule === 'nuitee') return Math.max(1, jours);
+  if (formule === 'semaine') return Math.max(1, Math.ceil(jours / 7));
+  let mois = 1;
+  while (mois < 120 && aHeure(ajouterMois(a, mois)) < aHeure(b)) mois += 1;
+  return mois;
+}
+
+// « lun. 3 nov., 18:00 » (heure de Ziguinchor)
 export const formatJourHeure = (d) =>
-  new Date(d).toLocaleString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  lireInstant(d).toLocaleString('fr-FR', { timeZone: 'Africa/Dakar', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
 // Durée lisible : « 2 j 18 h », « 5 h 30 »
 export function formatDuree(debut, fin) {

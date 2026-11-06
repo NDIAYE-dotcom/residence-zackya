@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase.js';
 import { formulesProposees } from '../lib/format.js';
+import { versISO } from '../lib/dates.js';
 import { lireParametres } from './parametres.js';
 
 // Requêtes du site public (visiteur non connecté).
@@ -41,7 +42,7 @@ export async function calendrierStudio(id, du, au) {
 
 // Recherche de l'accueil : studios libres sur la période, avec le prix de la formule choisie
 export async function rechercherDisponibles(formule, debut, fin) {
-  const p = { p_debut: new Date(debut).toISOString(), p_fin: new Date(fin).toISOString() };
+  const p = { p_debut: versISO(debut), p_fin: versISO(fin) };
   const { data, error } = await supabase.rpc('studios_disponibles', p);
   if (error) throw error;
   return Promise.all((data ?? []).map(async (s) => {
@@ -56,7 +57,7 @@ export { lireParametres };
 // Prix + disponibilité d'un studio sur une période (avant de réserver)
 // Renvoie { disponible, prix } — prix null si le studio ne propose pas cette formule
 export async function verifierSejour(studioId, formule, debut, fin) {
-  const p = { p_debut: new Date(debut).toISOString(), p_fin: new Date(fin).toISOString() };
+  const p = { p_debut: versISO(debut), p_fin: versISO(fin) };
   const [dispo, prix] = await Promise.all([
     supabase.rpc('studio_disponible', { p_studio: studioId, ...p }),
     supabase.rpc('calculer_prix', { p_studio: studioId, p_formule: formule, ...p }),
@@ -70,8 +71,8 @@ export async function creerReservationPublique(r) {
   const { data, error } = await supabase.rpc('creer_reservation_publique', {
     p_studio: r.studioId,
     p_formule: r.formule,
-    p_debut: new Date(r.debut).toISOString(),
-    p_fin: new Date(r.fin).toISOString(),
+    p_debut: versISO(r.debut),
+    p_fin: versISO(r.fin),
     p_nom: r.nom,
     p_phone: r.phone,
     p_email: r.email || null,
