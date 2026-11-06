@@ -2028,4 +2028,4 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 - **2026-11-06 · Nettoyage avant ouverture** : validé par Ousmane (« tout est test, garde le gérant »). `supabase/nettoyage/1_apercu.sql` (lecture seule, suivi git) puis `2_suppression.sql` (bloc unique, contrôles de nombre ; **hors git** car données personnelles).
   Supprimés : 14 réservations, 6 paiements (110 000 F), 11 clients, 3 dépenses, 1 panne, 3 tâches de ménage, journal associé, compte Awa. Compteurs `reservation_seq` et `recu_seq` remis à 1.
   Conservés : 10 studios (prix + photos), catégories, paramètres, 8 articles d'inventaire, comptes `zackya@admin.com` (admin) et `ousmanendiaye809@gmail.com` (gérant). Vérifié ensuite : 10 studios publiés avec 3 tarifs, 10 libres.
-  ⚠️ `parametres.derniere_sauvegarde` absent après le nettoyage : aucune sauvegarde enregistrée avant la suppression (ne pas supposer qu'un fichier existe).
+  Aucune sauvegarde avant la suppression (données de test non récupérables). Première sauvegarde réelle faite après le nettoyage, le 2026-11-06 à 18:30, vérifiée (10 studios, 36 tarifs, 8 inventaire, 2 comptes).
