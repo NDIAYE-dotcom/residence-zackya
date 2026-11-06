@@ -1991,7 +1991,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
 2. ~~Resend~~ ✅ terminé le 2026-11-02 (emails clients + SMTP Supabase Auth, voir notes) — ancien texte : compte + vérification DNS du domaine → secrets `RESEND_API_KEY`, `EMAIL_EXPEDITEUR`, `SITE_URL` → déployer l'Edge Function `notifier` (Verify JWT OFF). Utiliser aussi Resend comme **SMTP personnalisé** de Supabase Auth (emails « Mot de passe oublié » sans la limite de l'expéditeur par défaut).
 3. **PayDunya** (étape 16) : après accord du propriétaire (compte marchand + RCCM).
 4. Facultatif : offre **Supabase Pro** pour des sauvegardes automatiques quotidiennes.
-5. Données réelles : saisir les vrais studios / prix / photos, créer les comptes du personnel, supprimer les données de test (réservations ZQ-2610xx, clients Fatou Sané / Jean Dupont / DEMBA, compte Awa Test).
+5. Données réelles : ~~données de test~~ ✅ supprimées le 2026-11-06 ; 10 studios, prix et photos en place ; reste à créer les comptes du personnel.
 - **2026-10-31 · Audit général** (demande d'Ousmane) — corrigé :
   1. « Mot de passe oublié » cassé (aucun écran pour choisir le nouveau mot de passe) → `AuthContext` gère `PASSWORD_RECOVERY` (`recuperation`, `definirMotDePasse`) + formulaire « Nouveau mot de passe » dans Login.
   2. `ProtectedRoute` : profil actif obligatoire, rôles toujours vérifiés ; `chargerProfil` garde le profil connu en cas de coupure réseau (ne déconnecte plus).
@@ -2025,3 +2025,7 @@ mise à jour des URL Auth Supabase, backups, SMTP personnalisé.
      Migration **`021_prix_semaine_mois.sql`** (exécutée, vérifiée le 2026-11-05 : 1er déc. → 1er janv. = 450 000) : `calculer_prix` → semaine = nuits ÷ 7 (arrondi sup.), mensualité = mois du calendrier (`age()`, mois commencé = dû), dates en Africa/Dakar.
      Front aligné : `ajouterMois()` dans dates.js (31 janv. + 1 mois → 28 févr.) pour `calculerFin` et `ajouterUnites` (Prolonger). Montants déjà enregistrés inchangés.
   2. Brouillon « Nouvelle réservation » avec une formule retirée → ramené à l'étape 1 (nuitée proposée).
+- **2026-11-06 · Nettoyage avant ouverture** : validé par Ousmane (« tout est test, garde le gérant »). `supabase/nettoyage/1_apercu.sql` (lecture seule, suivi git) puis `2_suppression.sql` (bloc unique, contrôles de nombre ; **hors git** car données personnelles).
+  Supprimés : 14 réservations, 6 paiements (110 000 F), 11 clients, 3 dépenses, 1 panne, 3 tâches de ménage, journal associé, compte Awa. Compteurs `reservation_seq` et `recu_seq` remis à 1.
+  Conservés : 10 studios (prix + photos), catégories, paramètres, 8 articles d'inventaire, comptes `zackya@admin.com` (admin) et `ousmanendiaye809@gmail.com` (gérant). Vérifié ensuite : 10 studios publiés avec 3 tarifs, 10 libres.
+  ⚠️ `parametres.derniere_sauvegarde` absent après le nettoyage : aucune sauvegarde enregistrée avant la suppression (ne pas supposer qu'un fichier existe).
