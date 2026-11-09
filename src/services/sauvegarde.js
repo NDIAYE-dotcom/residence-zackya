@@ -7,7 +7,7 @@ import { enregistrerParametres } from './parametres.js';
 export const TABLES_SAUVEGARDE = [
   'parametres', 'categories', 'studios', 'tarifs', 'clients', 'reservations', 'paiements',
   'depenses', 'categories_depenses', 'clotures_caisse', 'taches_menage', 'maintenances',
-  'inventaire', 'profiles', 'journal_activite',
+  'inventaire', 'profiles', 'journal_activite', 'sud_documents',
 ];
 const PAQUET = 1000; // le serveur renvoie au plus 1 000 lignes par requête
 
@@ -19,6 +19,7 @@ export async function exporterSauvegarde(surProgression) {
     let lignes = [];
     for (let page = 0; ; page += 1) {
       const { data, error } = await supabase.from(table).select('*').range(page * PAQUET, page * PAQUET + PAQUET - 1);
+      if (error?.code === 'PGRST205' || error?.code === '42P01') break; // table pas encore créée (migration à venir)
       if (error) throw error;
       lignes = lignes.concat(data);
       if (data.length < PAQUET) break;

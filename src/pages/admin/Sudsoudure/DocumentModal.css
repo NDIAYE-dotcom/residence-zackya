@@ -1,0 +1,52 @@
+.sudform { display: flex; flex-direction: column; gap: 16px; }
+.sudform__aide { margin: 0; color: var(--texte-doux); font-size: .88rem; }
+.sudform__bloc { border: 1px solid var(--bordure); border-radius: var(--radius-sm); margin: 0; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 12px; }
+.sudform__bloc legend { padding: 0 6px; font-weight: 700; color: var(--bleu); font-size: .9rem; }
+.sudform__grille { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sudform textarea { resize: vertical; }
+
+/* Lignes de prestations */
+.sudform__lignes { display: flex; flex-direction: column; gap: 8px; }
+.sudform__ligne { display: grid; grid-template-columns: minmax(0, 1fr) 70px 90px 120px 120px 34px; gap: 8px; align-items: center; }
+.sudform__ligne--entete { font-size: .76rem; font-weight: 700; color: var(--texte-doux); text-transform: uppercase; letter-spacing: .3px; }
+.sudform__ligne input {
+  min-width: 0; padding: 10px 10px; border: 1.5px solid var(--bordure); border-radius: var(--radius-sm); background: var(--blanc); outline: none;
+}
+.sudform__ligne input:focus { border-color: var(--bleu); }
+.sudform__montant { text-align: right; font-size: .9rem; white-space: nowrap; }
+.sudform__retirer {
+  width: 34px; height: 34px; border: none; border-radius: 50%; background: var(--rouge-clair); color: var(--rouge); font-size: 1.2rem; line-height: 1;
+}
+.sudform__retirer:disabled { opacity: .35; cursor: not-allowed; }
+.sudform__ajouter { align-self: flex-start; padding: 8px 14px; }
+
+/* Options et totaux */
+.sudform__bas { display: grid; grid-template-columns: 1fr 280px; gap: 18px; align-items: start; }
+.sudform__options { display: flex; flex-direction: column; gap: 10px; }
+.sudform__case { display: flex; align-items: center; gap: 8px; font-size: .9rem; font-weight: 600; cursor: pointer; }
+.sudform__totaux {
+  margin: 0; padding: 14px; border-radius: var(--radius-sm); background: var(--fond);
+  display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: .9rem;
+}
+.sudform__totaux dt { color: var(--texte-doux); }
+.sudform__totaux dd { margin: 0; text-align: right; font-weight: 600; }
+.sudform__totaux .sudform__total { padding-top: 8px; border-top: 1px solid var(--bordure); color: var(--texte); font-weight: 700; font-size: 1.05rem; }
+.sudform__totaux dd.sudform__total { color: var(--rouge); }
+
+.sudform__erreur { margin: 0; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--rouge-clair); color: var(--rouge); font-size: .9rem; }
+.sudform__actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.sudform__mention { margin: -6px 0 0; text-align: right; font-size: .78rem; color: var(--texte-doux); }
+
+@media (max-width: 760px) {
+  .sudform__grille, .sudform__bas { grid-template-columns: 1fr; }
+  /* Une ligne = une petite carte : désignation en entier, puis quantité / unité / prix */
+  .sudform__ligne--entete { display: none; }
+  .sudform__ligne {
+    grid-template-columns: 1fr 1fr 1.4fr 34px; padding: 10px; border: 1px solid var(--bordure); border-radius: var(--radius-sm); background: var(--fond);
+  }
+  .sudform__ligne input:first-child { grid-column: 1 / -1; }
+  .sudform__montant { grid-column: 1 / 4; grid-row: 3; text-align: left; }
+  .sudform__retirer { grid-column: 4; grid-row: 3; }
+  .sudform__actions .btn { flex: 1 1 100%; }
+  .sudform__mention { text-align: left; }
+}

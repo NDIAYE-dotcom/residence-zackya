@@ -21,6 +21,7 @@ const MENU = [
   { to: '/admin/rapports',     label: 'Rapports',     roles: ['admin','gerant','comptable'] },
   { to: '/admin/personnel',    label: 'Personnel',    roles: ['admin'] },
   { to: '/admin/parametres',   label: 'Paramètres',   roles: ['admin'] },
+  { to: '/admin/sudsoudure',   label: 'Factures SUDSOUDURE', roles: ['admin'] }, // autre entreprise du propriétaire
 ];
 
 export default function AdminLayout() {

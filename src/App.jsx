@@ -25,6 +25,7 @@ const Rapports = lazy(() => import('./pages/admin/Rapports/Rapports.jsx'));
 const Menage = lazy(() => import('./pages/admin/Menage/Menage.jsx'));
 const Maintenance = lazy(() => import('./pages/admin/Maintenance/Maintenance.jsx'));
 const Parametres = lazy(() => import('./pages/admin/Parametres/Parametres.jsx'));
+const Sudsoudure = lazy(() => import('./pages/admin/Sudsoudure/Sudsoudure.jsx'));
 const StudiosPublic = lazy(() => import('./pages/public/Studios/Studios.jsx'));
 const StudioDetail = lazy(() => import('./pages/public/StudioDetail/StudioDetail.jsx'));
 const Reserver = lazy(() => import('./pages/public/Reserver/Reserver.jsx'));
@@ -79,6 +80,7 @@ export default function App() {
           <Route path="/admin/rapports" element={<ProtectedRoute roles={ROLES_ARGENT}><Rapports /></ProtectedRoute>} />
           <Route path="/admin/personnel" element={<ProtectedRoute roles={['admin']}><Personnel /></ProtectedRoute>} />
           <Route path="/admin/parametres" element={<ProtectedRoute roles={['admin']}><Parametres /></ProtectedRoute>} />
+          <Route path="/admin/sudsoudure" element={<ProtectedRoute roles={['admin']}><Sudsoudure /></ProtectedRoute>} />
           {/* Adresse inconnue dans l'administration → tableau de bord */}
           <Route path="/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
         </Route>

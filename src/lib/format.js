@@ -185,12 +185,15 @@ export const ACTIONS_JOURNAL = {
   'parametres.categorie_studio_supprimee': 'Catégorie de studio supprimée',
   'parametres.categorie_depense': 'Catégorie de dépense renommée',
   'notification.confirmation': 'Client prévenu de la confirmation',
+  'sud.document_cree': 'Facture / devis SUDSOUDURE créé',
+  'sud.document_modifie': 'Facture / devis SUDSOUDURE modifié',
+  'sud.document_supprime': 'Facture / devis SUDSOUDURE supprimé',
 };
 
 // Modules du journal (préfixe de l'action)
 export const MODULES_JOURNAL = {
   reservation: 'Réservations', paiement: 'Paiements', caisse: 'Caisse', client: 'Clients', studio: 'Studios',
-  tarifs: 'Tarifs', personnel: 'Personnel', notification: 'Notifications', depense: 'Dépenses', menage: 'Ménage', maintenance: 'Maintenance', parametres: 'Paramètres',
+  tarifs: 'Tarifs', personnel: 'Personnel', notification: 'Notifications', depense: 'Dépenses', menage: 'Ménage', maintenance: 'Maintenance', parametres: 'Paramètres', sud: 'SUDSOUDURE',
 };
 
 export const PRIORITES = { urgente: 'Urgente', haute: 'Haute', normale: 'Normale', basse: 'Basse' };

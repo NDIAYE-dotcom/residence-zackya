@@ -11,6 +11,8 @@ location à la nuitée, à la semaine ou au mois (formules modifiables dans Para
 - **Administration** (`/admin`) : tableau de bord, planning temps réel, réservations (création en 3 étapes, fiche et
   cycle de vie), clients, studios & tarifs, caisse (clôture, reçus PDF), dépenses, rapports, ménage, maintenance &
   inventaire, personnel, paramètres (journal, sauvegarde).
+- **Factures SUDSOUDURE** (`/admin/sudsoudure`, admin) : factures et devis PDF de l'autre entreprise du propriétaire,
+  séparés de la comptabilité de Zaquia (partage WhatsApp depuis le téléphone).
 
 ## Stack
 
@@ -29,7 +31,7 @@ npm run build          # doit passer sans erreur avant chaque mise en ligne
 ## Base de données
 
 Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaque fichier de
-`supabase/migrations/` (001 → 023). Chaque migration se termine par une requête de vérification.
+`supabase/migrations/` (001 → 024). Chaque migration se termine par une requête de vérification.
 
 | Migration | Contenu |
 |---|---|
@@ -55,6 +57,7 @@ Dans Supabase > **SQL Editor**, dans l'ordre : `supabase/schema.sql`, puis chaqu
 | 021 | Prix semaine / mensualité au calendrier |
 | 022 | Calendrier public par nuit + studios qui restaient bloqués |
 | 023 | Réservation en ligne jusqu'à 6 mois |
+| 024 | Factures et devis SUDSOUDURE (autre entreprise, admin seul) |
 
 ## Edge Functions (Supabase > Edge Functions > Deploy > Via Editor, « Verify JWT » désactivé)
 
