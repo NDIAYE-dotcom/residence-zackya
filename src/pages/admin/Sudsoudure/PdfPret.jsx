@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Modal from '../../../components/Modal/Modal.jsx';
 import { formatFCFA } from '../../../lib/format.js';
 import './PdfPret.css';
@@ -9,8 +9,13 @@ import './PdfPret.css';
  */
 export default function PdfPret({ pdf, document, onFermer }) {
   const fichier = useMemo(() => new File([pdf.blob], pdf.nom, { type: 'application/pdf' }), [pdf]);
-  const url = useMemo(() => URL.createObjectURL(pdf.blob), [pdf]);
-  useEffect(() => () => URL.revokeObjectURL(url), [url]);
+  // Adresse temporaire du PDF créée au moment du clic, libérée une minute plus tard
+  // (la libérer à la fermeture de la fenêtre cassait le téléchargement)
+  const adresse = () => {
+    const url = URL.createObjectURL(pdf.blob);
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    return url;
+  };
   const partageable = typeof navigator.canShare === 'function' && navigator.canShare({ files: [fichier] });
   const [info, setInfo] = useState('');
 
@@ -28,9 +33,11 @@ export default function PdfPret({ pdf, document, onFermer }) {
 
   const telecharger = () => {
     const lien = window.document.createElement('a');
-    lien.href = url;
+    lien.href = adresse();
     lien.download = pdf.nom;
+    window.document.body.appendChild(lien);
     lien.click();
+    lien.remove();
     if (!partageable) setInfo('PDF téléchargé : dans WhatsApp, utilisez le trombone 📎 puis « Document » pour l’envoyer.');
   };
 
@@ -42,7 +49,7 @@ export default function PdfPret({ pdf, document, onFermer }) {
           <button type="button" className="btn btn-rouge" onClick={partager}>Partager (WhatsApp…)</button>
         )}
         <button type="button" className={`btn ${partageable ? 'btn-contour' : 'btn-rouge'}`} onClick={telecharger}>Télécharger le PDF</button>
-        <a className="btn btn-contour" href={url} target="_blank" rel="noreferrer">Ouvrir / imprimer</a>
+        <button type="button" className="btn btn-contour" onClick={() => window.open(adresse(), '_blank')}>Ouvrir / imprimer</button>
         {info && <p className="pdfpret__info">{info}</p>}
       </div>
     </Modal>
